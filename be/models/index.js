@@ -21,5 +21,6 @@ db.connection = sequelize;
 
 db.users = require('./user.model.js')(db.connection, db.Sequelize)
 db.events = require('./event.model.js')(db.connection, db.Sequelize)
-
+db.venue = require('./venue.model.js')(db.connection, db.Sequelize)
+db.organization = require('./org.model.js')(db.connection, db.Sequelize)
 module.exports = db;
