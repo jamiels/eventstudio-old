@@ -1,8 +1,9 @@
 module.exports = app => {
     const eventsController = require("../controllers/dashboard/events.controller");
     const venueController = require("../controllers/dashboard/venue.controller");
+    const orgController = require("../controllers/dashboard/org.controller");
 
-    const {_, auth} = require('../middlewares');
+    const { _, auth } = require('../middlewares');
 
     var router = require("express").Router();
 
@@ -16,6 +17,11 @@ module.exports = app => {
     router.post("/venue/add", venueController.add);
 
     router.get('/venue/names', venueController.getAllVenueNames);
+
+    //org
+    router.post("/org/add", orgController.add);
+
+    router.get('/org/names', orgController.getAllOrgNames);
 
     app.use('/dashboard', router);
 };
