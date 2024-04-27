@@ -4,6 +4,7 @@ module.exports = app => {
     const orgController = require("../controllers/dashboard/org.controller");
     const sponsorshipsController = require("../controllers/dashboard/sponsorships.controller");
     const producerController = require("../controllers/dashboard/producer.controller");
+    const speakersController = require("../controllers/dashboard/speakers.controller");
 
     const { _, auth } = require('../middlewares');
 
@@ -33,7 +34,10 @@ module.exports = app => {
     //producer
     router.post('/producer/add', producerController.add);
     router.get('/producer/names', producerController.getAllProducerNames);
-    router.delete('/producer/:producerId', producerController.deleteProducer);
-
+    router.delete('/producer/:id', producerController.deleteProducer);
+    //speakers
+    router.post('/speakers/add', speakersController.addSpeaker);
+    router.get('/speakers/names', speakersController.getAllSpeakers);
+    router.delete('/speakers/:id', speakersController.deleteSpeaker);
     app.use('/dashboard', router);
 };
