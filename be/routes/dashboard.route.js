@@ -5,6 +5,7 @@ module.exports = app => {
     const sponsorshipsController = require("../controllers/dashboard/sponsorships.controller");
     const producerController = require("../controllers/dashboard/producer.controller");
     const speakersController = require("../controllers/dashboard/speakers.controller");
+    const teamsController = require("../controllers/dashboard/teams.controller");
 
     const { _, auth } = require('../middlewares');
 
@@ -39,5 +40,9 @@ module.exports = app => {
     router.post('/speakers/add', speakersController.addSpeaker);
     router.get('/speakers/names', speakersController.getAllSpeakers);
     router.delete('/speakers/:id', speakersController.deleteSpeaker);
+    //teams
+    router.post('/teams/add', auth, teamsController.createTeam);
+    router.post('/teams/addUser', auth, teamsController.addUserToTeam);
+
     app.use('/dashboard', router);
 };
