@@ -1,5 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
   const Event = sequelize.define("event", {
+    uuid: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4, // Generate UUID automatically
+    },
     name: {
       type: Sequelize.STRING,
       notEmpty: true,
@@ -23,8 +27,15 @@ module.exports = (sequelize, Sequelize) => {
     user: {
       type: Sequelize.INTEGER,
     },
+    team: {
+      type: Sequelize.DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'teams',
+        key: 'id'
+      }
+    }
   });
-
 
   return Event;
 };
