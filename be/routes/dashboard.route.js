@@ -3,6 +3,7 @@ module.exports = app => {
     const venueController = require("../controllers/dashboard/venue.controller");
     const orgController = require("../controllers/dashboard/org.controller");
     const sponsorshipsController = require("../controllers/dashboard/sponsorships.controller");
+    const producerController = require("../controllers/dashboard/producer.controller");
 
     const { _, auth } = require('../middlewares');
 
@@ -29,6 +30,10 @@ module.exports = app => {
     router.get('/sponserships/get/:id', sponsorshipsController.getSponsorship);
     router.delete('/sponserships/del/:id', sponsorshipsController.deleteSponsorship);
     router.get('/sponserships/all', sponsorshipsController.getAllSponsorships);
+    //producer
+    router.post('/producer/add', producerController.add);
+    router.get('/producer/names', producerController.getAllProducerNames);
+    router.delete('/producer/:producerId', producerController.deleteProducer);
 
     app.use('/dashboard', router);
 };
