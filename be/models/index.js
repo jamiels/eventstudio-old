@@ -28,6 +28,10 @@ db.producer = require('./producer.model.js')(db.connection, db.Sequelize)
 db.speakers = require('./speakers.model.js')(db.connection, db.Sequelize)
 db.teams = require('./teams.model.js')(db.connection, db.Sequelize)
 db.teams_users = require('./teamsUser.model.js')(db.connection, db.Sequelize)
+db.speaking_request = require('./speakingRequest.model.js')(db.connection, db.Sequelize)
+db.sponsor_boarding = require('./sponsorBoarding.model.js')(db.connection, db.Sequelize)
+db.sponsor_request = require('./sponsorRequest.model.js')(db.connection, db.Sequelize)
+
 
 //association of relationships
 db.events.hasOne(db.sponsorships, { foreignKey: 'event_id' });

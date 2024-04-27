@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 });
 
 require("./routes/user.routes")(app);
+require("./routes/publicForms.route")(app);
 require("./routes/dashboard.route")(app);
 
 // set port, listen for requests
