@@ -44,20 +44,20 @@ exports.getAllProducerNames = async (req, res) => {
 };
 
 exports.deleteProducer = async (req, res) => {
-    const { producerId } = req.params;
+    const { id } = req.params;
     try {
         const deletedProducer = await Producer.destroy({
             where: {
-                id: producerId
+                id: id
             }
         });
         if (deletedProducer === 0) {
             res.status(404).send({
-                message: `Producer with ID ${producerId} not found.`
+                message: `Producer with ID ${id} not found.`
             });
         } else {
             res.send({
-                message: `Producer with ID ${producerId} deleted successfully.`
+                message: `Producer with ID ${id} deleted successfully.`
             });
         }
     } catch (err) {
