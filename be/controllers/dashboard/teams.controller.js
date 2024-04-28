@@ -21,7 +21,7 @@ exports.createTeam = async (req, res) => {
         // Add the current user as the team admin
         await Teams_Users.create({ user_id: req.user.id, team_id: team.id, isAdmin: true });
 
-        res.status(201).send({ success: true, team });
+        res.status(201).send({ success: true, team, message: "Team Created Successfully." });
     } catch (err) {
         console.error("Error creating team:", err);
         res.status(500).send({
@@ -49,7 +49,6 @@ exports.addUserToTeam = async (req, res) => {
                 message: 'User not found with the provided email address.'
             });
         }
-
         // Check if the user is an admin of the team
         const teamUser = await Teams_Users.findOne({ where: { user_id: req.user.id, team_id } });
 
@@ -77,3 +76,22 @@ exports.addUserToTeam = async (req, res) => {
     }
 };
 
+exports.getUserTeams = async (req, res) => {
+    try {
+        // Find teams associated with the user
+        const userTeams = await Teams_Users.findAll({
+            where: { user_id: req.user.id },
+            include: [{ model: Teams, attributes: ['team_name'] }]
+        });
+
+        // Extract team names from the result
+
+        res.status(200).send({ success: true, userTeams });
+    } catch (err) {
+        console.error("Error fetching user teams:", err);
+        res.status(500).send({
+            message: "An error occurred while fetching user teams.",
+            errObj: err
+        });
+    }
+};

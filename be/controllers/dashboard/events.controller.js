@@ -22,7 +22,7 @@ exports.add = (req, res) => {
 
     Event.create(newEvent)
     .then(data => {
-        res.send({success: true});
+        res.send({success: true, event: data});
     })
     .catch(err => {
         res.status(500).send({

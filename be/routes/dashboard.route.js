@@ -45,6 +45,6 @@ module.exports = app => {
     //teams
     router.post('/teams/add', auth, teamsController.createTeam);
     router.post('/teams/addUser', auth, teamsController.addUserToTeam);
-
+    router.get('/teams/userteams', auth, teamsController?.getUserTeams)
     app.use('/dashboard', router);
 };

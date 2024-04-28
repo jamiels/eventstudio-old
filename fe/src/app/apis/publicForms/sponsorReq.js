@@ -3,9 +3,8 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/public/sponsor/";
 
 const addSponsorRequest = (data, eventUUID) => {
-    return axios.post(API_URL + `${eventUUID}`, {
-        data,
-    })
+    
+    return axios.post(API_URL + `${eventUUID}`, data)
         .then((response) => {
             return response.data;
         })

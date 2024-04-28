@@ -38,6 +38,7 @@ db.events.hasOne(db.sponsorships, { foreignKey: 'event_id' });
 db.sponsorships.belongsTo(db.events, { foreignKey: 'event_id' })
 db.organization.hasOne(db.sponsorships, { foreignKey: 'organization_id' });
 db.sponsorships.belongsTo(db.organization, { foreignKey: 'organization_id' });
-
+db.teams_users.belongsTo(db.teams,{ foreignKey: 'team_id' });
+db.teams.hasMany(db.teams_users,{ foreignKey: 'team_id' });
 
 module.exports = db;

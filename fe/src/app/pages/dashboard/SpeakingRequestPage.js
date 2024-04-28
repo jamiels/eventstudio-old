@@ -66,6 +66,7 @@ const SpeakingRequestPage = withSwal((props) => {
     }), columnHelper.accessor('sponsorshipInterest', {
       header: 'Sponsorship Interest',
       Cell: ({ value }) => {
+        console.log("🚀 ~ SpeakingRequestPage ~ value:", value)
         if (value?.toLowerCase() === 'yes') return 'Yes';
         else if (value?.toLowerCase() === 'possibly') return 'Possibly';
         else return 'No';
