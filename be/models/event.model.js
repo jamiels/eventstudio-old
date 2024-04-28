@@ -34,6 +34,12 @@ module.exports = (sequelize, Sequelize) => {
         model: 'teams',
         key: 'id'
       }
+    },
+    sponsorshipDeckUrl: {
+      type: Sequelize.STRING, // Assuming it's a URL field
+    },
+    theme: {
+      type: Sequelize.STRING(30), // Max length of 30 characters for the theme
     }
   });
 

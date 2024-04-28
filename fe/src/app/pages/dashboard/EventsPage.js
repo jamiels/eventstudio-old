@@ -33,6 +33,8 @@ const EventsPage = withSwal((props) => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [veneue, setVeneue] = useState(0);
+    const [themes, setThemes] = useState('');
+    const [sponsorshipDeckUrl, setSponsorshipDeckUrl] = useState('');
     const [nameError, setNameError] = useState('');
     const [endDateError, setEndDateError] = useState('');
     const [tableData, setTableData] = useState([]);
@@ -42,7 +44,6 @@ const EventsPage = withSwal((props) => {
     const { currentUser } = useAuth();
 
     console.log(currentUser);
-    // const { user: currentUser } = useSelector((state) => state.auth);
 
     const fetchData = () => {
         EventAPI.getEvents()
@@ -95,6 +96,8 @@ const EventsPage = withSwal((props) => {
                 </>
             ),
         }),
+        columnHelper.accessor('sponsorshipDeckUrl'),
+        columnHelper.accessor('theme'),
         columnHelper.accessor('startdate'),
         columnHelper.accessor('enddate'),
         columnHelper.accessor(row => `${row.veneue ? row.veneue : ''}`, {
@@ -106,12 +109,6 @@ const EventsPage = withSwal((props) => {
             id: 'actions',
             cell: props => (
                 <>
-                    {/* <a onClick={() => {EditBtnClick(props.row.original)}} class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-              <i class="ki-outline ki-switch fs-2"></i>
-            </a>
-            <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-              <i class="ki-outline ki-pencil fs-2"></i>
-            </a> */}
                     <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
                         <i class="ki-outline ki-trash fs-2"></i>
                     </a>
@@ -165,6 +162,8 @@ const EventsPage = withSwal((props) => {
         setStartDate(null);
         setEndDate(null);
         setVeneue(0);
+        setThemes('');
+        setSponsorshipDeckUrl('');
 
         setModalShow(true);
     }
@@ -185,8 +184,9 @@ const EventsPage = withSwal((props) => {
             eventData.startdate = startDate != null ? startDate.toLocaleDateString() : '';
             eventData.enddate = endDate != null ? endDate.toLocaleDateString() : '';
             eventData.veneue = veneue != 0 ? veneue : 0;
+            eventData.themes = themes;
+            eventData.sponsorshipDeckUrl = sponsorshipDeckUrl;
             eventData.team = selectedTeamOver?.team_id;
-            console.log("🚀 ~ addEventFunc ~  eventData.team :", eventData.team)
 
             if (!eventData.team) {
                 setTeamIDError(true);
@@ -247,6 +247,8 @@ const EventsPage = withSwal((props) => {
                     <TextField label='Name' required={true} name='name' value={name} onChange={(e) => { handleNameChange(e.target.value) }} error={nameError} />
                     <TextField label='ShortName' name='shortname' value={shortName} onChange={(e) => setShortName(e.target.value)} />
                     <TextField label='Landing Page URL' name='landingURL' value={url} onChange={(e) => setUrl(e.target.value)} />
+                    <TextField label='Themes' name='themes' value={themes} onChange={(e) => setThemes(e.target.value)} />
+                    <TextField label='Sponsorship Deck URL' name='sponsorshipDeckUrl' value={sponsorshipDeckUrl} onChange={(e) => setSponsorshipDeckUrl(e.target.value)} />
                     <DatePicker label='StartDate' onChange={(e) => { handleStartDateChange(e) }} value={startDate} />
                     <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />
                     <Select label='Veneue' name='veneue' options={veneueOptions} onChange={(e) => { setVeneue(e.value) }} />

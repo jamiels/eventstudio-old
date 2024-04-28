@@ -17,7 +17,9 @@ exports.add = (req, res) => {
         startdate: data.startdate,
         enddate: data.enddate,
         veneue: data.veneue,
-        team: data.team 
+        team: data.team,
+        sponsorshipDeckUrl: data.sponsorshipDeckUrl,
+        theme: data.theme 
     }
 
     Event.create(newEvent)
