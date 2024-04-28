@@ -39,3 +39,35 @@ exports.addSpeakingRequest = async (req, res) => {
         res.status(500).send({ message: "An error occurred while adding speaking request", error });
     }
 };
+
+exports.getAllSpeakingRequests = async (req, res) => {
+    try {
+        const allSpeakingRequests = await SpeakingRequest.findAll();
+        res.status(200).send({ speakingRequests: allSpeakingRequests });
+    } catch (error) {
+        console.error("Error fetching speaking requests:", error);
+        res.status(500).send({ message: "An error occurred while fetching speaking requests", error });
+    }
+};
+
+exports.deleteSpeakingRequest = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Find the speaking request by id
+        const speakingRequest = await SpeakingRequest.findByPk(id);
+
+        // If speaking request doesn't exist
+        if (!speakingRequest) {
+            return res.status(404).send({ message: "Speaking request not found" });
+        }
+
+        // Delete the speaking request
+        await speakingRequest.destroy();
+
+        res.status(200).send({ message: "Speaking request deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting speaking request:", error);
+        res.status(500).send({ message: "An error occurred while deleting speaking request", error });
+    }
+};

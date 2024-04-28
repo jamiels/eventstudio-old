@@ -44,3 +44,32 @@ exports.getAllOrgNames = async (req, res) => {
         });
     }
 };
+// delete organization
+exports.deleteOrganization = async (req, res) => {
+    const { id } = req.params;
+    try {
+        
+        const deletedOrganization = await Org.destroy({
+            where: {
+                id: id
+            }
+        });
+        
+        
+        if (deletedOrganization === 0) {
+            res.status(404).send({
+                message: `Organization with ID ${id} not found.`
+            });
+        } else {
+            res.send({
+                message: `Organization with ID ${id} deleted successfully.`
+            });
+        }
+        
+    } catch (err) {
+        res.status(500).send({
+            message: "An error occurred while deleting organization",
+            errObj: err
+        });
+    }
+};

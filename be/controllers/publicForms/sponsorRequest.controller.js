@@ -27,3 +27,36 @@ exports.addSponsorRequest = async (req, res) => {
         res.status(500).send({ message: "An error occurred while adding sponsor request", error });
     }
 };
+
+exports.getAllSponsorRequests = async (req, res) => {
+    try {
+        const allSponsorRequests = await SponsorRequest.findAll();
+        res.status(200).send({ sponsorRequests: allSponsorRequests });
+    } catch (error) {
+        console.error("Error fetching sponsor requests:", error);
+        res.status(500).send({ message: "An error occurred while fetching sponsor requests", error });
+    }
+};
+
+
+exports.deleteSponsorRequest = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Find the sponsor request by id
+        const sponsorRequest = await SponsorRequest.findByPk(id);
+
+        // If sponsor request doesn't exist
+        if (!sponsorRequest) {
+            return res.status(404).send({ message: "Sponsor request not found" });
+        }
+
+        // Delete the sponsor request
+        await sponsorRequest.destroy();
+
+        res.status(200).send({ message: "Sponsor request deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting sponsor request:", error);
+        res.status(500).send({ message: "An error occurred while deleting sponsor request", error });
+    }
+};

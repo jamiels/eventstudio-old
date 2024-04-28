@@ -45,3 +45,33 @@ exports.getAllVenueNames = async (req, res) => {
         });
     }
 };
+
+// delete venue
+exports.deleteVenue = async (req, res) => {
+    const { id } = req.params;
+    try {
+        
+        const deletedVenue = await Venue.destroy({
+            where: {
+                id: id
+            }
+        });
+        
+        
+        if (deletedVenue === 0) {
+            res.status(404).send({
+                message: `Venue with ID ${id} not found.`
+            });
+        } else {
+            res.send({
+                message: `Venue with ID ${id} deleted successfully.`
+            });
+        }
+        
+    } catch (err) {
+        res.status(500).send({
+            message: "An error occurred while deleting Venue",
+            errObj: err
+        });
+    }
+};

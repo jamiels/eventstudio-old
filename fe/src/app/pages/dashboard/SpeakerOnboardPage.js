@@ -1,72 +1,98 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Navigate, useNavigate } from 'react-router-dom';
-import {
-    createColumnHelper
-} from '@tanstack/react-table';
-import {withSwal} from 'react-sweetalert2';
-
+import React, { useState, useEffect } from "react";
+import { createColumnHelper } from '@tanstack/react-table';
+import { withSwal } from 'react-sweetalert2';
 import BreadcrumbCmp from "../../components/global/Breadcrumb";
 import TableCmp from "../../components/global/Table";
-import { useAuth } from "../../modules/auth";
+import SponsorOnboardingApi from "../../apis/publicForms/sponsorBoarding";
 
-const SpeakerOnboardPage = withSwal((props) => {
-    const columnHelper = createColumnHelper();
+const SponsorOnboardingPage = withSwal((props) => {
+  const columnHelper = createColumnHelper();
+  const { swal } = props;
+  const [tableData, setTableData] = useState([]);
 
-    const { swal, ...rest } = props;
+  const fetchData = () => {
+    SponsorOnboardingApi.getSponsorBoardings()
+      .then(res => {
+        setTableData(res.sponsorBoardings)
+      })
+      .catch(err => {
+        console.log(err)
+      });
+  }
 
-    const [tableData, setTableData] = useState([]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const columns = [
-      columnHelper.accessor('name'),
-      columnHelper.accessor('email'),
-      columnHelper.accessor('speaker'),
-      columnHelper.display({
-        header: 'Action',
-        id: 'actions',
-        cell: props => (
-          <>
-            <a onClick={() => {console.log("click")}} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-              <i class="ki-outline ki-trash fs-2"></i>
-            </a>
-          </>
-        ),
-      }),
-    ]
-
-
-    return (
+  const columns = [
+    columnHelper.accessor('fullName'),
+    columnHelper.accessor('email'),
+    columnHelper.accessor('bio'),
+    columnHelper.accessor('linkedInURL', {
+      Header: 'LinkedIn',
+      Cell: ({ value }) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+    }),
+    columnHelper.accessor('twitterURL', {
+      Header: 'Twitter',
+      Cell: ({ value }) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+    }),
+    columnHelper.accessor('headshotURL', {
+      Header: 'Headshot',
+      Cell: ({ value }) => <img src={value} alt="Headshot" style={{ width: '50px', height: '50px' }} />
+    }),
+    columnHelper.accessor('title'),
+    columnHelper.accessor('organization'),
+    columnHelper.display({
+      header: 'Action',
+      id: 'actions',
+      cell: props => (
         <>
-            {/* <!--begin::Content wrapper--> */}
-            <div class="d-flex flex-column flex-column-fluid">
-                <div id="kt_app_toolbar" class="app-toolbar pt-3 pt-lg-3">
-
-                    {/* <!--begin::Toolbar wrapper--> */}
-                    <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-
-                        {/* <!--begin::Page title--> */}
-                        <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
-                            {/* <!--begin::Breadcrumb--> */}
-                            <BreadcrumbCmp title={'Speaker Onboarding'} />
-                            {/* <!--end::Breadcrumb--> */}
-
-                            {/* <!--begin::Title--> */}
-                            <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Speaker Onboarding</h1>
-                            {/* <!--end::Title--> */}
-                        </div>
-                        {/* <!--end::Page title--> */}
-
-                    </div>
-                    {/* <!--end::Toolbar wrapper--> */}
-                </div>
-
-                <div id="kt_app_content" class="app-content flex-column-fluid mt-5 mt-lg-5">
-                        <TableCmp data={tableData} columns={columns}/>
-                </div>
-
-            </div>
-
+          <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+            <i className="ki-outline ki-trash fs-2"></i>
+          </a>
         </>
-    );
+      ),
+    }),
+  ];
+
+  const DeleteBtnClick = (row) => {
+    swal.fire({
+      title: 'Delete',
+      text: 'Are you sure you want to delete this sponsor onboarding request?',
+      icon: 'error',
+      confirmButtonText: 'Delete',
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          SponsorOnboardingApi.deleteSponsorOnboarding(row.id)
+            .then((data) => {
+              console.log(data);
+              fetchData();
+            })
+            .catch(err => {
+              console.log(err)
+            });
+        }
+      });
+  }
+
+  return (
+    <>
+      <div className="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_toolbar" className="app-toolbar pt-3 pt-lg-3">
+          <div className="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div className="page-title d-flex flex-column justify-content-center gap-1 me-3">
+              <BreadcrumbCmp title={'Sponsor Onboarding'} />
+              <h1 className="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Sponsor Onboarding</h1>
+            </div>
+          </div>
+        </div>
+        <div id="kt_app_content" className="app-content flex-column-fluid mt-5 mt-lg-5">
+          <TableCmp data={tableData} columns={columns} />
+        </div>
+      </div>
+    </>
+  );
 });
 
-export default SpeakerOnboardPage;
+export default SponsorOnboardingPage;

@@ -3,16 +3,19 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/dashboard/events/";
 
 const getVeneue = () => {
-    return axios.post(API_URL + "getVeneue", {})
+    return axios.get(API_URL + "getvenues", {})
     .then((response) => {
+        console.log("hello",response?.data)
         return response.data;
     });
 };
 
 const addEvent = (userId, data) => {
+    console.log("addevent",data)
     return axios.post(API_URL + "add", {
         userId,
         data,
+        
     })
     .then((response) => {
         return response.data;

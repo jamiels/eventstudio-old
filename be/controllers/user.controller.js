@@ -30,7 +30,7 @@ async function findUserByEamil(email) {
 
 
 exports.signup = async (req, res) => {
-    if (!req.body.username || !req.body.email || !req.body.password) {
+    if ( !req.body.email || !req.body.password) {
         res.status(400).send({
             message: 'Please provide all the fields.'
         });

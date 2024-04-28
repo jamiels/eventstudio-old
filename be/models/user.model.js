@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
     username: {
       type: Sequelize.STRING,
       set: function (val) {
-        this.setDataValue('username', val.toLowerCase());
+        this.setDataValue('username', val?.toLowerCase());
       },
       notEmpty: true,
       notNull: true,

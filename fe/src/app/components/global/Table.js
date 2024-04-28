@@ -8,19 +8,20 @@ import {
 
 import clsx from 'clsx';
 
-
 function TableCmp(props) {
-
-const table = useReactTable({
+  const table = useReactTable({
     data: props.data,
     columns: props.columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-});
+  });
 
-return (
-  <div className="dataTables_wrapper dt-bootstrap4 no-footer">
-    <div className="table-responsive">
+  // Ensure that props.data is defined and not null before accessing its length
+  const dataLength = props.data ? props.data.length : 0;
+
+  return (
+    <div className="dataTables_wrapper dt-bootstrap4 no-footer">
+      <div className="table-responsive">
         <table className="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -51,7 +52,7 @@ return (
       </div>
 
       <div className="row">
-        {props.data.length > 0 && (
+        {dataLength > 0 && (
           <div className="col-xs-6 col-sm-6 col-md-6 d-flex align-items-center justify-content-end justify-content-md-end">
             <div className="dataTables_length" id="kt_customers_table_length">
               <label>
@@ -73,7 +74,7 @@ return (
             </div>
           </div>
         )}
-        {props.data.length > table.getState().pagination.pageSize && (
+        {dataLength > table.getState().pagination.pageSize && (
           <div className="col-xs-6 col-sm-6 col-md-6 d-flex align-items-center">
             <div
               className="dataTables_paginate paging_simple_numbers"
@@ -115,9 +116,8 @@ return (
           </div>
         )}
       </div>
-  </div>
-);
-};
-
+    </div>
+  );
+}
 
 export default TableCmp;

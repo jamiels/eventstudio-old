@@ -4,39 +4,127 @@ import {
     createColumnHelper
 } from '@tanstack/react-table';
 import {withSwal} from 'react-sweetalert2';
-
+import { Modal, ModalBody, ModalFooter } from "../../components/global/Modal";
+import TextField from "../../components/global/TextField";
+import Button from "../../components/global/Button";
 import BreadcrumbCmp from "../../components/global/Breadcrumb";
 import TableCmp from "../../components/global/Table";
 import { useAuth } from "../../modules/auth";
-
+import OrgAPI from "../../apis/dashboard/org";
 const OrganizationPage = withSwal((props) => {
     const columnHelper = createColumnHelper();
 
     const { swal, ...rest } = props;
 
     const [tableData, setTableData] = useState([]);
+    const [name, setName] = useState('');
+    const [reload, setReload] = useState(false);
+    const [veneueOptions, setVeneueOptions] = useState([]);
+    const [nameError, setNameError] = useState('');
+    const [modalShow, setModalShow] = useState(false);
 
     const {currentUser} = useAuth();
 
     console.log(currentUser);
-    
+
+
+    const fetchData = () => {
+      OrgAPI.getOrg()
+      .then(res => {
+          setTableData(res.orgNames)
+          setReload(false)
+      })
+      .catch(err => {
+          console.log(err)
+      })
+  }
+ 
+
+  useEffect(() => {
+      fetchData()
+  }, []);
+ 
+
+  useEffect(() => {
+      if(reload == true) {
+          fetchData()
+      }
+  }, [reload]);
 
     const columns = [
+      columnHelper.accessor('id'),
       columnHelper.accessor('name'),
+
       columnHelper.display({
         header: 'Action',
         id: 'actions',
         cell: props => (
           <>
-            <a onClick={() => {console.log("click")}} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+            <a onClick={() => {DeleteBtnClick(props.row.original)}} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
               <i class="ki-outline ki-trash fs-2"></i>
             </a>
           </>
         ),
       }),
     ]
+    const DeleteBtnClick = (row) => {
+      console.log("row",)
+      swal.fire({
+          title: 'Delete',
+          text: 'Are you sure delete this event?',
+          icon: 'error',
+          confirmButtonText: 'Delete'
+      })
+      .then((result) => {
+          if (result.isConfirmed) {
+              OrgAPI.deleteOrg(row.id)
+              .then((data) => {
+                  console.log(data);
+                  setReload(true);
+              })
+              .catch(err => {
+                  console.log(err)
+              })
+          }  
+      })
+  }
 
 
+    const handleNameChange = (txt) => {
+      setName(txt); 
+      txt != '' ? setNameError('') : setNameError('Name is required.');
+  }
+    const openModal = () => {
+      setVeneueOptions(veneueOptions?.map(item => ({
+          value: item?.id,
+          label: item?.name
+      })));
+      
+
+        
+      setName('');
+      setModalShow(true);
+  }
+  const addEventFunc = async () => {
+    if(name == '') {
+        setNameError("Name is required.");
+    }
+    
+    
+    if(name != '') {
+        const orgData = {};
+        orgData.name = name;
+        OrgAPI.addOrg( orgData)
+        .then(res => {
+            setReload(true);
+            setModalShow(false);
+            
+        })
+        .catch(err => {
+            console.log("Error")
+        })
+    }
+}
     return (
         <>
             {/* <!--begin::Content wrapper--> */}
@@ -60,7 +148,7 @@ const OrganizationPage = withSwal((props) => {
 
                         {/* <!--begin::Actions--> */}
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => {console.log("!!!")}} class="btn btn-sm btn-flex btn-secondary align-self-center px-3">
+                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-secondary align-self-center px-3">
                             <i class="ki-outline ki-plus-square fs-3"></i>New Organization</a>
                         </div>
                         {/* <!--end::Actions--> */}
@@ -73,6 +161,20 @@ const OrganizationPage = withSwal((props) => {
                 </div>
 
             </div>
+            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Event"}>
+                <ModalBody>
+                    <TextField label='Name' required={true} name='name' value={name} onChange={(e) => {handleNameChange(e.target.value)}} error={nameError}/>
+                </ModalBody>
+                <ModalFooter>
+                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => {setModalShow(false)}}>
+                        Cancel
+                    </Button>
+                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => {addEventFunc()}}>
+                        <i class="ki-outline ki-plus-square fs-3"></i>&nbsp;Create Organization
+                    </Button>
+                </ModalFooter>
+            </Modal>
+
 
         </>
     );

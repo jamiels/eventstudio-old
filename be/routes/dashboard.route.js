@@ -20,12 +20,14 @@ module.exports = app => {
     //venue controller
     router.post("/venue/add", venueController.add);
 
-    router.get('/venue/names', venueController.getAllVenueNames);
+    router.get('/events/getvenues', venueController.getAllVenueNames);
+    router.delete('/venue/delete/:id', venueController.deleteVenue);
 
     //org
     router.post("/org/add", orgController.add);
 
     router.get('/org/names', orgController.getAllOrgNames);
+    router.delete('/org/delete/:id', orgController.deleteOrganization);
 
     // sponsorships
     router.post('/sponserships/add', sponsorshipsController.addSponsorship);
@@ -35,11 +37,11 @@ module.exports = app => {
     //producer
     router.post('/producer/add', producerController.add);
     router.get('/producer/names', producerController.getAllProducerNames);
-    router.delete('/producer/:id', producerController.deleteProducer);
+    router.delete('/producer/del/:id', producerController.deleteProducer);
     //speakers
     router.post('/speakers/add', speakersController.addSpeaker);
     router.get('/speakers/names', speakersController.getAllSpeakers);
-    router.delete('/speakers/:id', speakersController.deleteSpeaker);
+    router.delete('/speakers/del/:id', speakersController.deleteSpeaker);
     //teams
     router.post('/teams/add', auth, teamsController.createTeam);
     router.post('/teams/addUser', auth, teamsController.addUserToTeam);

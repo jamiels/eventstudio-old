@@ -40,3 +40,36 @@ exports.addSponsorOnboarding = async (req, res) => {
         res.status(500).send({ message: "An error occurred while adding sponsor onboarding", error });
     }
 };
+
+
+exports.getAllSponsorBoardings = async (req, res) => {
+    try {
+        const allSponsorBoardings = await SponsorOnboarding.findAll();
+        res.status(200).send({ sponsorBoardings: allSponsorBoardings });
+    } catch (error) {
+        console.error("Error fetching sponsor boardings:", error);
+        res.status(500).send({ message: "An error occurred while fetching sponsor boardings", error });
+    }
+};
+
+exports.deleteSponsorOnboarding = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Find the sponsor onboarding by id
+        const sponsorOnboarding = await SponsorOnboarding.findByPk(id);
+
+        // If sponsor onboarding doesn't exist
+        if (!sponsorOnboarding) {
+            return res.status(404).send({ message: "Sponsor onboarding not found" });
+        }
+
+        // Delete the sponsor onboarding
+        await sponsorOnboarding.destroy();
+
+        res.status(200).send({ message: "Sponsor onboarding deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting sponsor onboarding:", error);
+        res.status(500).send({ message: "An error occurred while deleting sponsor onboarding", error });
+    }
+};

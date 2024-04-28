@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import {
     createColumnHelper
 } from '@tanstack/react-table';
-import {withSwal} from 'react-sweetalert2';
+import { withSwal } from 'react-sweetalert2';
 
 import BreadcrumbCmp from "../../components/global/Breadcrumb";
 import TableCmp from "../../components/global/Table";
@@ -34,63 +34,81 @@ const EventsPage = withSwal((props) => {
     const [tableData, setTableData] = useState([]);
     const [reload, setReload] = useState(false);
 
-    const {currentUser} = useAuth();
+    const { currentUser } = useAuth();
 
     console.log(currentUser);
     // const { user: currentUser } = useSelector((state) => state.auth);
 
     const fetchData = () => {
         EventAPI.getEvents()
-        .then(res => {
-            setTableData(res.events)
-            setReload(false)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+            .then(res => {
+                setTableData(res.events)
+                setReload(false)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+    const fetchVenueNames = () => {
+        EventAPI.getVeneue()
+            .then(res => {
+                setVeneueOptions(res.venueNames)
+                setReload(false)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     useEffect(() => {
         fetchData()
+        fetchVenueNames()
     }, []);
 
+
     useEffect(() => {
-        if(reload == true) {
+        if (reload == true) {
             fetchData()
         }
     }, [reload]);
 
 
     const columns = [
-      columnHelper.accessor('name'),
-      columnHelper.accessor('shortname'),
-      columnHelper.accessor(row => `${row.landingUrl ? row.landingUrl : ''}`, {
-        id: 'landingUR',
-        header: 'Landing URL'
-      }),
-      columnHelper.accessor('startdate'),
-      columnHelper.accessor('enddate'),
-      columnHelper.accessor(row => `${row.veneue ? row.veneue : ''}`, {
-        id: 'veneue',
-        header: 'VENEUE'
-      }),
-      columnHelper.display({
-        header: 'Action',
-        id: 'actions',
-        cell: props => (
-          <>
-            {/* <a onClick={() => {EditBtnClick(props.row.original)}} class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+        columnHelper.accessor('id'),
+        columnHelper.accessor('name'),
+        columnHelper.accessor('shortname'),
+        columnHelper.display({
+            header: 'landingUrl',
+            id: 'actions',
+            cell: ({ row: { original } }) => (
+                <>
+                    <a href={original.landingUrl} target="_blank" rel="noopener noreferrer">{original?.landingUrl}</a>
+                </>
+            ),
+        }),
+        columnHelper.accessor('startdate'),
+        columnHelper.accessor('enddate'),
+        columnHelper.accessor(row => `${row.veneue ? row.veneue : ''}`, {
+            id: 'veneue',
+            header: 'VENEUE'
+        }),
+        columnHelper.display({
+            header: 'Action',
+            id: 'actions',
+            cell: props => (
+                <>
+                    {/* <a onClick={() => {EditBtnClick(props.row.original)}} class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
               <i class="ki-outline ki-switch fs-2"></i>
             </a>
             <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
               <i class="ki-outline ki-pencil fs-2"></i>
             </a> */}
-            <a onClick={() => {DeleteBtnClick(props.row.original)}} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-              <i class="ki-outline ki-trash fs-2"></i>
-            </a>
-          </>
-        ),
-      }),
+                    <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                        <i class="ki-outline ki-trash fs-2"></i>
+                    </a>
+                </>
+            ),
+        }),
     ]
 
     const DeleteBtnClick = (row) => {
@@ -100,43 +118,45 @@ const EventsPage = withSwal((props) => {
             icon: 'error',
             confirmButtonText: 'Delete',
         })
-        .then((result) => {
-            if (result.isConfirmed) {
-                EventAPI.deleteEvent(row.id)
-                .then((data) => {
-                    console.log(data);
-                    setReload(true);
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-            }
-        })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    EventAPI.deleteEvent(row.id)
+                        .then((data) => {
+                            console.log(data);
+                            setReload(true);
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+            })
     }
 
     const handleStartDateChange = (e) => {
-        setStartDate(e); 
-        if(endDate != null) {
+        setStartDate(e);
+        if (endDate != null) {
             e > endDate ? setEndDateError("End Date must be later than Start Date.") : setEndDateError('');
         }
     }
 
     const handleEndDateChange = (e) => {
-        setEndDate(e); 
+        setEndDate(e);
         e < startDate ? setEndDateError("End Date must be later than Start Date.") : setEndDateError('');
     }
 
     const handleNameChange = (txt) => {
-        setName(txt); 
+        setName(txt);
         txt != '' ? setNameError('') : setNameError('Name is required.');
     }
-
     const openModal = () => {
-        setVeneueOptions([
-            { value: 1, label: 'Chocolate' },
-            { value: 2, label: 'Strawberry' },
-            { value: 3, label: 'Vanilla' },
-        ])
+        console.log(veneueOptions)
+        setVeneueOptions(veneueOptions?.map(item => ({
+            value: item?.id,
+            label: item?.name
+        })));
+
+
+
         setName('');
         setShortName('');
         setUrl('');
@@ -148,14 +168,14 @@ const EventsPage = withSwal((props) => {
     }
 
     const addEventFunc = async () => {
-        if(name == '') {
+        if (name == '') {
             setNameError("Name is required.");
         }
-        if(startDate != null && endDate != null && endDate < startDate) {
+        if (startDate != null && endDate != null && endDate < startDate) {
             setEndDateError("End Date must be later than Start Date.");
         }
-        
-        if(name != '' && endDateError == '') {
+
+        if (name != '' && endDateError == '') {
             const eventData = {};
             eventData.name = name;
             eventData.shortName = shortName;
@@ -163,16 +183,16 @@ const EventsPage = withSwal((props) => {
             eventData.startdate = startDate != null ? startDate.toLocaleDateString() : '';
             eventData.enddate = endDate != null ? endDate.toLocaleDateString() : '';
             eventData.veneue = veneue != 0 ? veneue : 0;
-    
+            eventData.team = 1
             EventAPI.addEvent(currentUser.id, eventData)
-            .then(res => {
-                setReload(true);
-                setModalShow(false);
-                
-            })
-            .catch(err => {
-                console.log("Error")
-            })
+                .then(res => {
+                    setReload(true);
+                    setModalShow(false);
+
+                })
+                .catch(err => {
+                    console.log("Error")
+                })
         }
     }
 
@@ -199,8 +219,8 @@ const EventsPage = withSwal((props) => {
 
                         {/* <!--begin::Actions--> */}
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-secondary align-self-center px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
-                            <i class="ki-outline ki-plus-square fs-3"></i>New Event</a>
+                            <a onClick={() => { openModal() }} class="btn btn-sm btn-flex btn-secondary align-self-center px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
+                                <i class="ki-outline ki-plus-square fs-3"></i>New Event</a>
                         </div>
                         {/* <!--end::Actions--> */}
                     </div>
@@ -208,25 +228,25 @@ const EventsPage = withSwal((props) => {
                 </div>
 
                 <div id="kt_app_content" class="app-content flex-column-fluid mt-5 mt-lg-5">
-                        <TableCmp data={tableData} columns={columns}/>
+                    <TableCmp data={tableData} columns={columns} />
                 </div>
 
             </div>
 
-            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Event"}>
+            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={"New Event"}>
                 <ModalBody>
-                    <TextField label='Name' required={true} name='name' value={name} onChange={(e) => {handleNameChange(e.target.value)}} error={nameError}/>
+                    <TextField label='Name' required={true} name='name' value={name} onChange={(e) => { handleNameChange(e.target.value) }} error={nameError} />
                     <TextField label='ShortName' name='shortname' value={shortName} onChange={(e) => setShortName(e.target.value)} />
                     <TextField label='Landing Page URL' name='landingURL' value={url} onChange={(e) => setUrl(e.target.value)} />
-                    <DatePicker label='StartDate' onChange={(e) => {handleStartDateChange(e)}} value={startDate} />
-                    <DatePicker label='EndDate' onChange={(e) => {handleEndDateChange(e)}} value={endDate} error={endDateError} />
-                    <Select label='Veneue' name='veneue' options={veneueOptions} onChange={(e) => {setVeneue(e.value)}} />
+                    <DatePicker label='StartDate' onChange={(e) => { handleStartDateChange(e) }} value={startDate} />
+                    <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />
+                    <Select label='Veneue' name='veneue' options={veneueOptions} onChange={(e) => { setVeneue(e.value) }} />
                 </ModalBody>
                 <ModalFooter>
-                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => {setModalShow(false)}}>
+                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
                         Cancel
                     </Button>
-                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => {addEventFunc()}}>
+                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => { addEventFunc() }}>
                         <i class="ki-outline ki-plus-square fs-3"></i>&nbsp;Add Event
                     </Button>
                 </ModalFooter>
