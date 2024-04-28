@@ -186,7 +186,7 @@ const SpeakerPage = withSwal((props) => {
 
                         {/* <!--begin::Actions--> */}
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-secondary align-self-center px-3">
+                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-dark align-self-center px-3">
                             <i class="ki-outline ki-plus-square fs-3"></i>New Speaker</a>
                         </div>
                         {/* <!--end::Actions--> */}
@@ -199,7 +199,7 @@ const SpeakerPage = withSwal((props) => {
                 </div>
 
             </div>
-            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Event"}>
+            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Speaker"}>
                 <ModalBody>
                     <TextField label='First Name' required={true} name='first name' value={firstName} onChange={(e) => {handleNameChange(e.target.value)}} error={nameError}/>
                     <TextField label='Last Name' name='last name' value={lastname} onChange={(e) => setLastName(e.target.value)} />

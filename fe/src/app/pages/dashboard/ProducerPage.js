@@ -146,7 +146,7 @@ const ProducerPage = withSwal((props) => {
 
                         {/* <!--begin::Actions--> */}
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-secondary align-self-center px-3">
+                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-dark align-self-center px-3">
                             <i class="ki-outline ki-plus-square fs-3"></i>New Producers</a>
                         </div>
                         {/* <!--end::Actions--> */}
@@ -159,7 +159,7 @@ const ProducerPage = withSwal((props) => {
                 </div>
 
             </div>
-            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Event"}>
+            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Producer"}>
                 <ModalBody>
                     <TextField label='Name' required={true} name='name' value={name} onChange={(e) => {handleNameChange(e.target.value)}} error={nameError}/>
                 </ModalBody>

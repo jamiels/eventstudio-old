@@ -227,7 +227,7 @@ const EventsPage = withSwal((props) => {
 
                         {/* <!--begin::Actions--> */}
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => { openModal() }} class="btn btn-sm btn-flex btn-secondary align-self-center px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
+                            <a onClick={() => { openModal() }} class="btn btn-sm btn-flex btn-dark align-self-center px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
                                 <i class="ki-outline ki-plus-square fs-3"></i>New Event</a>
                         </div>
                         {/* <!--end::Actions--> */}
