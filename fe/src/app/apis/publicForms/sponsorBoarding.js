@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/public/onboard/";
+const API_URL = `${process.env.REACT_APP_API_URL}/public/onboard/`;
 
 const addSponsorOnboarding = (data, eventUUID) => {
 

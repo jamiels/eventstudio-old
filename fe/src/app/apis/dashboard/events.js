@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/dashboard/events/";
+const API_URL = `${process.env.REACT_APP_API_URL}dashboard/events/`;
 
 const getVeneue = () => {
     return axios.get(API_URL + "getvenues", {})

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/dashboard/teams/";
+const API_URL = `${process.env.REACT_APP_API_URL}/dashboard/teams/`;
 
 const addTeam = (data, token) => {
     return axios.post(API_URL + "add", data, {
