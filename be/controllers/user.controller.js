@@ -55,8 +55,8 @@ exports.signup = async (req, res) => {
         const user = await User.create(newUser);
 
         // Create the default team
-        const defaultTeamName = `${user.username}'s Team`;
-        const team = await Teams.create({ team_name: defaultTeamName });
+        // const defaultTeamName = `${user.username}'s Team`;
+        const team = await Teams.create({ team_name: `User Team` });
 
         // Add the user as admin to the team
         await Teams_Users.create({ user_id: user.id, team_id: team.id, isAdmin: true });
