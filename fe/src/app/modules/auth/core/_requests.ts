@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {AuthModel, UserModel} from './_models'
 
-const AUTH_API_URL = process.env.REACT_APP_API_URL + 'user'
+const AUTH_API_URL = process.env.REACT_APP_API_URL + '/user'
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${AUTH_API_URL}/verify_token`
 export const LOGIN_URL = `${AUTH_API_URL}/login`
