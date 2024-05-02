@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
-import {Link} from 'react-router-dom'
-import {KTIcon, toAbsoluteUrl} from '../../../helpers'
-import {useThemeMode} from '../../../partials'
-import {useLayout} from '../../core'
-import {Header} from './Header'
-import {Topbar} from './Topbar'
+import { Link } from 'react-router-dom'
+import { KTIcon, toAbsoluteUrl } from '../../../helpers'
+import { useThemeMode } from '../../../partials'
+import { useLayout } from '../../core'
+import { Header } from './Header'
+import { Topbar } from './Topbar'
+import { SpaceSelector } from './SpaceSelector'
 
 export function HeaderWrapper() {
-  const {config, classes, attributes} = useLayout()
+  const { config, classes, attributes } = useLayout()
 
-  const {header, aside} = config
-  const {mode} = useThemeMode()
+  const { header, aside } = config
+  const { mode } = useThemeMode()
 
   const [offset, setOffset] = useState<string>(``)
   // useEffect(() => {
@@ -50,7 +51,7 @@ export function HeaderWrapper() {
       data-kt-sticky='true'
       data-kt-sticky-name='header'
       // data-kt-sticky-offset={offset}
-      style={height > 0 ? {zIndex: 99, right: 0, width: '100%'}: {}}
+      style={height > 0 ? { zIndex: 99, right: 0, width: '100%' } : {}}
     >
 
       <div
@@ -88,15 +89,21 @@ export function HeaderWrapper() {
           </Link>
         </div>
 
-        <div className='d-flex align-items-stretch justify-content-between flex-lg-grow-1'>
+        <div className='d-flex align-items-stretch justify-content-end flex-lg-grow-1'>
+          {/* <div className='d-flex align-items-stretch'>
+            {header.left === 'menu' && (
+              <div className='d-flex align-items-stretch' id='kt_header_nav'>
+                {/* <Header /> */}
+          {/* </div>
+            )}
+          </div> */}
           <div className='d-flex align-items-stretch'>
             {header.left === 'menu' && (
               <div className='d-flex align-items-stretch' id='kt_header_nav'>
-                <Header />
+                <SpaceSelector />
               </div>
             )}
           </div>
-
           <Topbar />
         </div>
       </div>

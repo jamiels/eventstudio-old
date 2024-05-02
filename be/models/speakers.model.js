@@ -36,10 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         },
         adminEmailAddress: {
             type: DataTypes.STRING,
-            validate: {
-                isEmail: true,
+            allowNull: true,
+        },        
+        space_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: 'space',
+              key: 'id'
             }
-        }
+          },
     });
 
     return Speakers;

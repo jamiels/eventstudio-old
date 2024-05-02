@@ -12,7 +12,9 @@ import TableCmp from "../../components/global/Table";
 import { useAuth } from "../../modules/auth";
 import Venue from "../../apis/dashboard/venue";
 import EventAPI from "../../apis/dashboard/events";
+import { useSpace } from "../../context/space.provider";
 const OrganizationPage = withSwal((props) => {
+    const { selectedSpace } = useSpace();
     const columnHelper = createColumnHelper();
 
     const { swal, ...rest } = props;
@@ -113,6 +115,7 @@ const OrganizationPage = withSwal((props) => {
         if (name != '') {
             const venueData = {};
             venueData.name = name;
+            venueData.space_id = selectedSpace?.space_id;
             Venue.addVenue(venueData)
                 .then(res => {
                     setReload(true);

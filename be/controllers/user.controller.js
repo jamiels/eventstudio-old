@@ -1,7 +1,7 @@
 const db = require("../models");
 const User = db.users;
-const Teams = db.teams;
-const Teams_Users = db.teams_users;
+const Space = db.space;
+const SpaceUser = db.space_users;
 const Op = db.Sequelize.Op;
 const where = db.Sequelize.where;
 const jwt = require('jsonwebtoken');
@@ -30,7 +30,7 @@ async function findUserByEamil(email) {
 
 
 exports.signup = async (req, res) => {
-    if ( !req.body.email || !req.body.password) {
+    if (!req.body.email || !req.body.password) {
         res.status(400).send({
             message: 'Please provide all the fields.'
         });
@@ -54,12 +54,11 @@ exports.signup = async (req, res) => {
         };
         const user = await User.create(newUser);
 
-        // Create the default team
-        // const defaultTeamName = `${user.username}'s Team`;
-        const team = await Teams.create({ team_name: `User Team` });
+        // Create the default space
+        const space = await Space.create({ space_name: `Default Space` });
 
-        // Add the user as admin to the team
-        await Teams_Users.create({ user_id: user.id, team_id: team.id, isAdmin: true });
+        // Add the user as admin to the space
+        await SpaceUser.create({ user_id: user.id, space_id: space.id, isAdmin: true });
 
         res.status(200).send({
             message: "Signup Successful!"

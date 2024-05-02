@@ -16,7 +16,15 @@ module.exports = (sequelize, DataTypes) => {
         commitmentAmount: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
-        }
+        },
+        space_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: 'space',
+              key: 'id'
+            }
+          },
     });
 
     // Define associations

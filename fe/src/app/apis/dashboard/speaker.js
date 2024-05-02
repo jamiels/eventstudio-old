@@ -7,7 +7,6 @@ const API_URL = `${process.env.REACT_APP_API_URL}/dashboard/speakers/`;
 const addSpeaker = ( data) => {
     return axios.post(API_URL + "add", 
         data,
-        
     )
     .then((response) => {
         return response.data;

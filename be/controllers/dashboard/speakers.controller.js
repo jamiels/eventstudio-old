@@ -4,12 +4,11 @@ const Speakers = db.speakers;
 // Add Speaker
 exports.addSpeaker = async (req, res) => {
     try {
-        const { firstName, lastName, emailAddress, primaryAffiliation, title, headshot, linkedInURL, twitterURL, bio, adminFullName, adminEmailAddress } = req.body;
-        
+        const { firstName, lastName, emailAddress, primaryAffiliation, title, headshot, linkedInURL, twitterURL, bio, adminFullName, adminEmailAddress, space_id } = req.body;
         // Check for required parameters
-        if (!firstName) {
+        if (!firstName || !space_id) {
             return res.status(400).send({
-                message: 'Please provide the first name of the speaker.'
+                message: 'Please provide all the fields.'
             });
         }
         
@@ -25,7 +24,8 @@ exports.addSpeaker = async (req, res) => {
             twitterURL,
             bio,
             adminFullName,
-            adminEmailAddress
+            adminEmailAddress,
+            space_id
         }
 
         // Create a speaker in the database

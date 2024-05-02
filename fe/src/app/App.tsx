@@ -5,13 +5,13 @@ import { LayoutProvider, LayoutSplashScreen } from '../_metronic/layout/core'
 import { MasterInit } from '../_metronic/layout/MasterInit'
 import { AuthInit } from './modules/auth'
 import { ThemeModeProvider } from '../_metronic/partials'
-import { TeamProvider } from './context/Team.provider'
+import { SpaceProvider } from './context/space.provider'
 
 const App = () => {
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <I18nProvider>
-        <TeamProvider>
+        <SpaceProvider>
           <LayoutProvider>
             <ThemeModeProvider>
               <AuthInit>
@@ -20,7 +20,7 @@ const App = () => {
               </AuthInit>
             </ThemeModeProvider>
           </LayoutProvider>
-        </TeamProvider>
+        </SpaceProvider>
       </I18nProvider>
     </Suspense>
   )

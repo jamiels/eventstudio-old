@@ -41,14 +41,14 @@ const Topbar: FC = () => {
         {/* end::User */}
 
         {/* Header menu toggle */}
-        <div className='d-flex d-lg-none align-items-center me-n2' title='Show header menu'>
+        {/* <div className='d-flex d-lg-none align-items-center me-n2' title='Show header menu'>
           <button
             className='btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px'
             id='kt_header_menu_mobile_toggle'
           >
             <KTIcon iconName='burger-menu-2' className='fs-1' iconType='outline' />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   )

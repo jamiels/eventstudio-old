@@ -15,11 +15,11 @@ import Button from "../../components/global/Button";
 
 import EventAPI from "../../apis/dashboard/events";
 import { useAuth } from "../../modules/auth";
-import { useTeam } from "../../context/Team.provider";
+import { useSpace } from "../../context/space.provider";
 
 const EventsPage = withSwal((props) => {
-    const { selectedTeamOver } = useTeam();
-    console.log("🚀 ~ EventsPage ~ selectedTeamOver:", selectedTeamOver)
+    const { selectedSpace } = useSpace();
+    console.log("🚀 ~ EventsPage ~ selectedSpace:", selectedSpace)
 
     const columnHelper = createColumnHelper();
 
@@ -39,11 +39,8 @@ const EventsPage = withSwal((props) => {
     const [endDateError, setEndDateError] = useState('');
     const [tableData, setTableData] = useState([]);
     const [reload, setReload] = useState(false);
-    const [teamIdError, setTeamIDError] = useState(false);
 
     const { currentUser } = useAuth();
-
-    console.log(currentUser);
 
     const fetchData = () => {
         EventAPI.getEvents()
@@ -186,14 +183,11 @@ const EventsPage = withSwal((props) => {
             eventData.veneue = veneue != 0 ? veneue : 0;
             eventData.themes = themes;
             eventData.sponsorshipDeckUrl = sponsorshipDeckUrl;
-            eventData.team = selectedTeamOver?.team_id;
+            eventData.space_id = selectedSpace?.space_id;
 
-            if (!eventData.team) {
-                setTeamIDError(true);
-                return;
-            }
             EventAPI.addEvent(currentUser.id, eventData)
                 .then(res => {
+                    console.log("res", res);
                     setReload(true);
                     setModalShow(false);
 
@@ -241,9 +235,8 @@ const EventsPage = withSwal((props) => {
 
             </div>
 
-            <Modal show={modalShow} onHide={() => { setModalShow(false); setTeamIDError(false) }} title={"New Event"}>
+            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={"New Event"}>
                 <ModalBody>
-                    {teamIdError && <h6 className="p-2 text-danger display-6">Please select a team first</h6>}
                     <TextField label='Name' required={true} name='name' value={name} onChange={(e) => { handleNameChange(e.target.value) }} error={nameError} />
                     <TextField label='ShortName' name='shortname' value={shortName} onChange={(e) => setShortName(e.target.value)} />
                     <TextField label='Landing Page URL' name='landingURL' value={url} onChange={(e) => setUrl(e.target.value)} />
@@ -254,7 +247,7 @@ const EventsPage = withSwal((props) => {
                     <Select label='Veneue' name='veneue' options={veneueOptions} onChange={(e) => { setVeneue(e.value) }} />
                 </ModalBody>
                 <ModalFooter>
-                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false); setTeamIDError(false) }}>
+                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
                         Cancel
                     </Button>
                     <Button className="btn btn-sm btn-flex btn-primary" onClick={() => { addEventFunc() }}>

@@ -2,8 +2,8 @@ import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../../app/modules/auth';
 import { toAbsoluteUrl } from '../../../helpers';
-import { useTeam } from '../../../../app/context/Team.provider'; // Import the useTeam hook from TeamContext
-import teamsApi from '../../../../app/apis/dashboard/teams';
+import { useSpace } from '../../../../app/context/space.provider';
+import spaceApi from '../../../../app/apis/dashboard/space';
 import { Modal, ModalBody } from '../../../../app/components/global/Modal';
 import TextField from '../../../../app/components/global/TextField';
 import { ModalFooter, PlaceholderButton } from 'react-bootstrap';
@@ -11,34 +11,21 @@ import Button from '../../../../app/components/global/Button';
 
 const HeaderUserMenu: FC = () => {
   const { currentUser, logout, auth } = useAuth();
-  const [selectedTeam, setSelectedTeam] = useState('');
-  const [teams, setTeams] = useState([]);
-  const { updateSelectedTeam, selectedTeamOver } = useTeam();
-  const [showModalTeamCreate, setShowModalCreateTeam] = useState(false);
-  const [showModalAddToTeamCreate, setShowModalAddToCreateTeam] = useState(false);
-  const [teamIdError, setTeamIDError] = useState(false);
-  const [teamName, setTeamName] = useState('');
+  const { selectedSpace, setSpaces } = useSpace(); // Change selectedTeam to selectedSpace
+  const [showModalSpaceCreate, setShowModalCreateSpace] = useState(false); // Change showModalTeamCreate to showModalSpaceCreate
+  const [showModalAddToSpaceCreate, setShowModalAddToCreateSpace] = useState(false); // Change showModalAddToTeamCreate to showModalAddToSpaceCreate
+  const [spaceName, setSpaceName] = useState(''); // Change teamName to spaceName
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [teamNameError, setTeamNameError] = useState('');
+  const [spaceNameError, setSpaceNameError] = useState('');
   const [showSuccess, setShowSuccess] = useState('');
   const [errors, setError] = useState(null);
 
-  useEffect(() => {
-    teamsApi.getTeams(auth?.token).then((res) => setTeams(res?.userTeams))
-  }, [])
-
-  const handleTeamSelect = (team: any) => {
-    setSelectedTeam(team?.team?.team_name);
-    updateSelectedTeam(team);
-  };
-
-  // Function to handle adding user to a team
-  const handleAddToTeam = () => {
-    if (selectedTeamOver?.team_id == null) setTeamIDError(true);
+  // Function to handle adding user to a space
+  const handleAddToSpace = () => {
     if (email === '') setEmailError('Email is required');
 
-    teamsApi.addUserToTeam({ email, team_id: selectedTeamOver?.team_id }, auth?.token)
+    spaceApi.addUserToSpace({ email, space_id: selectedSpace?.space_id }, auth?.token)
       .then((res) => {
         setShowSuccess(res?.response?.data?.message || res.message)
         setEmail('');
@@ -49,15 +36,15 @@ const HeaderUserMenu: FC = () => {
 
   };
 
-  // Function to handle creating a new team
-  const handleCreateTeam = () => {
-    if (teamName === '') setTeamNameError('Team Name is required');
-    teamsApi.addTeam({ team_name: teamName }, auth?.token)
+  // Function to handle creating a new space
+  const handleCreateSpace = () => {
+    if (spaceName === '') setSpaceNameError('Space Name is required'); // Change Team Name to Space Name
+    spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
       .then((res) => {
         console.log("🚀 ~ .then ~ res:", res)
         setShowSuccess(res?.response?.data?.message || res.message)
-        teamsApi.getTeams(auth?.token).then((res) => setTeams(res?.userTeams))
-        setTeamName('');
+        spaceApi.getSpaces(auth?.token).then((res) => setSpaces(res?.userSpaces)) // Change getTeams to getSpaces
+        setSpaceName('');
       }).catch((err) => {
         console.log("🚀 ~ .then ~ err:", err)
       })
@@ -96,58 +83,45 @@ const HeaderUserMenu: FC = () => {
         </Link>
       </div>
 
-      {/* Team Selector */}
-      <div className='menu-item px-5 mx-5 dropdown'>
-        <button className='btn btn-link dropdown-toggle' type='button' id='teamSelectorDropdown' data-bs-toggle='dropdown' aria-expanded='false'>
-          {selectedTeam ? selectedTeamOver?.team?.team_name : 'Select Team'}
-        </button>
-        <ul className='dropdown-menu overflow-auto' style={{ height: '200px' }} aria-labelledby='teamSelectorDropdown'>
-          {teams.map((team: any, index) => (
-            <li key={index} onClick={() => handleTeamSelect(team)} className='dropdown-item'>{team?.team?.team_name}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Add to Team button */}
+      {/* Add to Space button */}
       <div className='menu-item px-5 '>
-        <button onClick={() => setShowModalAddToCreateTeam(true)} className='btn menu-link w-100 rounded' style={{ paddingLeft: '15px' }}>
-          + Add to Team
+        <button onClick={() => setShowModalAddToCreateSpace(true)} className='btn menu-link w-100 rounded' style={{ paddingLeft: '15px' }}>
+          + Add to Space
         </button>
       </div>
-      {/* create team modal done */}
-      <Modal show={showModalAddToTeamCreate} onHide={() => { setShowModalAddToCreateTeam(false); setTeamIDError(false); setShowSuccess('') }} title={"Add User To Team"}>
+      {/* create space modal done */}
+      <Modal show={showModalAddToSpaceCreate} onHide={() => { setShowModalAddToCreateSpace(false); setShowSuccess('') }} title={"Add User To Space"}>
         <ModalBody>
-          {teamIdError && <h6 className="p-2 text-danger display-6">Please select a team first</h6>}
           <TextField label='User Email' required={true} name='email' value={email} onChange={(e) => { setEmail(e.target.value) }} error={emailError} />
           {showSuccess != '' && <span className="p-2 text-success">{showSuccess}</span>}
           {errors != '' && <span className="p-2 text-success">{errors}</span>}
         </ModalBody>
         <ModalFooter>
-          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-secondary" onClick={() => { setShowModalAddToCreateTeam(false); setTeamIDError(false); setShowSuccess('') }}>
+          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-secondary" onClick={() => { setShowModalAddToCreateSpace(false); setShowSuccess('') }}>
             Cancel
           </Button>
-          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-primary" onClick={handleAddToTeam}>
+          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-primary" onClick={handleAddToSpace}>
             <i className="ki-outline ki-plus-square fs-3"></i>&nbsp;Add
           </Button>
         </ModalFooter>
       </Modal>
-      {/* Create Team button */}
+      {/* Create Space button */}
       <div className='menu-item px-5'>
-        <button onClick={() => setShowModalCreateTeam(true)} className='btn menu-link w-100 rounded' style={{ paddingLeft: '15px' }}>
-          + Create Team
+        <button onClick={() => setShowModalCreateSpace(true)} className='btn menu-link w-100 rounded' style={{ paddingLeft: '15px' }}>
+          + Create Space
         </button>
       </div>
-      {/* create team modal done */}
-      <Modal show={showModalTeamCreate} onHide={() => { setShowModalCreateTeam(false); setTeamIDError(false); setShowSuccess('') }} title={"Create Team"}>
+      {/* create space modal done */}
+      <Modal show={showModalSpaceCreate} onHide={() => { setShowModalCreateSpace(false); setShowSuccess('') }} title={"Create Space"}>
         <ModalBody>
-          <TextField label='Team Name' required={true} name='teamname' value={teamName} onChange={(e) => { setTeamName(e.target.value) }} error={teamNameError} />
+          <TextField label='Space Name' required={true} name='spacename' value={spaceName} onChange={(e) => { setSpaceName(e.target.value) }} error={spaceNameError} />
           {showSuccess != '' && <span className="p-2 text-success">{showSuccess}</span>}
         </ModalBody>
         <ModalFooter>
-          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-secondary" onClick={() => { setShowModalCreateTeam(false); setTeamIDError(false); setShowSuccess('') }}>
+          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-secondary" onClick={() => { setShowModalCreateSpace(false); setShowSuccess('') }}>
             Cancel
           </Button>
-          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-primary" onClick={handleCreateTeam}>
+          <Button isLoading={false} variant="primary" className="btn btn-sm btn-flex btn-primary" onClick={handleCreateSpace}>
             <i className="ki-outline ki-plus-square fs-3"></i>&nbsp;Create
           </Button>
         </ModalFooter>

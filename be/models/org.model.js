@@ -7,7 +7,14 @@ module.exports = (sequelize, Sequelize) => {
           notEmpty: true // Venue name cannot be empty
         }
       },
-      //future venue will be associated with team
+      space_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'space',
+          key: 'id'
+        }
+      },
     });
   
     return organization;

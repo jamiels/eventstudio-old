@@ -27,11 +27,15 @@ module.exports = (sequelize, Sequelize) => {
     user: {
       type: Sequelize.INTEGER,
     },
-    team: {
+    is_active: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true,
+    },
+    space_id: {
       type: Sequelize.DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'teams',
+        model: 'space',
         key: 'id'
       }
     },

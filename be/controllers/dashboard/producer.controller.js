@@ -2,8 +2,8 @@ const db = require("../../models");
 const Producer = db.producer;
 
 exports.add = (req, res) => {
-    const { name } = req.body;
-    if (!name) {
+    const { name, space_id } = req.body;
+    if (!name || !space_id) {
         res.status(400).send({
             message: 'Please provide all the fields.'
         });
@@ -13,6 +13,7 @@ exports.add = (req, res) => {
     // Create a new producer object with the provided data
     const newProducer = {
         name,
+        space_id,
     };
 
     // Use the Producer model to create a new producer in the database

@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import {
     createColumnHelper
 } from '@tanstack/react-table';
-import {withSwal} from 'react-sweetalert2';
+import { withSwal } from 'react-sweetalert2';
 import { Modal, ModalBody, ModalFooter } from "../../components/global/Modal";
 import TextField from "../../components/global/TextField";
 import Button from "../../components/global/Button";
@@ -11,7 +11,9 @@ import BreadcrumbCmp from "../../components/global/Breadcrumb";
 import TableCmp from "../../components/global/Table";
 import { useAuth } from "../../modules/auth";
 import Sponsorship from "../../apis/dashboard/sponsorship";
+import { useSpace } from "../../context/space.provider";
 const SponsorshipPage = withSwal((props) => {
+    const { selectedSpace } = useSpace();
     const columnHelper = createColumnHelper();
 
     const { swal, ...rest } = props;
@@ -19,7 +21,7 @@ const SponsorshipPage = withSwal((props) => {
     const [tableData, setTableData] = useState([]);
     const [organizationId, setOrganizationId] = useState('');
     const [eventId, setEventId] = useState('');
-    const [deckSent, setDeckSent] = useState('');
+    const [deckSent, setDeckSent] = useState(false);
     const [commitmentAmount, setCommitmentAmount] = useState('');
     // const [name, setName] = useState('');
 
@@ -28,109 +30,109 @@ const SponsorshipPage = withSwal((props) => {
     // const [nameError, setNameError] = useState('');
     const [modalShow, setModalShow] = useState(false);
 
-    const {currentUser} = useAuth();
+    const { currentUser } = useAuth();
 
     console.log(currentUser);
 
 
     const fetchData = () => {
-      Sponsorship.getSponsorship()
-      .then(res => {
-          setTableData(res.sponsorships)
-          setReload(false)
-      })
-      .catch(err => {
-          console.log(err)
-      })
-  }
- 
+        Sponsorship.getSponsorship()
+            .then(res => {
+                setTableData(res.sponsorships)
+                setReload(false)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
-  useEffect(() => {
-      fetchData()
-  }, []);
- 
 
-  useEffect(() => {
-      if(reload == true) {
-          fetchData()
-      }
-  }, [reload]);
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+
+    useEffect(() => {
+        if (reload == true) {
+            fetchData()
+        }
+    }, [reload]);
 
     const columns = [
-      columnHelper.accessor('organization_id'),
-      columnHelper.accessor('event_id'),
-      columnHelper.accessor('deckSent'),
-      columnHelper.accessor('commitmentAmount'),
-      columnHelper.display({
-        header: 'Action',
-        id: 'actions',
-        cell: props => (
-          <>
-            <a onClick={() => {DeleteBtnClick(props.row.original)}} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-              <i class="ki-outline ki-trash fs-2"></i>
-            </a>
-          </>
-        ),
-      }),
+        columnHelper.accessor('organization_id'),
+        columnHelper.accessor('event_id'),
+        columnHelper.accessor('deckSent'),
+        columnHelper.accessor('commitmentAmount'),
+        columnHelper.display({
+            header: 'Action',
+            id: 'actions',
+            cell: props => (
+                <>
+                    <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                        <i class="ki-outline ki-trash fs-2"></i>
+                    </a>
+                </>
+            ),
+        }),
     ]
     const DeleteBtnClick = (row) => {
-      console.log("row",)
-      swal.fire({
-          title: 'Delete',
-          text: 'Are you sure delete this event?',
-          icon: 'error',
-          confirmButtonText: 'Delete'
-      })
-      .then((result) => {
-          if (result.isConfirmed) {
-              Sponsorship.deleteSponsorship(row.id)
-              .then((data) => {
-                  console.log(data);
-                  setReload(true);
-              })
-              .catch(err => {
-                  console.log(err)
-              })
-          }  
-      })
-  }
-
-
-   
-    const openModal = () => {
-      setVeneueOptions(veneueOptions?.map(item => ({
-          value: item?.id,
-          label: item?.name
-      })));
-      
-
-        
-      // setName('');
-      setModalShow(true);
-  }
-  const addEventFunc = async () => {
-    // if(organizationId == '') {
-    //     setNameError("Name is required.");
-    // }
-    
-    
-    if(organizationId!= '' && eventId!= '' && deckSent !='' && commitmentAmount!='') {
-        const sponsorData = {};
-        sponsorData.organizationId = organizationId;
-        sponsorData.eventId = eventId;
-        sponsorData.deckSent = deckSent;
-        sponsorData.commitmentAmount = commitmentAmount;
-        Sponsorship.addSponsorship( sponsorData)
-        .then(res => {
-            setReload(true);
-            setModalShow(false);
-            
+        console.log("row",)
+        swal.fire({
+            title: 'Delete',
+            text: 'Are you sure delete this event?',
+            icon: 'error',
+            confirmButtonText: 'Delete'
         })
-        .catch(err => {
-            console.log("Error")
-        })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Sponsorship.deleteSponsorship(row.id)
+                        .then((data) => {
+                            console.log(data);
+                            setReload(true);
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+            })
     }
-}
+
+
+
+    const openModal = () => {
+        setVeneueOptions(veneueOptions?.map(item => ({
+            value: item?.id,
+            label: item?.name
+        })));
+
+
+
+        // setName('');
+        setModalShow(true);
+    }
+    const addEventFunc = async () => {
+
+
+
+        if (organizationId != '' && eventId != '' && deckSent != '' && commitmentAmount != '') {
+            const sponsorData = {};
+            console.log("deckSent", deckSent);
+            sponsorData.organizationId = organizationId;
+            sponsorData.eventId = eventId;
+            sponsorData.deckSent = deckSent;
+            sponsorData.commitmentAmount = commitmentAmount;
+            sponsorData.space_id = selectedSpace?.space_id;
+            Sponsorship.addSponsorship(sponsorData)
+                .then(res => {
+                    setReload(true);
+                    setModalShow(false);
+
+                })
+                .catch(err => {
+                    console.log("Error")
+                })
+        }
+    }
     return (
         <>
             {/* <!--begin::Content wrapper--> */}
@@ -147,15 +149,15 @@ const SponsorshipPage = withSwal((props) => {
                             {/* <!--end::Breadcrumb--> */}
 
                             {/* <!--begin::Title--> */}
-                            <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Sponsorships</h1>
+                            <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Sponsorship</h1>
                             {/* <!--end::Title--> */}
                         </div>
                         {/* <!--end::Page title--> */}
 
                         {/* <!--begin::Actions--> */}
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => {openModal()}} class="btn btn-sm btn-flex btn-dark align-self-center px-3">
-                            <i class="ki-outline ki-plus-square fs-3"></i>New Sponsorship</a>
+                            <a onClick={() => { openModal() }} class="btn btn-sm btn-flex btn-dark align-self-center px-3">
+                                <i class="ki-outline ki-plus-square fs-3"></i>New Sponsorship</a>
                         </div>
                         {/* <!--end::Actions--> */}
                     </div>
@@ -163,23 +165,28 @@ const SponsorshipPage = withSwal((props) => {
                 </div>
 
                 <div id="kt_app_content" class="app-content flex-column-fluid mt-5 mt-lg-5">
-                        <TableCmp data={tableData} columns={columns}/>
+                    <TableCmp data={tableData} columns={columns} />
                 </div>
 
             </div>
-            <Modal show={modalShow} onHide={() => {setModalShow(false)}} title={"New Sponserships"}>
+            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={"New Sponsership"}>
                 <ModalBody>
-                    <TextField label='Organization ID' required={true} name='organizationId' value={organizationId} onChange={(e) => {setOrganizationId(e.target.value)}} />
+                    <TextField label='Organization ID' required={true} name='organizationId' value={organizationId} onChange={(e) => { setOrganizationId(e.target.value) }} />
                     <TextField label='Event ID' name='eventId' value={eventId} onChange={(e) => setEventId(e.target.value)} />
-                    <TextField label='DeckSent' name='deckSent' value={deckSent} onChange={(e) => setDeckSent(e.target.value)} />
-                    <TextField label='Commitment Amont' name='commitmentAmount' value={commitmentAmount} onChange={(e) => setCommitmentAmount(e.target.value)} />
+                    <div class="form-check my-4">
+                        <input class="form-check-input" type="checkbox" checked={deckSent} onChange={(e) => setDeckSent(e.target.checked)} id="flexCheckDefault" />
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Deck Sent
+                        </label>
+                    </div>
+                    <TextField label='Commitment Amount' name='commitmentAmount' value={commitmentAmount} onChange={(e) => setCommitmentAmount(e.target.value)} />
 
                 </ModalBody>
                 <ModalFooter>
-                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => {setModalShow(false)}}>
+                    <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
                         Cancel
                     </Button>
-                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => {addEventFunc()}}>
+                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => { addEventFunc() }}>
                         <i class="ki-outline ki-plus-square fs-3"></i>&nbsp;Create Sponsorship
                     </Button>
                 </ModalFooter>

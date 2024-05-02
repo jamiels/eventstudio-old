@@ -5,7 +5,7 @@ module.exports = app => {
     const sponsorshipsController = require("../controllers/dashboard/sponsorships.controller");
     const producerController = require("../controllers/dashboard/producer.controller");
     const speakersController = require("../controllers/dashboard/speakers.controller");
-    const teamsController = require("../controllers/dashboard/teams.controller");
+    const spaceController = require("../controllers/dashboard/space.controller"); // assuming you have a controller for space operations
 
     const { _, auth } = require('../middlewares');
 
@@ -34,17 +34,20 @@ module.exports = app => {
     router.get('/sponserships/get/:id', sponsorshipsController.getSponsorship);
     router.delete('/sponserships/del/:id', sponsorshipsController.deleteSponsorship);
     router.get('/sponserships/all', sponsorshipsController.getAllSponsorships);
+    
     //producer
     router.post('/producer/add', producerController.add);
     router.get('/producer/names', producerController.getAllProducerNames);
     router.delete('/producer/del/:id', producerController.deleteProducer);
+    
     //speakers
     router.post('/speakers/add', speakersController.addSpeaker);
     router.get('/speakers/names', speakersController.getAllSpeakers);
     router.delete('/speakers/del/:id', speakersController.deleteSpeaker);
+    
     //teams
-    router.post('/teams/add', auth, teamsController.createTeam);
-    router.post('/teams/addUser', auth, teamsController.addUserToTeam);
-    router.get('/teams/userteams', auth, teamsController?.getUserTeams)
+    router.post('/space/add', auth, spaceController.createSpace); // Assuming createSpace is for creating a team/space
+    router.post('/space/addUser', auth, spaceController.addUserToSpace); // Assuming addUserToSpace is for adding a user to a team/space
+    router.get('/space/userspace', auth, spaceController.getUserSpaces); // Assuming getUserSpaces is for getting user's teams/spaces
     app.use('/dashboard', router);
 };

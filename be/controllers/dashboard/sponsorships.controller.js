@@ -23,8 +23,8 @@ exports.getAllSponsorships = async (req, res) => {
 
 // Add sponsorship
 exports.addSponsorship = (req, res) => {
-    const { organizationId, eventId, deckSent, commitmentAmount } = req.body;
-    if (!organizationId || !eventId || !deckSent || !commitmentAmount) {
+    const { organizationId, eventId, deckSent, commitmentAmount, space_id } = req.body;
+    if (!organizationId || !eventId || !deckSent || !commitmentAmount || !space_id) {
         res.status(400).send({
             message: 'Please provide all the fields.'
         });
@@ -36,6 +36,7 @@ exports.addSponsorship = (req, res) => {
         event_id: eventId,
         deckSent: deckSent,
         commitmentAmount: commitmentAmount,
+        space_id
         // Add more fields as needed
     }
 

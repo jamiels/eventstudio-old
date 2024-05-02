@@ -3,9 +3,8 @@ const Venue = db.venue;
 
 
 exports.add = (req, res) => {
-    const { name } = req.body;
-    console.log("data", name);
-    if (!name) {
+    const { name, space_id } = req.body;
+    if (!name || !space_id) {
         res.status(400).send({
             message: 'Please provide all the fields.'
         });
@@ -14,6 +13,7 @@ exports.add = (req, res) => {
     // Create a new venue object with the provided data
     const newVenue = {
         name,
+        space_id
     }
 
     // Use the Venue model to create a new venue in the database

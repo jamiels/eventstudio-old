@@ -1,6 +1,6 @@
 // models/teams_users.js
 module.exports = (sequelize, DataTypes) => {
-    const Teams_Users = sequelize.define('teams_users', {
+    const Space_Users = sequelize.define('space_users', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -14,11 +14,11 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id'
             }
         },
-        team_id: {
+        space_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'teams',
+                model: 'space',
                 key: 'id'
             }
         },
@@ -28,5 +28,5 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    return Teams_Users;
+    return Space_Users;
 };

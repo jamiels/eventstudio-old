@@ -19,6 +19,8 @@ const db = {};
 db.Sequelize = Sequelize;
 db.connection = sequelize;
 
+db.space = require('./space.model.js')(db.connection, db.Sequelize)
+db.space_users = require('./spaceUser.model.js')(db.connection, db.Sequelize)
 db.users = require('./user.model.js')(db.connection, db.Sequelize)
 db.events = require('./event.model.js')(db.connection, db.Sequelize)
 db.venue = require('./venue.model.js')(db.connection, db.Sequelize)
@@ -26,8 +28,6 @@ db.organization = require('./org.model.js')(db.connection, db.Sequelize)
 db.sponsorships = require('./sponsorships.model.js')(db.connection, db.Sequelize)
 db.producer = require('./producer.model.js')(db.connection, db.Sequelize)
 db.speakers = require('./speakers.model.js')(db.connection, db.Sequelize)
-db.teams = require('./teams.model.js')(db.connection, db.Sequelize)
-db.teams_users = require('./teamsUser.model.js')(db.connection, db.Sequelize)
 db.speaking_request = require('./speakingRequest.model.js')(db.connection, db.Sequelize)
 db.sponsor_boarding = require('./sponsorBoarding.model.js')(db.connection, db.Sequelize)
 db.sponsor_request = require('./sponsorRequest.model.js')(db.connection, db.Sequelize)
@@ -38,7 +38,7 @@ db.events.hasOne(db.sponsorships, { foreignKey: 'event_id' });
 db.sponsorships.belongsTo(db.events, { foreignKey: 'event_id' })
 db.organization.hasOne(db.sponsorships, { foreignKey: 'organization_id' });
 db.sponsorships.belongsTo(db.organization, { foreignKey: 'organization_id' });
-db.teams_users.belongsTo(db.teams,{ foreignKey: 'team_id' });
-db.teams.hasMany(db.teams_users,{ foreignKey: 'team_id' });
+db.space_users.belongsTo(db.space,{ foreignKey: 'space_id' });
+db.space.hasMany(db.space_users,{ foreignKey: 'space_id' });
 
 module.exports = db;

@@ -7,8 +7,6 @@ const where = db.Sequelize.where;
 
 exports.add = (req, res) => {
     const data = req.body.data;
-    console.log(data);
-
     const newEvent = {
         user: req.body.userId,
         name: data.name,
@@ -17,35 +15,35 @@ exports.add = (req, res) => {
         startdate: data.startdate,
         enddate: data.enddate,
         veneue: data.veneue,
-        team: data.team,
+        space_id: data.space_id,
         sponsorshipDeckUrl: data.sponsorshipDeckUrl,
-        theme: data.theme 
+        theme: data.theme
     }
 
     Event.create(newEvent)
-    .then(data => {
-        res.send({success: true, event: data});
-    })
-    .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while save new Event",
-          errObj: err
+        .then(data => {
+            res.send({ success: true, event: data });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while save new Event",
+                errObj: err
+            });
         });
-    });
 }
 
 
 exports.get = async (req, res) => {
     try {
         events = await Event.findAll();
-        res.send({events: events})
+        res.send({ events: events })
     }
     catch (ex) {
         console.log(ex)
         throw ex;
     }
-    
+
 }
 
 
@@ -53,17 +51,17 @@ exports.delete = (req, res) => {
     const id = req.body.id;
     console.log(id);
 
-    Event.destroy({where :{id: id}})
-    .then(data => {
-        res.send({success: true});
-    })
-    .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while save new Event",
-          errObj: err
+    Event.destroy({ where: { id: id } })
+        .then(data => {
+            res.send({ success: true });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while save new Event",
+                errObj: err
+            });
         });
-    });
 }
 
 
