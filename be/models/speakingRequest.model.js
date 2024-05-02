@@ -1,5 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-    const SpeakingRequest = sequelize.define('SpeakingRequest', {
+    const SpeakingRequest = sequelize.define('speaking_request', {
+        eventUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
+        spaceUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
         fullName: {
             type: DataTypes.STRING,
             allowNull: false
@@ -14,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         eventName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         title: {
             type: DataTypes.STRING,
@@ -34,10 +42,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         sponsorshipInterest: {
             type: DataTypes.STRING,
-            allowNull: false
-        },
-        eventUUID: {
-            type: DataTypes.UUID,
             allowNull: false
         }
     });

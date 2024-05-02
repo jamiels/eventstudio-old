@@ -1,10 +1,11 @@
 const db = require("../../models");
+const checkIsEvent = require("../../utils/checkIsEvent");
 const SponsorOnboarding = db.sponsor_boarding;
 const Event = db.events;
 
 exports.addSponsorOnboarding = async (req, res) => {
     try {
-        const { eventUUID } = req.params;
+        const { id } = req.params;
         // Check if all required fields are present in the request body
         const requiredFields = ["fullName", "email", "bio", "linkedInURL", "twitterURL", "headshotURL", "title", "organization"];
         for (const field of requiredFields) {
@@ -13,10 +14,10 @@ exports.addSponsorOnboarding = async (req, res) => {
             }
         }
 
-        const eventData = await Event.findOne({ where: { uuid: eventUUID } });
+        const typeForm = await checkIsEvent(id);
 
-        if (!eventData) {
-            return res.status(404).send({ message: `Event not found with the provided eventUUID ${eventUUID}` });
+        if (typeForm[0] === 0) {
+            return res.status(404).json({ message: "Id does not exists." });
         }
 
         const newSponsorOnboarding = {
@@ -28,8 +29,9 @@ exports.addSponsorOnboarding = async (req, res) => {
             headshotURL: req.body.headshotURL,
             title: req.body.title,
             organization: req.body.organization,
-            eventName: eventData.name,
-            eventUUID
+            eventName: typeForm[0] === 1 ? typeForm[1]?.name : null,
+            eventUUID: typeForm[0] === 1 ? id : null,
+            spaceUUID: typeForm[0] === 2 ? id : null,
         };
 
         const sponsorOnboarding = await SponsorOnboarding.create(newSponsorOnboarding);
@@ -55,7 +57,7 @@ exports.getAllSponsorBoardings = async (req, res) => {
 exports.deleteSponsorOnboarding = async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         // Find the sponsor onboarding by id
         const sponsorOnboarding = await SponsorOnboarding.findByPk(id);
 

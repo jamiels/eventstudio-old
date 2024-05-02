@@ -1,6 +1,13 @@
-// models/sponsor_onboarding.js
 module.exports = (sequelize, DataTypes) => {
-    const SponsorOnboarding = sequelize.define('SponsorOnboarding', {
+    const SponsorOnboarding = sequelize.define('Sponsor_onboarding', {
+        eventUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
+        spaceUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
         fullName: {
             type: DataTypes.STRING,
             allowNull: false
@@ -12,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         bio: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        eventName: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         linkedInURL: {
             type: DataTypes.STRING,
@@ -35,7 +46,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         eventUUID: {
             type: DataTypes.UUID,
-            allowNull: false
+            allowNull: true
+        },
+        spaceUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
         }
     });
 

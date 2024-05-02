@@ -31,6 +31,7 @@ db.speakers = require('./speakers.model.js')(db.connection, db.Sequelize)
 db.speaking_request = require('./speakingRequest.model.js')(db.connection, db.Sequelize)
 db.sponsor_boarding = require('./sponsorBoarding.model.js')(db.connection, db.Sequelize)
 db.sponsor_request = require('./sponsorRequest.model.js')(db.connection, db.Sequelize)
+db.volunteer = require('./volunteer.model.js')(db.connection, db.Sequelize)
 
 
 //association of relationships

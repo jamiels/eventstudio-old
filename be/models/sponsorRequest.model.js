@@ -1,5 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-    const SponsorRequest = sequelize.define('SponsorRequest', {
+    const SponsorRequest = sequelize.define('sponsor_request', {
+        eventUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
+        spaceUUID: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: false
@@ -15,10 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         linkedIn: {
             type: DataTypes.STRING,
             allowNull: true
-        },
-        eventUUID: {
-            type: DataTypes.UUID,
-            allowNull: false
         }
     });
 

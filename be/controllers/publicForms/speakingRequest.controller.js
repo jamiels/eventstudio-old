@@ -1,10 +1,11 @@
 const db = require("../../models");
+const checkIsEvent = require("../../utils/checkIsEvent");
 const SpeakingRequest = db.speaking_request;
 const Event = db.events;
 
 exports.addSpeakingRequest = async (req, res) => {
     try {
-        const { eventUUID } = req.params;
+        const { id } = req.params;
         // Check if all required fields are present in the request body
         const requiredFields = ["fullName", "email", "organization", "title", "panelists", "abstract", "linkedInURL", "sponsorshipInterest"];
         for (const field of requiredFields) {
@@ -12,23 +13,24 @@ exports.addSpeakingRequest = async (req, res) => {
                 return res.status(400).send({ message: `${field} is required` });
             }
         }
-        const eventData = await Event.findOne({ where: { uuid: eventUUID } });
+        const typeForm = await checkIsEvent(id);
 
-        if (!eventData) {
-            return res.status(404).send({ message: "Event not found with the provided UUID" });
+        if (typeForm[0] === 0) {
+            return res.status(404).json({ message: "Id does not exists." });
         }
 
         const newSpeakingRequest = {
             fullName: req.body.fullName,
             email: req.body.email,
             organization: req.body.organization,
-            eventName: eventData.name,
+            eventName: typeForm[0] === 1 ? typeForm[1]?.name : null,
             title: req.body.title,
             panelists: req.body.panelists,
             abstract: req.body.abstract,
             linkedInURL: req.body.linkedInURL,
             sponsorshipInterest: req.body.sponsorshipInterest,
-            eventUUID: eventUUID
+            eventUUID: typeForm[0] === 1 ? id : null,
+            spaceUUID: typeForm[0] === 2 ? id : null,
         };
 
         const speakingRequest = await SpeakingRequest.create(newSpeakingRequest);
@@ -53,7 +55,7 @@ exports.getAllSpeakingRequests = async (req, res) => {
 exports.deleteSpeakingRequest = async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         // Find the speaking request by id
         const speakingRequest = await SpeakingRequest.findByPk(id);
 
