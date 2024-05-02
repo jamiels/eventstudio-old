@@ -1,9 +1,8 @@
 import axios from "axios";
 
-const API_URL = `${process.env.REACT_APP_API_URL}/public/sponsor/`;
+const API_URL = `${process.env.REACT_APP_API_URL}/public/volunteer/`;
 
-const addSponsorRequest = (data, id) => {
-    
+const addVolunteerRequest = (data, id) => {
     return axios.post(API_URL + `${id}`, data)
         .then((response) => {
             return response.data;
@@ -13,14 +12,14 @@ const addSponsorRequest = (data, id) => {
         });
 };
 
-const getSponsorRequests = () => {
+const getVolunteerRequests = () => {
     return axios.get(API_URL + "all")
         .then((response) => {
             return response.data;
         });
 };
 
-const deleteSponsorRequest = (id) => {
+const deleteVolunteerRequest = (id) => {
     return axios.delete(API_URL + `${id}`)
         .then((response) => {
             return response.data;
@@ -28,7 +27,7 @@ const deleteSponsorRequest = (id) => {
 };
 
 export default {
-    addSponsorRequest,
-    getSponsorRequests,
-    deleteSponsorRequest
+    addVolunteerRequest,
+    getVolunteerRequests,
+    deleteVolunteerRequest
 };

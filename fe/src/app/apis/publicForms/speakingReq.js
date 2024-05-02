@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/public/speak/`;
 
-const addSpeakingRequest = (data, eventUUID) => {
-    return axios.post(API_URL + `${eventUUID}`, data)
+const addSpeakingRequest = (data, id) => {
+    return axios.post(API_URL + `${id}`, data)
         .then((response) => {
             return response.data;
         })

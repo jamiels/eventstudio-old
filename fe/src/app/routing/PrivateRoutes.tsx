@@ -1,13 +1,14 @@
-import {FC, lazy, Suspense} from 'react'
-import {Navigate, Route, Routes} from 'react-router-dom'
-import {MasterLayout} from '../../_metronic/layout/MasterLayout'
+import { FC, lazy, Suspense } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { MasterLayout } from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
-import {MenuTestPage} from '../pages/MenuTestPage'
-import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
-import {DisableSidebar} from '../../_metronic/layout/core'
-import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
-import {WithChildren} from '../../_metronic/helpers'
+import { MenuTestPage } from '../pages/MenuTestPage'
+import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
+import { DisableSidebar } from '../../_metronic/layout/core'
+import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
+import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
+import EventDetailsPage from '../pages/dashboard/EventDetails'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -24,15 +25,16 @@ const PrivateRoutes = () => {
         {/* Redirect to Dashboard after success login/registartion */}
         <Route path='auth/*' element={<Navigate to='/dashboard/events' />} />
         {/* Pages */}
-        <Route path='dashboard/events' element={<DashboardWrapper sidebar="events"/>} />
-        <Route path='dashboard/organizations' element={<DashboardWrapper sidebar="organizations"/>} />
-        <Route path='dashboard/venues' element={<DashboardWrapper sidebar="venues"/>} />
-        <Route path='dashboard/speakers' element={<DashboardWrapper sidebar="speakers"/>} />
-        <Route path='dashboard/sponsorships' element={<DashboardWrapper sidebar="sponsorships"/>} />
-        <Route path='dashboard/producers' element={<DashboardWrapper sidebar="producers"/>} />
-        <Route path='dashboard/sponsor-requests' element={<DashboardWrapper sidebar="sponsor-requests"/>} />
-        <Route path='dashboard/speaking-requests' element={<DashboardWrapper sidebar="speaking-requests"/>} />
-        <Route path='dashboard/speaker-onboard' element={<DashboardWrapper sidebar="speaker-onboard"/>} />
+        <Route path='dashboard/events' element={<DashboardWrapper sidebar="events" />} />
+        <Route path='dashboard/events/details/:eventId' element={<EventDetailsPage />} />
+        <Route path='dashboard/organizations' element={<DashboardWrapper sidebar="organizations" />} />
+        <Route path='dashboard/venues' element={<DashboardWrapper sidebar="venues" />} />
+        <Route path='dashboard/speakers' element={<DashboardWrapper sidebar="speakers" />} />
+        <Route path='dashboard/sponsorships' element={<DashboardWrapper sidebar="sponsorships" />} />
+        <Route path='dashboard/producers' element={<DashboardWrapper sidebar="producers" />} />
+        <Route path='dashboard/sponsor-requests' element={<DashboardWrapper sidebar="sponsor-requests" />} />
+        <Route path='dashboard/speaking-requests' element={<DashboardWrapper sidebar="speaking-requests" />} />
+        <Route path='dashboard/speaker-onboard' element={<DashboardWrapper sidebar="speaker-onboard" />} />
 
         <Route path='dashboard' element={<Navigate to='/dashboard/events' />} />
         <Route path='builder' element={<BuilderPageWrapper />} />
@@ -101,7 +103,7 @@ const PrivateRoutes = () => {
   )
 }
 
-const SuspensedView: FC<WithChildren> = ({children}) => {
+const SuspensedView: FC<WithChildren> = ({ children }) => {
   const baseColor = getCSSVariableValue('--bs-primary')
   TopBarProgress.config({
     barColors: {
@@ -117,4 +119,4 @@ const SuspensedView: FC<WithChildren> = ({children}) => {
   )
 }
 
-export {PrivateRoutes}
+export { PrivateRoutes }

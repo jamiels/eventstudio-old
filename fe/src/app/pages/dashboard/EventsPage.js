@@ -41,7 +41,7 @@ const EventsPage = withSwal((props) => {
     const [reload, setReload] = useState(false);
 
     const { currentUser } = useAuth();
-
+    const navigate = useNavigate();
     const fetchData = () => {
         EventAPI.getEvents()
             .then(res => {
@@ -102,12 +102,28 @@ const EventsPage = withSwal((props) => {
             header: 'VENEUE'
         }),
         columnHelper.display({
+            header: 'Links',
+            id: 'links',
+            cell: ({ row: { original } }) => (
+                <div className="d-flex flex-row gap-3">
+                    <a href={`/public/speak/${original.uuid}`} target="_blank" rel="noopener noreferrer">Speak</a> |
+                    <a href={`/public/sponsor/${original.uuid}`} target="_blank" rel="noopener noreferrer">Sponsor</a> |
+                    <a href={`/public/onboard/${original.uuid}`} target="_blank" rel="noopener noreferrer">Onboard</a> |
+                    <a href={`/public/volunteer/${original.uuid}`} target="_blank" rel="noopener noreferrer">Volunteer</a>
+                </div>
+            ),
+        }),
+
+        columnHelper.display({
             header: 'Action',
             id: 'actions',
             cell: props => (
                 <>
                     <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
                         <i class="ki-outline ki-trash fs-2"></i>
+                    </a>
+                    <a onClick={() => navigate(`/dashboard/events/details/${props.row.original.id}`)} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
+                        <i class="bi bi-ticket-detailed"></i>
                     </a>
                 </>
             ),
@@ -240,7 +256,7 @@ const EventsPage = withSwal((props) => {
                     <TextField label='Name' required={true} name='name' value={name} onChange={(e) => { handleNameChange(e.target.value) }} error={nameError} />
                     <TextField label='ShortName' name='shortname' value={shortName} onChange={(e) => setShortName(e.target.value)} />
                     <TextField label='Landing Page URL' name='landingURL' value={url} onChange={(e) => setUrl(e.target.value)} />
-                    <TextField label='Themes' name='themes' value={themes} onChange={(e) => setThemes(e.target.value)} />
+                    <TextField label='Theme' name='themes' value={themes} onChange={(e) => setThemes(e.target.value)} />
                     <TextField label='Sponsorship Deck URL' name='sponsorshipDeckUrl' value={sponsorshipDeckUrl} onChange={(e) => setSponsorshipDeckUrl(e.target.value)} />
                     <DatePicker label='StartDate' onChange={(e) => { handleStartDateChange(e) }} value={startDate} />
                     <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />

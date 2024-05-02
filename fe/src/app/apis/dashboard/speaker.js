@@ -18,6 +18,12 @@ const addSpeaker = ( data) => {
 };
 
 
+const getSpeakersByEvent = (eventId) => {
+    return axios.get(API_URL + `events/${eventId}`)
+        .then((response) => {
+            return response.data;
+        });
+};
 const getSpeaker = () => {
     return axios.get(API_URL + "names")
         .then((response) => {
@@ -39,5 +45,6 @@ const deleteSpeaker = (id) => {
 export default {
     addSpeaker,
     getSpeaker,
-    deleteSpeaker
+    deleteSpeaker,
+    getSpeakersByEvent
 };

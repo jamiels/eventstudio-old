@@ -116,7 +116,6 @@ const SponsorshipPage = withSwal((props) => {
 
         if (organizationId != '' && eventId != '' && deckSent != '' && commitmentAmount != '') {
             const sponsorData = {};
-            console.log("deckSent", deckSent);
             sponsorData.organizationId = organizationId;
             sponsorData.eventId = eventId;
             sponsorData.deckSent = deckSent;

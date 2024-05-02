@@ -2,9 +2,9 @@ import axios from "axios";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/public/onboard/`;
 
-const addSponsorOnboarding = (data, eventUUID) => {
+const addSponsorOnboarding = (data, id) => {
 
-    return axios.post(API_URL + `${eventUUID}`, data)
+    return axios.post(API_URL + `${id}`, data)
         .then((response) => {
             return response.data;
         })

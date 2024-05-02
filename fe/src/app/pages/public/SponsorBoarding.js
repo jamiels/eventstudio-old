@@ -7,7 +7,7 @@ import TextField from '../../components/global/TextField'
 import sponsorboarding from '../../apis/publicForms/sponsorBoarding'
 
 export function SponsorBoarding() {
-    const { eventUUID } = useParams();
+    const { id } = useParams();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [bio, setBio] = useState('');
@@ -53,7 +53,7 @@ export function SponsorBoarding() {
                 headshotURL,
                 title,
                 organization
-            }, eventUUID);
+            }, id);
 
             setSuccessMessage(res.message);
             setError(null);

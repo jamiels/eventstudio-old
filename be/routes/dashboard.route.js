@@ -34,6 +34,8 @@ module.exports = app => {
     router.get('/sponserships/get/:id', sponsorshipsController.getSponsorship);
     router.delete('/sponserships/del/:id', sponsorshipsController.deleteSponsorship);
     router.get('/sponserships/all', sponsorshipsController.getAllSponsorships);
+    router.get('/sponserships/events/:eventId', sponsorshipsController.getAllSponsorshipsEventDetail);
+
     
     //producer
     router.post('/producer/add', producerController.add);

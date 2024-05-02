@@ -95,3 +95,23 @@ exports.deleteSponsorship = async (req, res) => {
         });
     }
 };
+
+
+exports.getAllSponsorshipsEventDetail = async (req, res) => {
+    try {
+        const eventId = req.params.eventId; // Get the eventId from the request parameters
+
+        // Find all sponsorships where event_id matches the provided eventId
+        const sponsorships = await Sponsorship.findAll({
+            where: { event_id: eventId }
+        });
+
+        res.send({ sponsorships });
+    } catch (err) {
+        console.error("Error fetching sponsorships:", err);
+        res.status(500).send({
+            message: "An error occurred while fetching sponsorships",
+            errObj: err
+        });
+    }
+};

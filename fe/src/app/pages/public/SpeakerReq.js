@@ -7,7 +7,7 @@ import TextField from '../../components/global/TextField'
 import speakerReq from '../../apis/publicForms/speakingReq'
 
 export function SpeakerReq() {
-    const { eventUUID } = useParams();
+    const { id } = useParams();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [organization, setOrganization] = useState('');
@@ -53,7 +53,7 @@ export function SpeakerReq() {
                 abstract,
                 linkedInURL,
                 sponsorshipInterest
-            }, eventUUID);
+            }, id);
 
             setSuccessMessage(res.message);
             setError(null);

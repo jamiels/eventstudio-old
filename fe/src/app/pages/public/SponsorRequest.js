@@ -7,7 +7,7 @@ import TextField from '../../components/global/TextField'
 import sponsorReq from '../../apis/publicForms/sponsorReq'
 
 export function SponsorPage() {
-    const { eventUUID } = useParams();
+    const { id } = useParams();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [involvement, setInvolvement] = useState('');
@@ -37,7 +37,7 @@ export function SponsorPage() {
                 email,
                 involvement,
                 linkedIn
-            }, eventUUID);
+            }, id);
 
             setSuccessMessage(res.message);
             setError(null);
