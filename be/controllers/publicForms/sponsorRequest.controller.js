@@ -37,7 +37,7 @@ exports.addSponsorRequest = async (req, res) => {
 
 exports.getAllSponsorRequests = async (req, res) => {
     try {
-        const allSponsorRequests = await SponsorRequest.findAll();
+        const allSponsorRequests = await SponsorRequest.findAll({order: [['createdAt', 'DESC']]});
         res.status(200).send({ sponsorRequests: allSponsorRequests });
     } catch (error) {
         console.error("Error fetching sponsor requests:", error);

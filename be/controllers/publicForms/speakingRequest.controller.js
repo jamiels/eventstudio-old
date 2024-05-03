@@ -44,7 +44,7 @@ exports.addSpeakingRequest = async (req, res) => {
 
 exports.getAllSpeakingRequests = async (req, res) => {
     try {
-        const allSpeakingRequests = await SpeakingRequest.findAll();
+        const allSpeakingRequests = await SpeakingRequest.findAll({order: [['createdAt', 'DESC']]});
         res.status(200).send({ speakingRequests: allSpeakingRequests });
     } catch (error) {
         console.error("Error fetching speaking requests:", error);

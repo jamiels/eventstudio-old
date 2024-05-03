@@ -41,7 +41,7 @@ exports.addVolunteer = async (req, res) => {
 
 exports.getAllVolunteers = async (req, res) => {
     try {
-        const allVolunteers = await Volunteer.findAll();
+        const allVolunteers = await Volunteer.findAll({ order: [['createdAt', 'DESC']] });
         res.status(200).send({ volunteers: allVolunteers });
     } catch (error) {
         console.error("Error fetching volunteers:", error);

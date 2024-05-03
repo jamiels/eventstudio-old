@@ -36,7 +36,7 @@ exports.addSpeakerOnboarding = async (req, res) => {
             eventUUID: typeForm[0] === 1 ? id : null,
             spaceUUID: typeForm[0] === 2 ? id : null,
         };
-    
+
         const speakerOnboarding = await SpeakerOnboarding.create(newSpeakerOnboarding);
 
         res.status(201).send({ message: "Speaker onboarding created successfully", speakerOnboarding });
@@ -49,7 +49,7 @@ exports.addSpeakerOnboarding = async (req, res) => {
 
 exports.getAllSpeakerOnboardings = async (req, res) => {
     try {
-        const allSpeakerOnboardings = await SpeakerOnboarding.findAll();
+        const allSpeakerOnboardings = await SpeakerOnboarding.findAll({ order: [['createdAt', 'DESC']] });
         res.status(200).send({ speakerOnboardings: allSpeakerOnboardings });
     } catch (error) {
         console.error("Error fetching speaker onboardings:", error);
