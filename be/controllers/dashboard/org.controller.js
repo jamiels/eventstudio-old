@@ -50,14 +50,14 @@ exports.getAllOrgNames = async (req, res) => {
 exports.deleteOrganization = async (req, res) => {
     const { id } = req.params;
     try {
-        
+
         const deletedOrganization = await Org.destroy({
             where: {
                 id: id
             }
         });
-        
-        
+
+
         if (deletedOrganization === 0) {
             res.status(404).send({
                 message: `Organization with ID ${id} not found.`
@@ -67,10 +67,30 @@ exports.deleteOrganization = async (req, res) => {
                 message: `Organization with ID ${id} deleted successfully.`
             });
         }
-        
+
     } catch (err) {
         res.status(500).send({
             message: "An error occurred while deleting organization",
+            errObj: err
+        });
+    }
+};
+
+exports.updateOrg = async (req, res) => {
+    const id = req.params.id;
+    const orgData = req.body;
+    try {
+        const organization = await Org.findByPk(id);
+        if (!organization) {
+            return res.status(404).send({ message: "Organization not found." });
+        }
+
+        await Org.update(orgData, { where: { id: id } });
+        res.send({ success: true, organization: orgData });
+    } catch (err) {
+        console.log("🚀 ~ exports.updateOrg= ~ err:", err)
+        res.status(500).send({
+            message: "Error updating organization with id=" + id,
             errObj: err
         });
     }

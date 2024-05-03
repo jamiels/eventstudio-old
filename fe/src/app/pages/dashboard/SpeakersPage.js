@@ -1,69 +1,151 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Navigate, useNavigate } from 'react-router-dom';
-import {
-    createColumnHelper
-} from '@tanstack/react-table';
+import React, { useState, useEffect } from "react";
 import { withSwal } from 'react-sweetalert2';
 import { Modal, ModalBody, ModalFooter } from "../../components/global/Modal";
 import TextField from "../../components/global/TextField";
 import Button from "../../components/global/Button";
 import BreadcrumbCmp from "../../components/global/Breadcrumb";
 import TableCmp from "../../components/global/Table";
-import { useAuth } from "../../modules/auth";
-import Speaker from "../../apis/dashboard/speaker";
+import SpeakerAPI from "../../apis/dashboard/speaker";
+import EventsApi from "../../apis/dashboard/events";
 import { useSpace } from "../../context/space.provider";
-const SpeakerPage = withSwal((props) => {
+import { createColumnHelper } from '@tanstack/react-table';
 
+const SpeakerPage = withSwal((props) => {
     const { selectedSpace } = useSpace();
     const columnHelper = createColumnHelper();
 
     const { swal, ...rest } = props;
 
     const [tableData, setTableData] = useState([]);
-    const [firstName, setName] = useState('');
-    const [lastname, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [title, setTitle] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [emailAddress, setEmailAddress] = useState('');
     const [primaryAffiliation, setPrimaryAffiliation] = useState('');
-    const [headshot, setHeadShot] = useState('');
+    const [title, setTitle] = useState('');
+    const [headshot, setHeadshot] = useState('');
     const [linkedInURL, setLinkedInURL] = useState('');
     const [twitterURL, setTwitterURL] = useState('');
     const [bio, setBio] = useState('');
     const [adminFullName, setAdminFullName] = useState('');
     const [adminEmailAddress, setAdminEmailAddress] = useState('');
     const [reload, setReload] = useState(false);
-    const [veneueOptions, setVeneueOptions] = useState([]);
-    const [nameError, setNameError] = useState('');
+    const [activeEvents, setActiveEvents] = useState([]);
+    const [selectedActiveEvent, setSelectedActiveEvent] = useState('');
     const [modalShow, setModalShow] = useState(false);
-
-    const { currentUser } = useAuth();
-
-    console.log(currentUser);
-
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [speakerToUpdate, setSpeakerToUpdate] = useState(null);
 
     const fetchData = () => {
-        Speaker.getSpeaker()
+        SpeakerAPI.getSpeaker()
             .then(res => {
-                setTableData(res.speakers)
-                setReload(false)
+                setTableData(res.speakers);
+                setReload(false);
             })
             .catch(err => {
-                console.log(err)
-            })
-    }
+                console.log(err);
+            });
+    };
 
+    const fetchActiveEvents = async () => {
+        try {
+            const res = await EventsApi.getActiveEvents();
+            setActiveEvents(res.events);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
-        fetchData()
+        fetchData();
+        fetchActiveEvents();
     }, []);
 
-
     useEffect(() => {
-        if (reload == true) {
-            fetchData()
+        if (reload) {
+            fetchData();
         }
     }, [reload]);
 
+    const openModal = (speaker) => {
+        if (speaker) {
+            setFirstName(speaker.firstName);
+            setLastName(speaker.lastName);
+            setEmailAddress(speaker.emailAddress);
+            setPrimaryAffiliation(speaker.primaryAffiliation);
+            setTitle(speaker.title);
+            setHeadshot(speaker.headshot);
+            setLinkedInURL(speaker.linkedInURL);
+            setTwitterURL(speaker.twitterURL);
+            setBio(speaker.bio);
+            setAdminFullName(speaker.adminFullName);
+            setAdminEmailAddress(speaker.adminEmailAddress);
+            setSelectedActiveEvent(speaker.event_id);
+            setIsEditMode(true);
+            setSpeakerToUpdate(speaker);
+        } else {
+            setFirstName('');
+            setLastName('');
+            setEmailAddress('');
+            setPrimaryAffiliation('');
+            setTitle('');
+            setHeadshot('');
+            setLinkedInURL('');
+            setTwitterURL('');
+            setBio('');
+            setAdminFullName('');
+            setAdminEmailAddress('');
+            setSelectedActiveEvent('');
+            setIsEditMode(false);
+            setSpeakerToUpdate(null);
+        }
+        setModalShow(true);
+    };
+
+    const handleNameChange = (value) => {
+        setFirstName(value);
+    };
+
+    const handleEmailChange = (value) => {
+        setEmailAddress(value);
+    };
+
+    const handleEventChange = (value) => {
+        setSelectedActiveEvent(value);
+    };
+
+    const addOrUpdateSpeaker = async () => {
+        try {
+            if (firstName !== '' && emailAddress !== '' && selectedActiveEvent !== '') {
+                const speakerData = {
+                    firstName,
+                    lastName,
+                    emailAddress,
+                    primaryAffiliation,
+                    title,
+                    headshot,
+                    linkedInURL,
+                    twitterURL,
+                    bio,
+                    adminFullName,
+                    adminEmailAddress,
+                    space_id: selectedSpace?.space_id,
+                    event_id: selectedActiveEvent
+                };
+                if (isEditMode) {
+                    await SpeakerAPI.updateSpeaker(speakerToUpdate.id, speakerData);
+                } else {
+                    await SpeakerAPI.addSpeaker(speakerData);
+                }
+                setReload(true);
+                setModalShow(false);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const openEditModal = (speaker) => {
+        openModal(speaker);
+    };
     const columns = [
         columnHelper.accessor('firstName'),
         columnHelper.accessor('lastName'),
@@ -81,154 +163,90 @@ const SpeakerPage = withSwal((props) => {
             id: 'actions',
             cell: props => (
                 <>
-                    <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                        <i class="ki-outline ki-trash fs-2"></i>
-                    </a>
+                    <div className="d-flex flex-row gap-2">
+                        <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                            <i className="ki-outline ki-trash fs-2"></i>
+                        </a>
+                        <a onClick={() => openEditModal(props.row.original)} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
+                            <i className="bi bi-pencil"></i>
+                        </a>
+                    </div>
                 </>
             ),
         }),
-    ]
+    ];
+
     const DeleteBtnClick = (row) => {
-        console.log("row", row)
         swal.fire({
             title: 'Delete',
-            text: 'Are you sure delete this event?',
+            text: 'Are you sure you want to delete this speaker?',
             icon: 'error',
             confirmButtonText: 'Delete'
         })
             .then((result) => {
                 if (result.isConfirmed) {
-                    Speaker.deleteSpeaker(row.id)
-                        .then((data) => {
-                            console.log(data);
+                    SpeakerAPI.deleteSpeaker(row.id)
+                        .then(() => {
                             setReload(true);
                         })
                         .catch(err => {
-                            console.log(err)
-                        })
+                            console.log(err);
+                        });
                 }
-            })
-    }
+            });
+    };
 
-
-    const handleNameChange = (txt) => {
-        setName(txt);
-        txt != '' ? setNameError('') : setNameError('Name is required.');
-    }
-    const openModal = () => {
-        setVeneueOptions(veneueOptions?.map(item => ({
-            value: item?.id,
-            label: item?.name
-        })));
-
-
-
-        setName('');
-        setLastName('');
-        setEmail('');
-        setPrimaryAffiliation('');
-        setTitle('');
-        setHeadShot('');
-        setLinkedInURL('');
-        setTwitterURL('');
-        setBio('');
-        setAdminFullName('');
-        setAdminEmailAddress('');
-        setModalShow(true);
-    }
-    const addEventFunc = async () => {
-        if (firstName == '') {
-            setNameError("Name is required.");
-        }
-
-
-        if (firstName != '') {
-            const speakerData = {};
-            speakerData.firstName = firstName;
-            speakerData.lastName = lastname;
-            speakerData.emailAddress = email;
-            speakerData.title = title;
-            speakerData.primaryAffiliation = primaryAffiliation;
-            speakerData.headshot = headshot;
-            speakerData.linkedInURL = linkedInURL;
-            speakerData.twitterURL = twitterURL;
-            speakerData.bio = bio;
-            speakerData.adminFullName = adminFullName;
-            speakerData.adminEmailAddress = adminEmailAddress;
-            speakerData.space_id = selectedSpace?.space_id;
-            Speaker.addSpeaker(speakerData)
-                .then(res => {
-                    setReload(true);
-                    setModalShow(false);
-
-                })
-                .catch(err => {
-                    console.log("Error")
-                })
-        }
-    }
     return (
         <>
-            {/* <!--begin::Content wrapper--> */}
-            <div class="d-flex flex-column flex-column-fluid">
-                <div id="kt_app_toolbar" class="app-toolbar pt-3 pt-lg-3">
-
-                    {/* <!--begin::Toolbar wrapper--> */}
-                    <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-
-                        {/* <!--begin::Page title--> */}
-                        <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
-                            {/* <!--begin::Breadcrumb--> */}
+            <div className="d-flex flex-column flex-column-fluid">
+                <div id="kt_app_toolbar" className="app-toolbar pt-3 pt-lg-3">
+                    <div className="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+                        <div className="page-title d-flex flex-column justify-content-center gap-1 me-3">
                             <BreadcrumbCmp title={'Speakers'} />
-                            {/* <!--end::Breadcrumb--> */}
-
-                            {/* <!--begin::Title--> */}
-                            <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Speakers</h1>
-                            {/* <!--end::Title--> */}
+                            <h1 className="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Speakers</h1>
                         </div>
-                        {/* <!--end::Page title--> */}
-
-                        {/* <!--begin::Actions--> */}
-                        <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => { openModal() }} class="btn btn-sm btn-flex btn-dark align-self-center px-3">
-                                <i class="ki-outline ki-plus-square fs-3"></i>New Speaker</a>
+                        <div className="d-flex align-items-center gap-2 gap-lg-3">
+                            <a onClick={() => { openModal() }} className="btn btn-sm btn-flex btn-dark align-self-center px-3">
+                                <i className="ki-outline ki-plus-square fs-3"></i>New Speaker</a>
                         </div>
-                        {/* <!--end::Actions--> */}
                     </div>
-                    {/* <!--end::Toolbar wrapper--> */}
                 </div>
-
-                <div id="kt_app_content" class="app-content flex-column-fluid mt-5 mt-lg-5">
+                <div id="kt_app_content" className="app-content flex-column-fluid mt-5 mt-lg-5">
                     <TableCmp data={tableData} columns={columns} />
                 </div>
-
             </div>
-            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={"New Speaker"}>
+            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={isEditMode ? "Edit Speaker" : "New Speaker"}>
                 <ModalBody>
-                    <TextField label='First Name' required={true} name='first name' value={firstName} onChange={(e) => { handleNameChange(e.target.value) }} error={nameError} />
-                    <TextField label='Last Name' name='last name' value={lastname} onChange={(e) => setLastName(e.target.value)} />
-                    <TextField label='Email Address' name='emailAddress' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <div className="mb-3">
+                        <label htmlFor="Events" className="form-label">Event</label>
+                        <select className="form-select" id="Events" value={selectedActiveEvent} onChange={(e) => handleEventChange(e.target.value)}>
+                            <option value="">Select an active event</option>
+                            {activeEvents.map(event => (
+                                <option key={event.id} value={event.id}>{event.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <TextField label='First Name' required={true} name='first name' value={firstName} onChange={(e) => handleNameChange(e.target.value)} />
+                    <TextField label='Last Name' name='last name' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <TextField label='Email Address' required={true} name='emailAddress' value={emailAddress} onChange={(e) => handleEmailChange(e.target.value)} />
                     <TextField label='Primary Affiliation' name='primaryAffiliation' value={primaryAffiliation} onChange={(e) => setPrimaryAffiliation(e.target.value)} />
                     <TextField label='Title' name='title' value={title} onChange={(e) => setTitle(e.target.value)} />
-                    <TextField label='Headshot' name='headshot' value={headshot} onChange={(e) => setHeadShot(e.target.value)} />
+                    <TextField label='Headshot' name='headshot' value={headshot} onChange={(e) => setHeadshot(e.target.value)} />
                     <TextField label='LinkedInURL' name='linkedInURL' value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} />
                     <TextField label='TwitterURL' name='twitterURL' value={twitterURL} onChange={(e) => setTwitterURL(e.target.value)} />
                     <TextField label='Bio' name='bio' value={bio} onChange={(e) => setBio(e.target.value)} />
                     <TextField label='Admin Full Name' name='adminFullName' value={adminFullName} onChange={(e) => setAdminFullName(e.target.value)} />
                     <TextField label='Admin Email Address' name='adminEmailAddress' value={adminEmailAddress} onChange={(e) => setAdminEmailAddress(e.target.value)} />
-
                 </ModalBody>
                 <ModalFooter>
                     <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
                         Cancel
                     </Button>
-                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => { addEventFunc() }}>
-                        <i class="ki-outline ki-plus-square fs-3"></i>&nbsp;Create Speaker
+                    <Button className="btn btn-sm btn-flex btn-primary" onClick={() => { addOrUpdateSpeaker() }}>
+                        {isEditMode ? "Update Speaker" : <><i className="ki-outline ki-plus-square fs-3"></i>&nbsp;Create Speaker</>}
                     </Button>
                 </ModalFooter>
             </Modal>
-
-
         </>
     );
 });

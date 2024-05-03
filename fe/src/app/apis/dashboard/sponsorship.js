@@ -42,9 +42,16 @@ const getSponsorshipsByEvent = (eventId) => {
         });
 };
 
+const updateSponsorship = (id, data) => {
+    return axios.put(API_URL + `update/${id}`, data)
+        .then((response) => {
+            return response.data;
+        });
+}
 export default {
     addSponsorship,
     getSponsorship,
     deleteSponsorship,
-    getSponsorshipsByEvent
+    getSponsorshipsByEvent,
+    updateSponsorship
 };

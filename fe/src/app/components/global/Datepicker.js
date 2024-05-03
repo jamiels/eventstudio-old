@@ -6,8 +6,8 @@ import { getMonth, getYear } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toAbsoluteUrl } from '../../../_metronic/helpers';
 
-const ArrowLeft = () => <img src={toAbsoluteUrl("/media/svg/arrow-left.svg")} alt="Arrow Left" style={{width: '10px'}} />;
-const ArrowRight = () => <img src={toAbsoluteUrl("/media/svg/arrow-right.svg")} alt="Arrow Right" style={{width: '10px'}} />;
+// const ArrowLeft = () => <img src={toAbsoluteUrl("/media/svg/arrow-left.svg")} alt="Arrow Left" style={{ width: '10px' }} />;
+// const ArrowRight = () => <img src={toAbsoluteUrl("/media/svg/arrow-right.svg")} alt="Arrow Right" style={{ width: '10px' }} />;
 
 const StyledPicker = Styled.div`
   .react-datepicker-wrapper {
@@ -180,7 +180,7 @@ const months = [
 ];
 
 const DatePicker = forwardRef(({ placeHolder, onChange, selected, error, label, required, ...props }, ref) => {
-  
+
   const [selectedDate, setSelectedDate] = useState(null);
 
 
@@ -207,7 +207,7 @@ const DatePicker = forwardRef(({ placeHolder, onChange, selected, error, label, 
           renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth }) => (
             <div className="flatpickr-months">
               <div className="flatpickr-prev-month cusor-pointer" onClick={decreaseMonth}>
-                <ArrowLeft />
+                <i class="bi bi-arrow-left-short"></i>
               </div>
               <div className="flatpickr-month">
                 <div className="flatpickr-current-month p-0">
@@ -225,6 +225,7 @@ const DatePicker = forwardRef(({ placeHolder, onChange, selected, error, label, 
                   <div className="numInputWrapper">
                     <input
                       className="numInput cur-year"
+                      style={{ width: '75px' }}
                       type="number"
                       aria-label="Year"
                       onChange={(e) => changeYear(Number(e?.target?.value))}
@@ -236,7 +237,7 @@ const DatePicker = forwardRef(({ placeHolder, onChange, selected, error, label, 
                 </div>
               </div>
               <div className="flatpickr-next-month cusor-pointer" onClick={increaseMonth}>
-                <ArrowRight />
+                <i class="bi bi-arrow-right-short"></i>
               </div>
             </div>
           )}

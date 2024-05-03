@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Navigate, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
     createColumnHelper
 } from '@tanstack/react-table';
@@ -19,7 +19,6 @@ import { useSpace } from "../../context/space.provider";
 
 const EventsPage = withSwal((props) => {
     const { selectedSpace } = useSpace();
-    console.log("🚀 ~ EventsPage ~ selectedSpace:", selectedSpace)
 
     const columnHelper = createColumnHelper();
 
@@ -39,9 +38,12 @@ const EventsPage = withSwal((props) => {
     const [endDateError, setEndDateError] = useState('');
     const [tableData, setTableData] = useState([]);
     const [reload, setReload] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [eventToUpdate, setEventToUpdate] = useState(null);
 
     const { currentUser } = useAuth();
     const navigate = useNavigate();
+
     const fetchData = () => {
         EventAPI.getEvents()
             .then(res => {
@@ -52,6 +54,7 @@ const EventsPage = withSwal((props) => {
                 console.log(err)
             })
     }
+
     const fetchVenueNames = () => {
         EventAPI.getVeneue()
             .then(res => {
@@ -72,13 +75,11 @@ const EventsPage = withSwal((props) => {
         fetchVenueNames()
     }, []);
 
-
     useEffect(() => {
-        if (reload == true) {
+        if (reload) {
             fetchData()
         }
     }, [reload]);
-
 
     const columns = [
         columnHelper.accessor('id'),
@@ -88,9 +89,7 @@ const EventsPage = withSwal((props) => {
             header: 'landingUrl',
             id: 'actions',
             cell: ({ row: { original } }) => (
-                <>
-                    <a href={original.landingUrl} target="_blank" rel="noopener noreferrer">{original?.landingUrl}</a>
-                </>
+                <a href={original.landingUrl} target="_blank" rel="noopener noreferrer">{original?.landingUrl}</a>
             ),
         }),
         columnHelper.accessor('sponsorshipDeckUrl'),
@@ -119,12 +118,17 @@ const EventsPage = withSwal((props) => {
             id: 'actions',
             cell: props => (
                 <>
-                    <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                        <i class="ki-outline ki-trash fs-2"></i>
-                    </a>
-                    <a onClick={() => navigate(`/dashboard/events/details/${props.row.original.id}`)} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
-                        <i class="bi bi-ticket-detailed"></i>
-                    </a>
+                    <div className="d-flex flex-row gap-2">
+                        <a onClick={() => { DeleteBtnClick(props.row.original) }} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                            <i class="ki-outline ki-trash fs-2"></i>
+                        </a>
+                        <a onClick={() => navigate(`/dashboard/events/details/${props.row.original.id}`)} class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
+                            <i class="bi bi-ticket-detailed"></i>
+                        </a>
+                        <a onClick={() => openEditModal(props.row.original)} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
+                            <i className="bi bi-pencil"></i>
+                        </a>
+                    </div>
                 </>
             ),
         }),
@@ -165,10 +169,10 @@ const EventsPage = withSwal((props) => {
 
     const handleNameChange = (txt) => {
         setName(txt);
-        txt != '' ? setNameError('') : setNameError('Name is required.');
+        txt !== '' ? setNameError('') : setNameError('Name is required.');
     }
-    const openModal = () => {
 
+    const openModal = () => {
         setName('');
         setShortName('');
         setUrl('');
@@ -177,81 +181,93 @@ const EventsPage = withSwal((props) => {
         setVeneue(0);
         setThemes('');
         setSponsorshipDeckUrl('');
-
         setModalShow(true);
+        setIsEditMode(false);
+        setEventToUpdate(null);
     }
 
     const addEventFunc = async () => {
-        if (name == '') {
+        if (name === '') {
             setNameError("Name is required.");
         }
         if (startDate != null && endDate != null && endDate < startDate) {
             setEndDateError("End Date must be later than Start Date.");
         }
 
-        if (name != '' && endDateError == '') {
-            const eventData = {};
-            eventData.name = name;
-            eventData.shortName = shortName;
-            eventData.landingURL = url;
-            eventData.startdate = startDate != null ? startDate.toLocaleDateString() : '';
-            eventData.enddate = endDate != null ? endDate.toLocaleDateString() : '';
-            eventData.veneue = veneue != 0 ? veneue : 0;
-            eventData.themes = themes;
-            eventData.sponsorshipDeckUrl = sponsorshipDeckUrl;
-            eventData.space_id = selectedSpace?.space_id;
+        if (name !== '' && endDateError === '') {
+            const eventData = {
+                name,
+                shortName,
+                landingURL: url,
+                startdate: startDate != null ? startDate.toLocaleDateString() : '',
+                enddate: endDate != null ? endDate.toLocaleDateString() : '',
+                veneue: veneue !== 0 ? veneue : 0,
+                themes,
+                sponsorshipDeckUrl,
+                space_id: selectedSpace?.space_id
+            };
 
-            EventAPI.addEvent(currentUser.id, eventData)
-                .then(res => {
-                    console.log("res", res);
-                    setReload(true);
-                    setModalShow(false);
-
-                })
-                .catch(err => {
-                    console.log("Error")
-                })
+            if (isEditMode) {
+                EventAPI.updateEvent(eventToUpdate.id, eventData)
+                    .then(res => {
+                        console.log("res", res);
+                        setReload(true);
+                        setModalShow(false);
+                    })
+                    .catch(err => {
+                        console.log("Error updating event:", err);
+                    });
+            } else {
+                EventAPI.addEvent(currentUser.id, eventData)
+                    .then(res => {
+                        console.log("res", res);
+                        setReload(true);
+                        setModalShow(false);
+                    })
+                    .catch(err => {
+                        console.log("Error adding new event:", err);
+                    });
+            }
         }
     }
 
+    const openEditModal = (event) => {
+        setName(event.name);
+        setShortName(event.shortname);
+        setUrl(event.landingURL);
+        setStartDate(event.startdate ? new Date(event.startdate) : null);
+        setEndDate(event.enddate ? new Date(event.enddate) : null);
+        setVeneue(event.veneue);
+        setThemes(event.theme);
+        setSponsorshipDeckUrl(event.sponsorshipDeckUrl);
+        setModalShow(true);
+        setIsEditMode(true);
+        setEventToUpdate(event);
+    };
+
     return (
         <>
-            {/* <!--begin::Content wrapper--> */}
-            <div class="d-flex flex-column flex-column-fluid">
-                <div id="kt_app_toolbar" class="app-toolbar pt-3 pt-lg-3">
-
-                    {/* <!--begin::Toolbar wrapper--> */}
-                    <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-
-                        {/* <!--begin::Page title--> */}
-                        <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
-                            {/* <!--begin::Breadcrumb--> */}
+            <div className="d-flex flex-column flex-column-fluid">
+                <div id="kt_app_toolbar" className="app-toolbar pt-3 pt-lg-3">
+                    <div className="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+                        <div className="page-title d-flex flex-column justify-content-center gap-1 me-3">
                             <BreadcrumbCmp title={'Events'} />
-                            {/* <!--end::Breadcrumb--> */}
-
-                            {/* <!--begin::Title--> */}
-                            <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Events</h1>
-                            {/* <!--end::Title--> */}
+                            <h1 className="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Events</h1>
                         </div>
-                        {/* <!--end::Page title--> */}
-
-                        {/* <!--begin::Actions--> */}
-                        <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a onClick={() => { openModal() }} class="btn btn-sm btn-flex btn-dark align-self-center px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
-                                <i class="ki-outline ki-plus-square fs-3"></i>New Event</a>
+                        <div className="d-flex align-items-center gap-2 gap-lg-3">
+                            <button onClick={openModal} className="btn btn-sm btn-flex btn-dark align-self-center px-3">
+                                <i className="ki-outline ki-plus-square fs-3"></i>New Event
+                            </button>
                         </div>
-                        {/* <!--end::Actions--> */}
                     </div>
-                    {/* <!--end::Toolbar wrapper--> */}
                 </div>
 
-                <div id="kt_app_content" class="app-content flex-column-fluid mt-5 mt-lg-5">
+                <div id="kt_app_content" className="app-content flex-column-fluid mt-5 mt-lg-5">
                     <TableCmp data={tableData} columns={columns} />
                 </div>
-
             </div>
 
-            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={"New Event"}>
+            <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={isEditMode ? "Edit Event" : "New Event"}>
                 <ModalBody>
                     <TextField label='Name' required={true} name='name' value={name} onChange={(e) => { handleNameChange(e.target.value) }} error={nameError} />
                     <TextField label='ShortName' name='shortname' value={shortName} onChange={(e) => setShortName(e.target.value)} />
@@ -267,12 +283,10 @@ const EventsPage = withSwal((props) => {
                         Cancel
                     </Button>
                     <Button className="btn btn-sm btn-flex btn-primary" onClick={() => { addEventFunc() }}>
-                        <i class="ki-outline ki-plus-square fs-3"></i>&nbsp;Add Event
+                        {isEditMode ? "Update Event" : <><i className="ki-outline ki-plus-square fs-3"></i>&nbsp;Add Event</>}
                     </Button>
                 </ModalFooter>
             </Modal>
-
-            {/* <!--end::Content wrapper--> */}
         </>
     );
 });

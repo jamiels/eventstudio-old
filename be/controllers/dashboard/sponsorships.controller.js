@@ -115,3 +115,36 @@ exports.getAllSponsorshipsEventDetail = async (req, res) => {
         });
     }
 };
+
+exports.updateSponsorship = async (req, res) => {
+    const id = req.params.id;
+    const { organizationId, eventId, deckSent, space_id, commitmentAmount } = req.body;
+
+    try {
+        // Find the sponsorship by its ID
+        let sponsorship = await Sponsorship.findByPk(id);
+
+        // If sponsorship not found, return 404 error
+        if (!sponsorship) {
+            return res.status(404).send({ message: "Sponsorship not found." });
+        }
+        const updateSponsorship = {
+            organization_id: organizationId,
+            event_id: eventId,
+            deckSent: deckSent,
+            commitmentAmount: commitmentAmount,
+            space_id
+        }
+        sponsorship = await Sponsorship.update(updateSponsorship, { where: { id: id } });
+
+        // Return success response with updated sponsorship
+        res.send({ success: true, sponsorship });
+    } catch (err) {
+        console.log("🚀 ~ exports.updateSponsorship= ~ err:", err)
+        // Return error response if any error occurs
+        res.status(500).send({
+            message: "Error updating sponsorship with id=" + id,
+            errObj: err
+        });
+    }
+};

@@ -102,7 +102,7 @@ const EventDetailsPage = withSwal((props) => {
             cell: props => (
                 <>
                     <button onClick={() => DeleteBtnClick(props.row.original.id, 'speaker')} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                        <i className="ki ki-trash fs-2"></i>
+                        <i class="ki-outline ki-trash fs-2"></i>
                     </button>
                 </>
             ),

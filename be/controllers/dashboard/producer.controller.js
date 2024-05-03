@@ -69,3 +69,23 @@ exports.deleteProducer = async (req, res) => {
         });
     }
 };
+
+exports.updateProducer = async (req, res) => {
+    const id = req.params.id;
+    const updateProducer = req.body;
+
+    try {
+        const producer = await Producer.findByPk(id);
+        if (!producer) {
+            return res.status(404).send({ message: "Producer not found." });
+        }
+
+        await Producer.update(updateProducer, { where: { id } });
+        res.send({ success: true, producer: updateProducer });
+    } catch (err) {
+        res.status(500).send({
+            message: "Error updating producer with id=" + id,
+            errObj: err
+        });
+    }
+};

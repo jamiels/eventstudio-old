@@ -1,5 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-    const Speakers = sequelize.define('Speakers', {
+    const Speakers = sequelize.define('speakers', {
+        event_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'events',
+                key: 'id'
+            }
+        },
         firstName: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -37,15 +45,15 @@ module.exports = (sequelize, DataTypes) => {
         adminEmailAddress: {
             type: DataTypes.STRING,
             allowNull: true,
-        },        
+        },
         space_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-              model: 'space',
-              key: 'id'
+                model: 'space',
+                key: 'id'
             }
-          },
+        },
     });
 
     return Speakers;

@@ -35,9 +35,16 @@ const deleteProducer = (id) => {
     });
 };
 
+const updateProducer= (id, data) => {
+    return axios.put(API_URL + `update/${id}`, data)
+        .then((response) => {
+            return response.data;
+        });
+}
 
 export default {
     addProducer,
     getProducer,
-    deleteProducer
+    deleteProducer,
+    updateProducer
 };

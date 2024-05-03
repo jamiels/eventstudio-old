@@ -63,6 +63,49 @@ exports.delete = (req, res) => {
             });
         });
 }
+exports.getActiveEvents = async (req, res) => {
+    try {
+        events = await Event.findAll({ where: { is_active: true } });
+        res.send({ events: events })
+    }
+    catch (ex) {
+        console.log(ex)
+        throw ex;
+    }
+
+}
+
+exports.updateEvent = async (req, res) => {
+    const id = req.params.id;
+    const eventData = req.body;
+
+    try {
+        const event = await Event.findByPk(id);
+        if (!event) {
+            return res.status(404).send({ message: "Event not found." });
+        }
+
+        const updatedEvent = {
+            name: eventData.name,
+            shortname: eventData.shortName,
+            landingUrl: eventData.landingURL,
+            startdate: eventData.startdate,
+            enddate: eventData.enddate,
+            veneue: eventData.veneue,
+            space_id: eventData.space_id,
+            sponsorshipDeckUrl: eventData.sponsorshipDeckUrl,
+            theme: eventData.theme
+        };
+
+        await Event.update(updatedEvent, { where: { id: id } });
+        res.send({ success: true, event: updatedEvent });
+    } catch (err) {
+        res.status(500).send({
+            message: "Error updating event with id=" + id,
+            errObj: err
+        });
+    }
+};
 
 
 module.exports = exports;

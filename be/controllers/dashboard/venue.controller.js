@@ -50,14 +50,14 @@ exports.getAllVenueNames = async (req, res) => {
 exports.deleteVenue = async (req, res) => {
     const { id } = req.params;
     try {
-        
+
         const deletedVenue = await Venue.destroy({
             where: {
                 id: id
             }
         });
-        
-        
+
+
         if (deletedVenue === 0) {
             res.status(404).send({
                 message: `Venue with ID ${id} not found.`
@@ -67,10 +67,39 @@ exports.deleteVenue = async (req, res) => {
                 message: `Venue with ID ${id} deleted successfully.`
             });
         }
-        
+
     } catch (err) {
         res.status(500).send({
             message: "An error occurred while deleting Venue",
+            errObj: err
+        });
+    }
+};
+
+
+exports.updateVenue = async (req, res) => {
+    const id = req.params.id;
+    const venueData = req.body;
+
+    try {
+        // Find the venue by its ID
+        let venue = await Venue.findByPk(id);
+
+        // If venue not found, return 404 error
+        if (!venue) {
+            return res.status(404).send({ message: "Venue not found." });
+        }
+
+        // Save the updated venue
+        venue = await venue.update(venueData, { where: { id: id } });
+
+        // Return success response with updated venue
+        res.send({ success: true, venue });
+    } catch (err) {
+        console.log("🚀 ~ exports.updateVenue= ~ err:", err)
+        // Return error response if any error occurs
+        res.status(500).send({
+            message: "Error updating venue with id=" + id,
             errObj: err
         });
     }

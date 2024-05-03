@@ -40,11 +40,17 @@ const deleteSpeaker = (id) => {
     });
 };
 
-
+const updateSpeaker= (id, data) => {
+    return axios.put(API_URL + `update/${id}`, data)
+        .then((response) => {
+            return response.data;
+        });
+}
 
 export default {
     addSpeaker,
     getSpeaker,
     deleteSpeaker,
-    getSpeakersByEvent
+    getSpeakersByEvent,
+    updateSpeaker
 };

@@ -4,41 +4,47 @@ const API_URL = `${process.env.REACT_APP_API_URL}/dashboard/venue/`;
 
 
 
-const addVenue = ( data) => {
-    return axios.post(API_URL + "add", 
+const addVenue = (data) => {
+    return axios.post(API_URL + "add",
         data,
-        
+
     )
-    .then((response) => {
-        return response.data;
-    })
-    .catch(err => {
-        console.log("error",err)
-        return err.message;
-    });
+        .then((response) => {
+            return response.data;
+        })
+        .catch(err => {
+            console.log("error", err)
+            return err.message;
+        });
 };
 
 
 const getVenue = () => {
-    return axios.get(`${API_URL}events/getvenues`)
+    return axios.get(`${process.env.REACT_APP_API_URL}/Dashboard/events/getvenues`)
         .then((response) => {
-           return response.data;
+            return response.data;
         });
 };
 
 const deleteVenue = (id) => {
     return axios.delete(`${API_URL}delete/${id}`)
-    
-    .then((response) => {
-        console.log("del",response?.data);
-        return response.data;
-    });
+
+        .then((response) => {
+            console.log("del", response?.data);
+            return response.data;
+        });
 };
 
-
+const updateVenue = (id, data) => {
+    return axios.put(API_URL + `update/${id}`, data)
+        .then((response) => {
+            return response.data;
+        });
+}
 
 export default {
     addVenue,
     getVenue,
-    deleteVenue
+    deleteVenue,
+    updateVenue
 };
