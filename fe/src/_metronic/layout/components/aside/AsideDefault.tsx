@@ -1,18 +1,16 @@
-/* eslint-disable react/jsx-no-target-blank */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {FC} from 'react'
+import React, { FC } from 'react'
 import clsx from 'clsx'
-import {useLayout} from '../../core'
-import {Link, NavLink} from 'react-router-dom'
+import { useLayout } from '../../core'
+import { Link, NavLink } from 'react-router-dom'
 
 const AsideDefault: FC = () => {
-  const {config, classes} = useLayout()
-  const {aside} = config
+  const { config, classes } = useLayout()
+  const { aside } = config
 
   return (
     <div
       id='kt_aside'
-      className={clsx('aside', classes.aside.join(' '), {'d-none': !aside.display})}
+      className={clsx('aside', classes.aside.join(' '), { 'd-none': !aside.display })}
       data-kt-drawer='true'
       data-kt-drawer-name='aside'
       data-kt-drawer-activate='{default: true, lg: false}'
@@ -45,81 +43,54 @@ const AsideDefault: FC = () => {
 
           <div className="menu-item">
             <NavLink to='/dashboard/events' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Events</span>
             </NavLink>
           </div>
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/organizations' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Organizations</span>
             </NavLink>
           </div>
 
           <div className="menu-item">
             <NavLink to='/dashboard/venues' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Venues</span>
             </NavLink>
           </div>
 
           <div className="menu-item">
             <NavLink to='/dashboard/speakers' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Speakers</span>
             </NavLink>
           </div>
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/sponsorships' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Sponsorships</span>
             </NavLink>
           </div>
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/producers' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Producers</span>
             </NavLink>
           </div>
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/sponsor-requests' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Sponsor Requests</span>
             </NavLink>
           </div>
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/speaking-requests' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Speaking Requests</span>
             </NavLink>
           </div>
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/speaker-onboard' className='menu-link'>
-              <span className="menu-bullet">
-                  <span className="bullet bullet-dot"></span>
-              </span>
               <span className="menu-title">Speaker Onboarding</span>
             </NavLink>
           </div>
@@ -129,4 +100,4 @@ const AsideDefault: FC = () => {
   )
 }
 
-export {AsideDefault}
+export { AsideDefault }
