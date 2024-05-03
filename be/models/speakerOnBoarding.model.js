@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const SponsorOnboarding = sequelize.define('Sponsor_onboarding', {
+    const SpeakerOnboarding = sequelize.define('speaker_onboarding', {
         eventUUID: {
             type: DataTypes.UUID,
             allowNull: true
@@ -43,16 +43,8 @@ module.exports = (sequelize, DataTypes) => {
         organization: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        eventUUID: {
-            type: DataTypes.UUID,
-            allowNull: true
-        },
-        spaceUUID: {
-            type: DataTypes.UUID,
-            allowNull: true
         }
     });
 
-    return SponsorOnboarding;
+    return SpeakerOnboarding;
 };

@@ -4,9 +4,9 @@ import clsx from 'clsx'
 import { Link, useParams } from 'react-router-dom'
 import { toAbsoluteUrl } from '../../../_metronic/helpers'
 import TextField from '../../components/global/TextField'
-import sponsorboarding from '../../apis/publicForms/sponsorBoarding'
+import speakerBoardingApi from '../../apis/publicForms/speakerBoarding'
 
-export function SponsorBoarding() {
+export function SpeakerOnBoarding() {
     const { id } = useParams();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -25,10 +25,15 @@ export function SponsorBoarding() {
         bio: Yup.string().required('Bio is required'),
         twitterURL: Yup.string().url('Invalid twitter URL').required('Twitter URL is required'),
         linkedInURL: Yup.string().url('Invalid LinkedIn URL').required('LinkedIn URL is required'),
-        headshotURL: Yup.string().url('Invalid headshot URL').required('Headshot URL is required'),
+        headshotURL: Yup.mixed().required('Headshot is required'),
         title: Yup.string().required('Title is required'),
         organization: Yup.string().required('Organization is required')
     });
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setHeadshotURL(file);
+    };
 
     const handleSponsorBoarding = async () => {
         try {
@@ -43,17 +48,18 @@ export function SponsorBoarding() {
                 organization
             }, { abortEarly: false });
 
+            const formData = new FormData();
+            formData.append('fullName', fullName);
+            formData.append('email', email);
+            formData.append('bio', bio);
+            formData.append('linkedInURL', linkedInURL);
+            formData.append('twitterURL', twitterURL);
+            formData.append('headshot', headshotURL);
+            formData.append('title', title);
+            formData.append('organization', organization);
+
             // If validation passes, make the request
-            const res = await sponsorboarding.addSponsorOnboarding({
-                fullName,
-                email,
-                bio,
-                linkedInURL,
-                twitterURL,
-                headshotURL,
-                title,
-                organization
-            }, id);
+            const res = await speakerBoardingApi.addSpeakerOnboarding(formData, id);
 
             setSuccessMessage(res.message);
             setError(null);
@@ -96,10 +102,15 @@ export function SponsorBoarding() {
                     <TextField label='Bio' required name='bio' value={bio} onChange={(e) => setBio(e.target.value)} error={error && error.bio} />
                     <TextField label='LinkedIn URL' required name='linkedInURL' value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} error={error && error.linkedInURL} />
                     <TextField label='Twitter URL' required name='twitterURL' value={twitterURL} onChange={(e) => setTwitterURL(e.target.value)} error={error && error.twitterURL} />
-                    <TextField label='Headshot URL' required name='headshotURL' value={headshotURL} onChange={(e) => setHeadshotURL(e.target.value)} error={error && error.headshotURL} />
+                    <div className="mb-10 d-flex flex-column">
+                        <label htmlFor="headshot" className="form-label">Headshot</label>
+                        <input type="file" id="headshot" accept="image/jpeg" onChange={handleFileChange} />
+                    </div>
+                    {error && error.headshotURL && <div className="text-red-500">{error.headshotURL}</div>}
                     <TextField label='Title' required name='title' value={title} onChange={(e) => setTitle(e.target.value)} error={error && error.title} />
                     <TextField label='Organization' required name='organization' value={organization} onChange={(e) => setOrganization(e.target.value)} error={error && error.organization} />
                 </div>
+
                 {error && typeof error === 'string' && <div className="text-red-500">{error}</div>}
                 {successMessage && <div className="text-green-500">{successMessage}</div>}
                 <div className="mb-5 mt-10">

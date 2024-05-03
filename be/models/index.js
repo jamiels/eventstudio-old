@@ -29,7 +29,7 @@ db.sponsorships = require('./sponsorships.model.js')(db.connection, db.Sequelize
 db.producer = require('./producer.model.js')(db.connection, db.Sequelize)
 db.speakers = require('./speakers.model.js')(db.connection, db.Sequelize)
 db.speaking_request = require('./speakingRequest.model.js')(db.connection, db.Sequelize)
-db.sponsor_boarding = require('./sponsorBoarding.model.js')(db.connection, db.Sequelize)
+db.speaker_onboarding = require('./speakerOnBoarding.model.js')(db.connection, db.Sequelize)
 db.sponsor_request = require('./sponsorRequest.model.js')(db.connection, db.Sequelize)
 db.volunteer = require('./volunteer.model.js')(db.connection, db.Sequelize)
 

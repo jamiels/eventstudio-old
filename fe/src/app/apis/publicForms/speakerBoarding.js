@@ -2,8 +2,7 @@ import axios from "axios";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/public/onboard/`;
 
-const addSponsorOnboarding = (data, id) => {
-
+const addSpeakerOnboarding = (data, id) => {
     return axios.post(API_URL + `${id}`, data)
         .then((response) => {
             return response.data;
@@ -13,14 +12,14 @@ const addSponsorOnboarding = (data, id) => {
         });
 };
 
-const getSponsorBoardings = () => {
+const getSpeakerOnboardings = () => {
     return axios.get(API_URL + "all")
         .then((response) => {
             return response.data;
         });
 };
 
-const deleteSponsorOnboarding = (id) => {
+const deleteSpeakerOnboarding = (id) => {
     return axios.delete(API_URL + `${id}`)
         .then((response) => {
             return response.data;
@@ -28,7 +27,7 @@ const deleteSponsorOnboarding = (id) => {
 };
 
 export default {
-    addSponsorOnboarding,
-    getSponsorBoardings,
-    deleteSponsorOnboarding
+    addSpeakerOnboarding,
+    getSpeakerOnboardings,
+    deleteSpeakerOnboarding
 };

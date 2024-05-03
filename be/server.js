@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const db = require("./models");
-const {logger, } = require('./middlewares');
+const { logger, } = require('./middlewares');
 
 const app = express();
 
@@ -23,9 +23,12 @@ app.use(logger)
 // Prepare DB
 db.connection.sync();
 
+//make the uploads folder static
+app.use('/headshots', express.static('uploads'));
+
 // simple route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Login System'});
+  res.json({ message: 'Welcome to Login System' });
 });
 
 require("./routes/user.routes")(app);

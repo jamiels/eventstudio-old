@@ -3,17 +3,17 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { withSwal } from 'react-sweetalert2';
 import BreadcrumbCmp from "../../components/global/Breadcrumb";
 import TableCmp from "../../components/global/Table";
-import SponsorOnboardingApi from "../../apis/publicForms/sponsorBoarding";
+import SponsorOnboardingApi from "../../apis/publicForms/speakerBoarding";
 
-const SponsorOnboardingPage = withSwal((props) => {
+const SpeakerOnboardingPage = withSwal((props) => {
   const columnHelper = createColumnHelper();
   const { swal } = props;
   const [tableData, setTableData] = useState([]);
 
   const fetchData = () => {
-    SponsorOnboardingApi.getSponsorBoardings()
+    SponsorOnboardingApi.getSpeakerOnboardings()
       .then(res => {
-        setTableData(res.sponsorBoardings)
+        setTableData(res.speakerOnboardings)
       })
       .catch(err => {
         console.log(err)
@@ -64,7 +64,7 @@ const SponsorOnboardingPage = withSwal((props) => {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          SponsorOnboardingApi.deleteSponsorOnboarding(row.id)
+          SponsorOnboardingApi.deleteSpeakerOnboarding(row.id)
             .then((data) => {
               console.log(data);
               fetchData();
@@ -82,8 +82,8 @@ const SponsorOnboardingPage = withSwal((props) => {
         <div id="kt_app_toolbar" className="app-toolbar pt-3 pt-lg-3">
           <div className="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
             <div className="page-title d-flex flex-column justify-content-center gap-1 me-3">
-              <BreadcrumbCmp title={'Sponsor Onboarding'} />
-              <h1 className="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Sponsor Onboarding</h1>
+              <BreadcrumbCmp title={'Speaker Onboarding'} />
+              <h1 className="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-3 m-0">Speaker Onboarding</h1>
             </div>
           </div>
         </div>
@@ -95,4 +95,4 @@ const SponsorOnboardingPage = withSwal((props) => {
   );
 });
 
-export default SponsorOnboardingPage;
+export default SpeakerOnboardingPage;
