@@ -23,14 +23,15 @@ function TableCmp(props) {
     <div className="dataTables_wrapper dt-bootstrap4 no-footer">
       <div className="table-responsive">
         <table className="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
-          <thead>
+          <thead className='w-100'>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
+                style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
                 key={headerGroup.id}
                 className="text-start text-black fw-bold fs-7 text-uppercase gs-0"
               >
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} className="min-w-125px sorting">
+                  <th key={header.id} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-center' : 'text-start'}`}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -41,7 +42,9 @@ function TableCmp(props) {
           </thead>
           <tbody className="fw-semibold text-gray-600">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="odd">
+              <tr key={row.id} className="odd"
+                style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                 ))}
@@ -53,7 +56,7 @@ function TableCmp(props) {
 
       <div className="row">
         {dataLength > 0 && (
-          <div className="col-xs-6 col-sm-6 col-md-6 d-flex align-items-center justify-content-end justify-content-md-end">
+          <div className="w-100 d-flex align-items-center justify-content-end">
             <div className="dataTables_length" id="kt_customers_table_length">
               <label>
                 <select
