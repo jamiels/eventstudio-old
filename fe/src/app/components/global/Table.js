@@ -26,9 +26,8 @@ function TableCmp(props) {
           <thead className='w-100'>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
-                style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
                 key={headerGroup.id}
-                className="text-start text-black fw-bold fs-7 text-uppercase gs-0"
+                className="w-100 d-flex flex-row justify-content-between align-items-center text-start text-black fw-bold fs-7 text-uppercase gs-0"
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-center' : 'text-start'}`}>
