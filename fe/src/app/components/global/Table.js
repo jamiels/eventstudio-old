@@ -27,7 +27,7 @@ function TableCmp(props) {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0"
+                className="text-start text-black fw-bold fs-7 text-uppercase gs-0"
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="min-w-125px sorting">
