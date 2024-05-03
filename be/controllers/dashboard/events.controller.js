@@ -92,6 +92,7 @@ exports.updateEvent = async (req, res) => {
             startdate: eventData.startdate,
             enddate: eventData.enddate,
             veneue: eventData.veneue,
+            is_active: eventData.is_active,
             space_id: eventData.space_id,
             sponsorshipDeckUrl: eventData.sponsorshipDeckUrl,
             theme: eventData.theme

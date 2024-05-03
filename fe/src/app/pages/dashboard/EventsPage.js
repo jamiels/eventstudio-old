@@ -81,6 +81,20 @@ const EventsPage = withSwal((props) => {
         }
     }, [reload]);
 
+
+    const handleToggleActive = (event) => {
+        const updatedEvent = { ...event, is_active: !event.is_active };
+        EventAPI.updateEvent(event.id, updatedEvent)
+            .then(res => {
+                console.log("Event status updated:", res);
+                // Reload data after successful update
+                fetchData();
+            })
+            .catch(err => {
+                console.error("Error updating event status:", err);
+            });
+    };
+
     const columns = [
         columnHelper.accessor('id'),
         columnHelper.accessor('name'),
@@ -128,6 +142,10 @@ const EventsPage = withSwal((props) => {
                         <a onClick={() => openEditModal(props.row.original)} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
                             <i className="bi bi-pencil"></i>
                         </a>
+                        <div class="form-check form-switch d-flex justify-content-center align-items-center">
+                            <input class="form-check-input" checked={props.row.original.is_active} onChange={() => handleToggleActive(props.row.original)} type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                            {/* <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label> */}
+                        </div>
                     </div>
                 </>
             ),
