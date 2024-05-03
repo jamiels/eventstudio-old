@@ -13,7 +13,7 @@ export function SpeakerOnBoarding() {
     const [bio, setBio] = useState('');
     const [linkedInURL, setLinkedInURL] = useState('');
     const [twitterURL, setTwitterURL] = useState('');
-    const [headshotURL, setHeadshotURL] = useState('');
+    const [headshotURL, setHeadshotURL] = useState(null);
     const [title, setTitle] = useState('');
     const [organization, setOrganization] = useState('');
     const [error, setError] = useState(null);
@@ -68,7 +68,7 @@ export function SpeakerOnBoarding() {
             setBio('');
             setLinkedInURL('');
             setTwitterURL('');
-            setHeadshotURL('');
+            setHeadshotURL(null);
             setTitle('');
             setOrganization('');
         } catch (err) {

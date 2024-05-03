@@ -29,7 +29,7 @@ const SponsorshipRequestPage = withSwal((props) => {
     columnHelper.accessor('email'),
     columnHelper.accessor('involvement'),
     columnHelper.display({
-      header: 'linkedIn',
+      header: 'linkedIn URL',
       id: 'actions',
       cell: ({ row: { original } }) => (
         <>

@@ -56,14 +56,15 @@ const SpeakingRequestPage = withSwal((props) => {
     columnHelper.accessor('panelists', { header: 'Panelists', Cell: ({ value }) => value ? 'Yes' : 'No' }),
     columnHelper.accessor('abstract', { header: 'Abstract' }),
     columnHelper.display({
-      header: 'linkedInURL',
+      header: 'linkedIn URL',
       id: 'actions',
       cell: ({ row: { original } }) => (
         <>
           <a href={original.linkedInURL} target="_blank" rel="noopener noreferrer">{original?.linkedInURL}</a>
         </>
       ),
-    }), columnHelper.accessor('sponsorshipInterest', {
+    }),
+    columnHelper.accessor('sponsorshipInterest', {
       header: 'Sponsorship Interest',
       Cell: ({ value }) => {
         console.log("🚀 ~ SpeakingRequestPage ~ value:", value)

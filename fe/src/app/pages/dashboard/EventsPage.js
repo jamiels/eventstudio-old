@@ -100,13 +100,13 @@ const EventsPage = withSwal((props) => {
         columnHelper.accessor('name'),
         columnHelper.accessor('shortname'),
         columnHelper.display({
-            header: 'landingUrl',
+            header: 'landing Url',
             id: 'actions',
             cell: ({ row: { original } }) => (
                 <a href={original.landingUrl} target="_blank" rel="noopener noreferrer">{original?.landingUrl}</a>
             ),
         }),
-        columnHelper.accessor('sponsorshipDeckUrl'),
+        columnHelper.accessor('sponsorshipDeckUrl', { header: 'sponsorship Deck Url' }),
         columnHelper.accessor('theme'),
         columnHelper.accessor('startdate'),
         columnHelper.accessor('enddate'),

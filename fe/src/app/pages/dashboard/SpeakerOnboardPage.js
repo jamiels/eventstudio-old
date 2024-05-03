@@ -28,18 +28,34 @@ const SpeakerOnboardingPage = withSwal((props) => {
     columnHelper.accessor('fullName'),
     columnHelper.accessor('email'),
     columnHelper.accessor('bio'),
-    columnHelper.accessor('linkedInURL', {
-      Header: 'LinkedIn',
-      Cell: ({ value }) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+    columnHelper.display({
+      header: 'linkedIn URL',
+      id: 'actions',
+      cell: ({ row: { original } }) => (
+        <>
+          <a href={original.linkedInURL} target="_blank" rel="noopener noreferrer">{original?.linkedInURL}</a>
+        </>
+      ),
     }),
-    columnHelper.accessor('twitterURL', {
-      Header: 'Twitter',
-      Cell: ({ value }) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+    columnHelper.display({
+      header: 'Twitter URL',
+      id: 'actions',
+      cell: ({ row: { original } }) => (
+        <>
+          <a href={original.twitterURL} target="_blank" rel="noopener noreferrer">{original?.twitterURL}</a>
+        </>
+      ),
     }),
-    columnHelper.accessor('headshotURL', {
-      Header: 'Headshot',
-      Cell: ({ value }) => <img src={value} alt="Headshot" style={{ width: '50px', height: '50px' }} />
+    columnHelper.display({
+      header: 'Headshot URL',
+      id: 'actions',
+      cell: ({ row: { original } }) => (
+        <>
+          <a href={original.headshotURL} target="_blank" rel="noopener noreferrer">{original?.headshotURL}</a>
+        </>
+      ),
     }),
+
     columnHelper.accessor('title'),
     columnHelper.accessor('organization'),
     columnHelper.display({
