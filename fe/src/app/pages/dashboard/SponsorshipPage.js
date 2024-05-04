@@ -116,13 +116,13 @@ const SponsorshipPage = withSwal((props) => {
             id: 'actions',
             cell: props => (
                 <>
-                <div className="d-flex flex-row gap-2">
-                    <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                        <i className="ki-outline ki-trash fs-2"></i>
-                    </a>
-                    <a onClick={() => openEditModal(props.row.original)} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
-                        <i className="bi bi-pencil"></i>
-                    </a>
+                    <div className="w-100 d-flex gap-2 flex-row justify-content-end">
+                        <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                            <i className="ki-outline ki-trash fs-2"></i>
+                        </a>
+                        <a onClick={() => openEditModal(props.row.original)} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
+                            <i className="bi bi-pencil"></i>
+                        </a>
                     </div>
                 </>
             ),

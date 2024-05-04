@@ -42,9 +42,11 @@ const SponsorshipRequestPage = withSwal((props) => {
       id: 'actions',
       cell: props => (
         <>
-          <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-            <i className="ki-outline ki-trash fs-2"></i>
-          </a>
+          <div className="w-100 d-flex gap-2 flex-row justify-content-end">
+            <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+              <i className="ki-outline ki-trash fs-2"></i>
+            </a>
+          </div>
         </>
       ),
     }),

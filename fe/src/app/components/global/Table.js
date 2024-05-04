@@ -23,14 +23,14 @@ function TableCmp(props) {
     <div className="dataTables_wrapper dt-bootstrap4 no-footer">
       <div className="table-responsive">
         <table className="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
-          <thead className='w-100'>
+          <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="w-100 d-flex flex-row justify-content-between align-items-center text-start text-black fw-bold fs-7 text-uppercase gs-0"
+                className="text-start text-black fw-bold fs-7 text-uppercase gs-0"
               >
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-center' : 'text-start'}`}>
+                  <th key={header.id} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-end' : 'text-start'}`}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -41,11 +41,9 @@ function TableCmp(props) {
           </thead>
           <tbody className="fw-semibold text-gray-600">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="odd"
-                style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-              >
+              <tr key={row.id} className="odd">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  <td key={cell.id} className='min-w-125px'>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                 ))}
               </tr>
             ))}

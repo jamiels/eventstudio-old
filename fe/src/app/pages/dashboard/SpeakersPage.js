@@ -149,21 +149,21 @@ const SpeakerPage = withSwal((props) => {
     const columns = [
         columnHelper.accessor('firstName'),
         columnHelper.accessor('lastName'),
-        columnHelper.accessor('emailAddress', {header: 'email Address'}),
-        columnHelper.accessor('primaryAffiliation', {header: 'primary Affiliation'}),
+        columnHelper.accessor('emailAddress', { header: 'email Address' }),
+        columnHelper.accessor('primaryAffiliation', { header: 'primary Affiliation' }),
         columnHelper.accessor('title'),
         columnHelper.accessor('headshot'),
-        columnHelper.accessor('linkedInURL', {header: 'linkedIn URL'}),
-        columnHelper.accessor('twitterURL', {header: 'twitter URL'}),
+        columnHelper.accessor('linkedInURL', { header: 'linkedIn URL' }),
+        columnHelper.accessor('twitterURL', { header: 'twitter URL' }),
         columnHelper.accessor('bio'),
-        columnHelper.accessor('adminFullName', {header: 'admin FullName'}),
-        columnHelper.accessor('adminEmailAddress', {header: 'admin Email Address'}),
+        columnHelper.accessor('adminFullName', { header: 'admin FullName' }),
+        columnHelper.accessor('adminEmailAddress', { header: 'admin Email Address' }),
         columnHelper.display({
             header: 'Action',
             id: 'actions',
             cell: props => (
                 <>
-                    <div className="d-flex flex-row gap-2">
+                    <div className="w-100 d-flex gap-2 flex-row justify-content-end">
                         <a onClick={() => { DeleteBtnClick(props.row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
                             <i className="ki-outline ki-trash fs-2"></i>
                         </a>

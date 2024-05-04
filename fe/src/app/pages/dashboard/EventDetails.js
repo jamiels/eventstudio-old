@@ -101,9 +101,11 @@ const EventDetailsPage = withSwal((props) => {
             id: 'actions',
             cell: props => (
                 <>
-                    <button onClick={() => DeleteBtnClick(props.row.original.id, 'speaker')} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                        <i class="ki-outline ki-trash fs-2"></i>
-                    </button>
+                    <div className="w-100 d-flex gap-2 flex-row justify-content-end">
+                        <button onClick={() => DeleteBtnClick(props.row.original.id, 'speaker')} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                            <i class="ki-outline ki-trash fs-2"></i>
+                        </button>
+                    </div>
                 </>
             ),
         }),
@@ -119,9 +121,12 @@ const EventDetailsPage = withSwal((props) => {
             id: 'actions',
             cell: props => (
                 <>
-                    <button onClick={() => DeleteBtnClick(props.row.original.id, 'sponsorship')} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                        <i class="ki-outline ki-trash fs-2"></i>
-                    </button>
+                    <div className="w-100 d-flex gap-2 flex-row justify-content-end">
+
+                        <button onClick={() => DeleteBtnClick(props.row.original.id, 'sponsorship')} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                            <i class="ki-outline ki-trash fs-2"></i>
+                        </button>
+                    </div>
                 </>
             ),
         }),
