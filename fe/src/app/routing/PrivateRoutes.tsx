@@ -35,6 +35,7 @@ const PrivateRoutes = () => {
         <Route path='dashboard/sponsor-requests' element={<DashboardWrapper sidebar="sponsor-requests" />} />
         <Route path='dashboard/speaking-requests' element={<DashboardWrapper sidebar="speaking-requests" />} />
         <Route path='dashboard/speaker-onboard' element={<DashboardWrapper sidebar="speaker-onboard" />} />
+        <Route path='dashboard/volunteer' element={<DashboardWrapper sidebar="volunteer" />} />
 
         <Route path='dashboard' element={<Navigate to='/dashboard/events' />} />
         <Route path='builder' element={<BuilderPageWrapper />} />

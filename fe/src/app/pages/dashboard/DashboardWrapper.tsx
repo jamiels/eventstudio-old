@@ -11,6 +11,7 @@ import OrganizationPage from './OrganizationsPage'
 import SponsorshipRequestPage from './SponsorRequestPage'
 import SpeakingRequestPage from './SpeakingRequestPage'
 import SpeakerOnboardPage from './SpeakerOnboardPage'
+import VolunteerPage from './VolunteerPage'
 
 interface DashboardWrapperProps {
   sidebar: string;
@@ -39,6 +40,8 @@ const DashboardWrapper: FC<DashboardWrapperProps> = ({sidebar}) => {
         <SpeakingRequestPage />
         : sidebar == "speaker-onboard" ? 
         <SpeakerOnboardPage />
+        : sidebar == "volunteer" ? 
+        <VolunteerPage />
         : ''
       }
     </EnableSidebar>

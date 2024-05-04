@@ -94,6 +94,13 @@ const AsideDefault: FC = () => {
               <span className="menu-title">Speaker Onboarding</span>
             </NavLink>
           </div>
+
+          
+          <div className="menu-item">
+            <NavLink to='/dashboard/volunteer' className='menu-link'>
+              <span className="menu-title">Volunteer</span>
+            </NavLink>
+          </div>
         </div>
       </div>
     </div>

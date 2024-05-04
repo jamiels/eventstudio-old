@@ -20,6 +20,6 @@ module.exports = app => {
     //volunteer
     router.post("/volunteer/:id", volunteer.addVolunteer)
     router.get("/volunteer/all", volunteer.getAllVolunteers)
-    router.delete('/sponvolunteersor/:id', volunteer.deleteVolunteer);
+    router.delete('/volunteer/:id', volunteer.deleteVolunteer);
     app.use('/public', router);
 };
