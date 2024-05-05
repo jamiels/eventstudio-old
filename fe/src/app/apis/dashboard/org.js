@@ -20,8 +20,8 @@ const addOrg = (data) => {
 };
 
 
-const getOrg = () => {
-    return axios.get(API_URL + "names")
+const getOrg = (spaceId) => {
+    return axios.get(API_URL + `names/${spaceId}`)
         .then((response) => {
             return response.data;
         });

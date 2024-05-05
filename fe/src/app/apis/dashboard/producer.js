@@ -18,8 +18,8 @@ const addProducer = ( data) => {
 };
 
 
-const getProducer = () => {
-    return axios.get(API_URL + "names")
+const getProducer = (spaceId) => {
+    return axios.get(API_URL + `names/${spaceId}`)
         .then((response) => {
            return response.data;
         });

@@ -2,8 +2,9 @@ import axios from "axios";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/dashboard/events/`;
 
-const getVeneue = () => {
-    return axios.get(API_URL + "getvenues", {})
+const getVeneue = (spaceId) => {
+    console.log("🚀 ~ getVeneue ~ spaceId:", spaceId)
+    return axios.get(API_URL + `getvenues/${spaceId}`, {})
         .then((response) => {
             console.log("hello", response?.data)
             return response.data;
@@ -26,15 +27,15 @@ const addEvent = (userId, data) => {
 };
 
 
-const getEvents = () => {
-    return axios.post(API_URL + "get", {})
+const getEvents = (spaceId) => {
+    return axios.post(API_URL + `get/${spaceId}`, {})
         .then((response) => {
             return response.data;
         });
 };
 
-const getActiveEvents = () => {
-    return axios.get(API_URL + "active", {})
+const getActiveEvents = (spaceId) => {
+    return axios.get(API_URL + `active/${spaceId}`, {})
         .then((response) => {
             return response.data;
         });

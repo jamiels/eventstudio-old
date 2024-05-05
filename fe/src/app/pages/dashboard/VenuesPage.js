@@ -24,7 +24,7 @@ const VenuePage = withSwal((props) => {
     const [venueToUpdate, setVenueToUpdate] = useState(null);
 
     const fetchData = () => {
-        VenueAPI.getVenue()
+        VenueAPI.getVenue(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.venueNames);
                 setReload(false);
@@ -35,8 +35,10 @@ const VenuePage = withSwal((props) => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (selectedSpace && selectedSpace.space_id) {
+            fetchData();
+        }
+    }, [selectedSpace]);
 
     useEffect(() => {
         if (reload) {

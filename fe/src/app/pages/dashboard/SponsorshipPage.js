@@ -26,7 +26,7 @@ const SponsorshipPage = withSwal((props) => {
     const [sponsorshipToUpdate, setSponsorshipToUpdate] = useState(null);
 
     const fetchData = () => {
-        SponsorshipAPI.getSponsorship()
+        SponsorshipAPI.getSponsorship(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.sponsorships);
                 setReload(false);
@@ -37,8 +37,10 @@ const SponsorshipPage = withSwal((props) => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (selectedSpace && selectedSpace.space_id) {
+            fetchData();
+        }
+    }, [selectedSpace]);
 
     useEffect(() => {
         if (reload) {

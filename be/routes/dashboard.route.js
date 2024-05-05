@@ -13,8 +13,8 @@ module.exports = app => {
 
     router.post("/events/add", eventsController.add);
 
-    router.post("/events/get", eventsController.get);
-    router.get("/events/active", eventsController.getActiveEvents);
+    router.post("/events/get/:spaceId", eventsController.get);
+    router.get("/events/active/:spaceId", eventsController.getActiveEvents);
     router.put("/events/update/:id", eventsController.updateEvent);
 
     router.post("/events/delete", eventsController.delete);
@@ -22,14 +22,14 @@ module.exports = app => {
     //venue controller
     router.post("/venue/add", venueController.add);
     router.put("/venue/update/:id", venueController.updateVenue);
-    router.get('/events/getvenues', venueController.getAllVenueNames);
+    router.get('/events/getvenues/:spaceId', venueController.getAllVenueNames);
     router.delete('/venue/delete/:id', venueController.deleteVenue);
 
     //org
     router.post("/org/add", orgController.add);
     router.put("/org/update/:id", orgController.updateOrg);
 
-    router.get('/org/names', orgController.getAllOrgNames);
+    router.get('/org/names/:spaceId', orgController.getAllOrgNames);
     router.delete('/org/delete/:id', orgController.deleteOrganization);
 
     // sponsorships
@@ -37,19 +37,19 @@ module.exports = app => {
     router.put('/sponserships/update/:id', sponsorshipsController.updateSponsorship);
     router.get('/sponserships/get/:id', sponsorshipsController.getSponsorship);
     router.delete('/sponserships/del/:id', sponsorshipsController.deleteSponsorship);
-    router.get('/sponserships/all', sponsorshipsController.getAllSponsorships);
+    router.get('/sponserships/all/:spaceId', sponsorshipsController.getAllSponsorships);
     router.get('/sponserships/events/:eventId', sponsorshipsController.getAllSponsorshipsEventDetail);
 
     
     //producer
     router.post('/producer/add', producerController.add);
-    router.get('/producer/names', producerController.getAllProducerNames);
+    router.get('/producer/names/:spaceId', producerController.getAllProducerNames);
     router.delete('/producer/del/:id', producerController.deleteProducer);
     router.put('/producer/update/:id', producerController.updateProducer);
 
     //speakers
     router.post('/speakers/add', speakersController.addSpeaker);
-    router.get('/speakers/names', speakersController.getAllSpeakers);
+    router.get('/speakers/names/:spaceId', speakersController.getAllSpeakers);
     router.put('/speakers/update/:id', speakersController.updateSpeaker);
     router.delete('/speakers/del/:id', speakersController.deleteSpeaker);
     router.get('/speakers/events/:eventId', speakersController.getAllSpeakersEventDetail);

@@ -71,7 +71,11 @@ exports.deleteSpeaker = async (req, res) => {
 // Get all Speakers
 exports.getAllSpeakers = async (req, res) => {
     try {
-        const speakers = await Speakers.findAll();
+        const { spaceId } = req.params;
+        if (!spaceId) {
+            return res.status(400).send({ message: "spaceId not found." });
+        }
+        const speakers = await Speakers.findAll({ where: { space_id: spaceId } });
         res.send({ speakers });
     } catch (err) {
         console.error("Error fetching speakers:", err);

@@ -25,7 +25,7 @@ const OrganizationPage = withSwal((props) => {
     const [organizationToUpdate, setOrganizationToUpdate] = useState(null);
 
     const fetchData = () => {
-        OrgAPI.getOrg()
+        OrgAPI.getOrg(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.orgNames);
                 setReload(false);
@@ -36,8 +36,10 @@ const OrganizationPage = withSwal((props) => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (selectedSpace && selectedSpace.space_id) {
+            fetchData();
+        }
+    }, [selectedSpace]);
 
     useEffect(() => {
         if (reload) {

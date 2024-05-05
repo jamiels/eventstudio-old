@@ -23,7 +23,7 @@ const ProducerPage = withSwal((props) => {
     const [producerToUpdate, setProducerToUpdate] = useState(null);
 
     const fetchData = () => {
-        ProducerAPI.getProducer()
+        ProducerAPI.getProducer(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.producerNames);
                 setReload(false);
@@ -34,8 +34,10 @@ const ProducerPage = withSwal((props) => {
     };
 
     useEffect(() => {
+        if (selectedSpace && selectedSpace.space_id) {
         fetchData();
-    }, []);
+        }
+    }, [selectedSpace]);
 
     useEffect(() => {
         if (reload) {

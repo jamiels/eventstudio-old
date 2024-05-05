@@ -36,7 +36,12 @@ exports.add = (req, res) => {
 
 exports.get = async (req, res) => {
     try {
-        events = await Event.findAll();
+        const { spaceId } = req.params;
+        if (!spaceId) {
+            return res.status(400).send({ message: "spaceId not found." });
+        }
+        console.log("🚀 ~ exports.get= ~ spaceId:", spaceId)
+        events = await Event.findAll({ where: { space_id: spaceId } });
         res.send({ events: events })
     }
     catch (ex) {
@@ -65,7 +70,8 @@ exports.delete = (req, res) => {
 }
 exports.getActiveEvents = async (req, res) => {
     try {
-        events = await Event.findAll({ where: { is_active: true } });
+        const { spaceId } = req.params;
+        events = await Event.findAll({ where: { is_active: true, space_id: spaceId } });
         res.send({ events: events })
     }
     catch (ex) {

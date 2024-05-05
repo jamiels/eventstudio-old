@@ -19,8 +19,8 @@ const addVenue = (data) => {
 };
 
 
-const getVenue = () => {
-    return axios.get(`${process.env.REACT_APP_API_URL}/Dashboard/events/getvenues`)
+const getVenue = (spaceId) => {
+    return axios.get(`${process.env.REACT_APP_API_URL}/Dashboard/events/getvenues/${spaceId}`)
         .then((response) => {
             return response.data;
         });

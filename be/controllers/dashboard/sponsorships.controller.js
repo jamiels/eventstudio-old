@@ -5,8 +5,13 @@ const Event = db.events;
 //getallsponserships
 exports.getAllSponsorships = async (req, res) => {
     try {
+        const { spaceId } = req.params;
+        if (!spaceId) {
+            return res.status(400).send({ message: "spaceId not found." });
+        }
         // Find all sponsorships and include the associated organization and event
         const sponsorships = await Sponsorship.findAll({
+            where: { space_id: spaceId },
             include: [{ model: Organization, attributes: ['id', 'name'] }, { model: Event, attributes: ['id', 'name'] }]
         });
 

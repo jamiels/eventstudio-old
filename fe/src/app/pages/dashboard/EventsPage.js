@@ -19,6 +19,7 @@ import { useSpace } from "../../context/space.provider";
 
 const EventsPage = withSwal((props) => {
     const { selectedSpace } = useSpace();
+    console.log("🚀 ~ EventsPage ~ selectedSpace:", selectedSpace)
 
     const columnHelper = createColumnHelper();
 
@@ -45,7 +46,7 @@ const EventsPage = withSwal((props) => {
     const navigate = useNavigate();
 
     const fetchData = () => {
-        EventAPI.getEvents()
+        EventAPI.getEvents(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.events)
                 setReload(false)
@@ -56,7 +57,7 @@ const EventsPage = withSwal((props) => {
     }
 
     const fetchVenueNames = () => {
-        EventAPI.getVeneue()
+        EventAPI.getVeneue(selectedSpace?.space_id)
             .then(res => {
                 setVeneueOptions(res.venueNames?.map(item => ({
                     value: item?.id,
@@ -71,9 +72,12 @@ const EventsPage = withSwal((props) => {
     }
 
     useEffect(() => {
-        fetchData()
-        fetchVenueNames()
-    }, []);
+        if (selectedSpace && selectedSpace.space_id) {
+            fetchData();
+            fetchVenueNames();
+        }
+    }, [selectedSpace]);
+
 
     useEffect(() => {
         if (reload) {

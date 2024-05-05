@@ -31,8 +31,11 @@ exports.add = (req, res) => {
 
 exports.getAllProducerNames = async (req, res) => {
     try {
-        // Find all producers and select only the 'name' attribute
-        const producerNames = await Producer.findAll();
+        const { spaceId } = req.params;
+        if (!spaceId) {
+            return res.status(400).send({ message: "spaceId not found." });
+        }        // Find all producers and select only the 'name' attribute
+        const producerNames = await Producer.findAll({ where: { space_id: spaceId } });
 
         res.send({ producerNames });
     } catch (err) {

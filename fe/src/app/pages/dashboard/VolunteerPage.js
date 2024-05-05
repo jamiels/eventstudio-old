@@ -27,12 +27,12 @@ const VolunteerPage = withSwal((props) => {
   const columns = [
     columnHelper.accessor('fullName'),
     columnHelper.accessor('email'),
-    columnHelper.accessor('linkedInURL', { Header: 'LinkedIn URL' }), // Display LinkedIn URL
-    columnHelper.accessor('mobilePhone', { Header: 'Mobile Phone' }), // Display Mobile Phone
-    columnHelper.accessor('telegramID', { Header: 'Telegram ID' }), // Display Telegram ID
-    columnHelper.accessor('communicationTools', { Header: 'Communication Tools' }), // Display Communication Tools
-    columnHelper.accessor('areasOfSupport', { Header: 'Areas of Support' }), // Display Areas of Support
-    columnHelper.accessor('businessAttire', { Header: 'Business Attire' }), // Display Business Attire
+    columnHelper.accessor('linkedInURL', { header: 'LinkedIn URL' }), // Display LinkedIn URL
+    columnHelper.accessor('mobilePhone', { header: 'Mobile Phone' }), // Display Mobile Phone
+    columnHelper.accessor('telegramID', { header: 'Telegram ID' }), // Display Telegram ID
+    columnHelper.accessor('communicationTools', { header: 'Communication Tools' }), // Display Communication Tools
+    columnHelper.accessor('areasOfSupport', { header: 'Areas of Support' }), // Display Areas of Support
+    columnHelper.accessor('businessAttire', { header: 'Business Attire' }), // Display Business Attire
     columnHelper.display({
       header: 'Action',
       id: 'actions',

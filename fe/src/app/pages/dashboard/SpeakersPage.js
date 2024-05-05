@@ -36,7 +36,7 @@ const SpeakerPage = withSwal((props) => {
     const [speakerToUpdate, setSpeakerToUpdate] = useState(null);
 
     const fetchData = () => {
-        SpeakerAPI.getSpeaker()
+        SpeakerAPI.getSpeaker(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.speakers);
                 setReload(false);
@@ -48,7 +48,7 @@ const SpeakerPage = withSwal((props) => {
 
     const fetchActiveEvents = async () => {
         try {
-            const res = await EventsApi.getActiveEvents();
+            const res = await EventsApi.getActiveEvents(selectedSpace?.space_id);
             setActiveEvents(res.events);
         } catch (error) {
             console.log(error);
@@ -56,9 +56,11 @@ const SpeakerPage = withSwal((props) => {
     };
 
     useEffect(() => {
-        fetchData();
-        fetchActiveEvents();
-    }, []);
+        if (selectedSpace && selectedSpace.space_id) {
+            fetchData();
+            fetchActiveEvents();
+        }
+    }, [selectedSpace]);
 
     useEffect(() => {
         if (reload) {

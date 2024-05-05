@@ -24,8 +24,8 @@ const getSpeakersByEvent = (eventId) => {
             return response.data;
         });
 };
-const getSpeaker = () => {
-    return axios.get(API_URL + "names")
+const getSpeaker = (spaceId) => {
+    return axios.get(API_URL + `names/${spaceId}`)
         .then((response) => {
            return response.data;
         });

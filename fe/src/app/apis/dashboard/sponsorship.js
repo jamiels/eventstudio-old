@@ -19,8 +19,8 @@ const addSponsorship = (data) => {
 };
 
 
-const getSponsorship = () => {
-    return axios.get(API_URL + "all")
+const getSponsorship = (spaceId) => {
+    return axios.get(API_URL + `all/${spaceId}`)
         .then((response) => {
             return response.data;
         });

@@ -31,8 +31,12 @@ exports.add = (req, res) => {
 
 exports.getAllVenueNames = async (req, res) => {
     try {
+        const { spaceId } = req.params;
+        if (!spaceId) {
+            return res.status(400).send({ message: "spaceId not found." });
+        }
         // Find all venues and select only the 'name' attribute
-        const venues = await Venue.findAll();
+        const venues = await Venue.findAll({ where: { space_id: spaceId } });
 
         // Extract the names from the venue objects
 

@@ -32,8 +32,9 @@ exports.add = (req, res) => {
 
 exports.getAllOrgNames = async (req, res) => {
     try {
+        const { spaceId } = req.params;
         // Find all venues and select only the 'name' attribute
-        const orgNames = await Org.findAll();
+        const orgNames = await Org.findAll({ where: { space_id: spaceId } });
 
         // Extract the names from the venue objects
 
