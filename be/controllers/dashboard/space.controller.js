@@ -2,7 +2,8 @@ const db = require("../../models");
 const Space = db.space;
 const SpaceUser = db.space_users;
 const User = db.users;
-
+const sgMail = require('@sendgrid/mail');
+const generatePasswordResetToken = require('../user.controller');
 // Create Space
 exports.createSpace = async (req, res) => {
     try {
@@ -46,9 +47,20 @@ exports.addUserToSpace = async (req, res) => {
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            return res.status(404).send({
-                message: 'User not found with the provided email address.'
-            });
+            const newUser = await User.create({ email });
+            const token = generatePasswordResetToken(newUser.email);
+
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+            const msg = {
+                to: email,
+                from: 'no-reply@yourdomain.com',
+                subject: 'Create Your Password',
+                html: `<p>Please create your password by clicking the link below:</p>
+                       <a href="${process.env.FRONTEND_URL}/public/create-password/${token}">Create Password</a>`
+            };
+            await sgMail.send(msg);
+
+            return res.status(200).send({ message: 'Email sent to create password.' });
         }
 
         // Check if the user is an admin of the space
@@ -85,7 +97,7 @@ exports.getUserSpaces = async (req, res) => {
         // Find spaces associated with the user
         const userSpaces = await SpaceUser.findAll({
             where: { user_id: req.user.id },
-            include: [{ model: Space, attributes: ['space_name'] }]
+            include: [{ model: Space, attributes: ['space_name', 'uuid'] }]
         });
 
         // Extract space names from the result
@@ -95,6 +107,46 @@ exports.getUserSpaces = async (req, res) => {
         console.error("Error fetching user spaces:", err);
         res.status(500).send({
             message: "An error occurred while fetching user spaces.",
+            errObj: err
+        });
+    }
+};
+
+
+exports.deleteSpace = async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Check if the space exists
+        const space = await Space.findByPk(id);
+        if (!space) {
+            return res.status(404).send({
+                message: `Space with ID ${id} not found.`
+            });
+        }
+
+        // Delete space-user associations first
+        await SpaceUser.destroy({
+            where: {
+                space_id: id,
+                user_id: req.user.id
+            }
+        });
+
+        // Then delete the space
+        await Space.destroy({
+            where: {
+                id: id
+            }
+        });
+
+        res.send({
+            message: `Space with ID ${id} deleted successfully.`
+        });
+
+    } catch (err) {
+        console.error("Error deleting Space:", err);
+        res.status(500).send({
+            message: "An error occurred while deleting Space",
             errObj: err
         });
     }

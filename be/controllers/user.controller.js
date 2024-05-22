@@ -7,6 +7,10 @@ const where = db.Sequelize.where;
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/jwt.config');
 
+module.exports = function generatePasswordResetToken(email) {
+    const token = jwt.sign({ email }, secret, { expiresIn: process.env.expiresIn });
+    return token;
+}
 
 async function findUserByUsername(username) {
     try {
@@ -27,6 +31,48 @@ async function findUserByEamil(email) {
         throw ex;
     }
 }
+
+exports.createPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+
+        if (!token || !newPassword) {
+            return res.status(400).send({
+                message: 'Please provide all required fields.'
+            });
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, secret);
+        } catch (err) {
+            return res.status(400).send({
+                message: 'Token is invalid or has expired.'
+            });
+        }
+
+        const user = await User.findOne({ where: { email: decoded.email } });
+        if (!user) {
+            return res.status(404).send({
+                message: 'User not found.'
+            });
+        }
+
+        user.update({ password: req.body.newpassword }, {
+            where: { id: user.id }
+        });
+
+        res.status(200).send({
+            message: 'Password Created successfully.'
+        });
+    } catch (err) {
+        console.error("Error creating password:", err);
+        res.status(500).send({
+            message: "An error occurred while creating the password.",
+            errObj: err
+        });
+    }
+};
 
 
 exports.signup = async (req, res) => {
@@ -49,7 +95,7 @@ exports.signup = async (req, res) => {
         // Create the user
         const newUser = {
             email: req.body.email,
-            username: req.body.username,
+            name: req.body.name,
             password: req.body.password
         };
         const user = await User.create(newUser);
@@ -92,7 +138,7 @@ exports.login = async (req, res) => {
         if (user.verifyPassword(req.body.password)) {
             res.status(200).send({
                 message: "Login Successful",
-                token: jwt.sign({ id: user.id, email: user.email }, secret),
+                token: jwt.sign({ id: user.id, email: user.email, name: user.name }, secret),
                 user: user
             })
         } else {

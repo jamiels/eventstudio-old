@@ -3,13 +3,16 @@ import { PublicLayout } from '../../modules/public/PublicLayout'
 import { SponsorPage } from './SponsorRequest'
 import { SpeakerReq } from './SpeakerReq'
 import { Volunteer } from './volunteer'
-import {SpeakerOnBoarding} from './SpeakerOnBoarding'
+import { SpeakerOnBoarding } from './SpeakerOnBoarding'
+import { CreatePassword } from './CreatePassword';
 
 const PublicPage = () => (
   <Routes>
     <Route element={<PublicLayout />}>
       <Route path='sponsor/:id' element={<SponsorPage />} />
       <Route index element={<Navigate to={'/public/sponsor/:id'} replace />} />
+      <Route path='create-password/:token' element={<CreatePassword />} />
+      <Route index element={<Navigate to={'/create-password/:token'} replace />} />
       <Route path='onboard/:id' element={<SpeakerOnBoarding />} />
       <Route index element={<Navigate to={'/public/onboard/:id'} replace />} />
       <Route path='speak/:id' element={<SpeakerReq />} />
