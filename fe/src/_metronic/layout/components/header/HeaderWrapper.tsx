@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { KTIcon, toAbsoluteUrl } from '../../../helpers'
 import { useThemeMode } from '../../../partials'
 import { useLayout } from '../../core'
@@ -99,8 +99,11 @@ export function HeaderWrapper() {
           </div> */}
           <div className='d-flex align-items-stretch'>
             {header.left === 'menu' && (
-              <div className='d-flex align-items-stretch' id='kt_header_nav'>
+              <div className='d-flex align-items-center' id='kt_header_nav'>
                 <SpaceSelector />
+                <NavLink to='/dashboard/space-management'>
+                  <i className="bi bi-search"></i>
+                </NavLink>
               </div>
             )}
           </div>

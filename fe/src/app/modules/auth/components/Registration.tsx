@@ -1,18 +1,17 @@
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState, useEffect} from 'react'
-import {useFormik} from 'formik'
+import { useState, useEffect } from 'react'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {getUserByToken, register} from '../core/_requests'
-import {Link, useNavigate} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
-import {useAuth} from '../core/Auth'
+import { getUserByToken, register } from '../core/_requests'
+import { Link, useNavigate } from 'react-router-dom'
+import { toAbsoluteUrl } from '../../../../_metronic/helpers'
+import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/components'
+import { useAuth } from '../core/Auth'
 
 const initialValues = {
-  firstname: '',
-  lastname: '',
+  name: '',
   email: '',
   password: '',
   changepassword: '',
@@ -20,6 +19,10 @@ const initialValues = {
 }
 
 const registrationSchema = Yup.object().shape({
+  name: Yup.string()
+  .min(3, 'Minimum 3 symbols')
+  .max(50, 'Maximum 50 symbols')
+  .required('Email is required'),
   email: Yup.string()
     .email('Wrong email format')
     .min(3, 'Minimum 3 symbols')
@@ -41,14 +44,15 @@ export function Registration() {
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const { saveAuth, setCurrentUser } = useAuth()
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
-    onSubmit: async (values, {setStatus, setSubmitting}) => {
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true)
       try {
-        const {data: auth} = await register(
+        const { data: auth } = await register(
+          values.name,
           values.email,
           values.password,
         )
@@ -57,7 +61,7 @@ export function Registration() {
         // saveAuth(auth)
         // const {data: user} = await getUserByToken(auth.api_token)
         // setCurrentUser(user)
-        
+
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -143,6 +147,29 @@ export function Registration() {
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
+      {/* begin::Form group name */}
+      <div className='fv-row mb-8'>
+        <label className='form-label fw-bolder text-dark fs-6'>Name</label>
+        <input
+          placeholder='Name'
+          type='text'
+          autoComplete='off'
+          {...formik.getFieldProps('name')} // Changed from 'email' to 'name'
+          className={clsx(
+            'form-control bg-transparent',
+            { 'is-invalid': formik.touched.name && formik.errors.name }, // Changed from 'email' to 'name'
+            { 'is-valid': formik.touched.name && !formik.errors.name } // Changed from 'email' to 'name'
+          )}
+        />
+        {formik.touched.name && formik.errors.name && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.name}</span> {/* Changed from 'email' to 'name' */}
+            </div>
+          </div>
+        )}
+      </div>
+      {/* end::Form group */}
 
       {/* begin::Form group Email */}
       <div className='fv-row mb-8'>
@@ -154,7 +181,7 @@ export function Registration() {
           {...formik.getFieldProps('email')}
           className={clsx(
             'form-control bg-transparent',
-            {'is-invalid': formik.touched.email && formik.errors.email},
+            { 'is-invalid': formik.touched.email && formik.errors.email },
             {
               'is-valid': formik.touched.email && !formik.errors.email,
             }
@@ -285,7 +312,7 @@ export function Registration() {
         >
           {!loading && <span className='indicator-label'>Submit</span>}
           {loading && (
-            <span className='indicator-progress' style={{display: 'block'}}>
+            <span className='indicator-progress' style={{ display: 'block' }}>
               Please wait...{' '}
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
