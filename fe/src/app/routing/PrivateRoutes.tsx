@@ -9,6 +9,7 @@ import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import EventDetailsPage from '../pages/dashboard/EventDetails'
+import SpaceManagementPage from '../pages/dashboard/SpaceManagement'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -26,6 +27,7 @@ const PrivateRoutes = () => {
         <Route path='auth/*' element={<Navigate to='/dashboard/events' />} />
         {/* Pages */}
         <Route path='dashboard/events' element={<DashboardWrapper sidebar="events" />} />
+        <Route path='dashboard/space-management' element={<SpaceManagementPage />} />
         <Route path='dashboard/events/details/:eventId' element={<EventDetailsPage />} />
         <Route path='dashboard/organizations' element={<DashboardWrapper sidebar="organizations" />} />
         <Route path='dashboard/venues' element={<DashboardWrapper sidebar="venues" />} />

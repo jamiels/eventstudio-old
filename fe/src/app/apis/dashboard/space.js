@@ -44,8 +44,12 @@ const getSpaces = (token) => { // Updated function name to getSpaces
         });
 };
 
-const deleteSpace = (id) => { // Updated function name to deleteSpace
-    return axios.delete(`${API_URL}${id}`) // Updated API URL
+const deleteSpace = (id, token) => { // Updated function name to deleteSpace
+    return axios.delete(`${API_URL}${id}`, { // Updated endpoint name to userteams
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }) // Updated API URL
         .then((response) => {
             console.log("del", response?.data);
             return response.data;
