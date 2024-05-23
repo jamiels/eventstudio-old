@@ -30,7 +30,8 @@ const SpaceManagementPage = withSwal((props) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [errors, setError] = useState(null);
-    const [curr_space, setCurrSpace] = useState(null);
+    const [nameError, setNameError] = useState(null);
+    const [name, setName] = useState('');
 
     const fetchData = () => {
         spaceApi.getSpaces()
@@ -52,7 +53,6 @@ const SpaceManagementPage = withSwal((props) => {
 
     useEffect(() => {
         if (reload) {
-            console.log("🚀 ~ useEffect ~ reload:", reload)
             fetchData();
         }
     }, [reload]);
@@ -76,12 +76,11 @@ const SpaceManagementPage = withSwal((props) => {
         if (spaceName !== '') {
             try {
                 if (isEditMode) {
-                    await spaceApi.updateSelectedSpace(spaceToUpdate.id, { space_name: spaceToUpdate.space_name });
+                    await spaceApi.updateSpace(spaceToUpdate.id, { space_name: spaceName }, auth?.token);
                 } else {
-                    spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
+                    await spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
                         .then((res) => {
                             setShowSuccess(res?.response?.data?.message || res.message)
-                            spaceApi.getSpaces(auth?.token).then((res) => setSpaces(res?.userSpaces)) // Change getTeams to getSpaces
                             setSpaceName('');
                         }).catch((err) => {
                             console.log("🚀 ~ .then ~ err:", err)
@@ -101,8 +100,8 @@ const SpaceManagementPage = withSwal((props) => {
             accessor: 'isAdmin',
             id: 'role',
             header: 'Role',
-            cell: ({ row: { isAdmin } }) => (
-                <span>{isAdmin ? 'Admin' : 'Member'}</span>
+            cell: ({ row: { original } }) => (
+                <span>{original?.isAdmin ? 'Admin' : 'Member'}</span>
             ),
         }),
         columnHelper.display({
@@ -123,15 +122,15 @@ const SpaceManagementPage = withSwal((props) => {
             cell: ({ row }) => (
                 <div className="w-100 d-flex gap-2 flex-row justify-content-end">
                     <>
-                        {row?.original?.isAdmin && 
-                        <a onClick={() => { renameSpace(row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
-                            <i className="bi bi-pencil"></i>
-                        </a>
+                        {row?.original?.isAdmin &&
+                            <a onClick={() => { renameSpace(row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                                <i className="bi bi-pencil"></i>
+                            </a>
                         }
                         {row?.original?.isAdmin &&
-                        <a onClick={() => { handleAddUser(row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
-                            <i className="bi bi-person-plus"></i>
-                        </a>
+                            <a onClick={() => { handleAddUser(row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
+                                <i className="bi bi-person-plus"></i>
+                            </a>
                         }
                         {!row?.original?.isAdmin &&
                             <a onClick={() => { leaveSpace(row.original) }} className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm ml-3">
@@ -145,20 +144,23 @@ const SpaceManagementPage = withSwal((props) => {
     ];
 
     const renameSpace = (space) => {
+        console.log("🚀 ~ renameSpace ~ space:", space)
         setSpaceToUpdate(space);
-        setSpaceName(space.space_name);
+        setSpaceName(space.space.space_name);
         setIsEditMode(true);
         setModalShow(true);
     };
     const handleAddUser = (curr_space) => {
+        setShowSuccess('');
         setShowModalAddToCreateSpace(true);
-        setCurrSpace(curr_space); // Assuming you have state to hold the current space
+        setSpaceToUpdate(curr_space); // Assuming you have state to hold the current space
     };
 
     const addUser = (curr_space) => {
         if (email === '') setEmailError('Email is required');
+        if (name === '') setNameError('Name is required');
 
-        spaceApi.addUserToSpace({ email, space_id: curr_space.id }, auth?.token)
+        spaceApi.addUserToSpace({ name, email, space_id: spaceToUpdate.id }, auth?.token)
             .then((res) => {
                 setShowSuccess(res?.response?.data?.message || res.message)
                 setEmail('');
@@ -209,7 +211,7 @@ const SpaceManagementPage = withSwal((props) => {
             </div>
             <Modal show={modalShow} onHide={() => { setModalShow(false) }} title={isEditMode ? "Edit Space" : "New Space"}>
                 <ModalBody>
-                    <TextField label='Space Name' required={true} name='space_name' value={spaceName} onChange={(e) => { handleSpaceName(e.target.value) }} />
+                    <TextField label='Space Name' required={true} name='space name' value={spaceName} onChange={(e) => { handleSpaceName(e.target.value) }} />
                 </ModalBody>
                 <ModalFooter>
                     <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
@@ -223,6 +225,7 @@ const SpaceManagementPage = withSwal((props) => {
             {/* create space modal done */}
             <Modal show={showModalAddToSpaceCreate} onHide={() => { setShowModalAddToCreateSpace(false); setShowSuccess('') }} title={"Add User To Space"}>
                 <ModalBody>
+                    <TextField label='User Name' required={true} name='name' value={name} onChange={(e) => { setName(e.target.value) }} error={nameError} />
                     <TextField label='User Email' required={true} name='email' value={email} onChange={(e) => { setEmail(e.target.value) }} error={emailError} />
                     {showSuccess != '' && <span className="p-2 text-success">{showSuccess}</span>}
                     {errors != '' && <span className="p-2 text-success">{errors}</span>}

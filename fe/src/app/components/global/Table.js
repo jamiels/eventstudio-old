@@ -30,7 +30,7 @@ function TableCmp(props) {
                 className="text-start text-black fw-bold fs-7 text-uppercase gs-0"
               >
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-end' : 'text-start'}`}>
+                  <th key={header.id} style={{textTransform: 'capitalize'}} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-end' : 'text-start'}`}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}

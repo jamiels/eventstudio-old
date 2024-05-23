@@ -34,7 +34,7 @@ exports.createSpace = async (req, res) => {
 
 exports.addUserToSpace = async (req, res) => {
     try {
-        const { email, space_id } = req.body;
+        const { name, email, space_id } = req.body;
 
         // Check if email is provided
         if (!email) {
@@ -47,7 +47,7 @@ exports.addUserToSpace = async (req, res) => {
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            const newUser = await User.create({ email });
+            const newUser = await User.create({ email, name });
             const token = generatePasswordResetToken(newUser.email);
 
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -132,13 +132,6 @@ exports.deleteSpace = async (req, res) => {
             }
         });
 
-        // Then delete the space
-        await Space.destroy({
-            where: {
-                id: id
-            }
-        });
-
         res.send({
             message: `Space with ID ${id} deleted successfully.`
         });
@@ -147,6 +140,50 @@ exports.deleteSpace = async (req, res) => {
         console.error("Error deleting Space:", err);
         res.status(500).send({
             message: "An error occurred while deleting Space",
+            errObj: err
+        });
+    }
+};
+
+// Update Space
+exports.updateSpace = async (req, res) => {
+    const { id } = req.params; // Space ID from the URL params
+    const { space_name } = req.body; // New space name from the request body
+
+    try {
+        // Check if space name is provided
+        if (!space_name) {
+            return res.status(400).send({
+                message: 'Please provide a new space name.'
+            });
+        }
+
+        // Check if the space exists
+        const space = await Space.findByPk(id);
+        if (!space) {
+            return res.status(404).send({
+                message: `Space with ID ${id} not found.`
+            });
+        }
+
+        // Check if the user is an admin of the space
+        const spaceUser = await SpaceUser.findOne({ where: { user_id: req.user.id, space_id: id } });
+
+        if (!spaceUser || !spaceUser.isAdmin) {
+            return res.status(403).send({
+                message: 'User is not an admin of the space.'
+            });
+        }
+
+        // Update the space name
+        space.space_name = space_name;
+        await space.save();
+
+        res.status(200).send({ success: true, message: 'Space name updated successfully.', space });
+    } catch (err) {
+        console.error("Error updating space:", err);
+        res.status(500).send({
+            message: "An error occurred while updating the space.",
             errObj: err
         });
     }

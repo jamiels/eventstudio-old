@@ -102,7 +102,7 @@ const EventsPage = withSwal((props) => {
     const columns = [
         columnHelper.accessor('id'),
         columnHelper.accessor('name'),
-        columnHelper.accessor('shortname'),
+        columnHelper.accessor('shortname', { header: 'Short Name' }),
         columnHelper.display({
             header: 'landing Url',
             id: 'actions',
@@ -112,11 +112,11 @@ const EventsPage = withSwal((props) => {
         }),
         columnHelper.accessor('sponsorshipDeckUrl', { header: 'sponsorship Deck Url' }),
         columnHelper.accessor('theme'),
-        columnHelper.accessor('startdate'),
-        columnHelper.accessor('enddate'),
+        columnHelper.accessor('startdate', { header: 'Start Date' }),
+        columnHelper.accessor('enddate', { header: 'End Date' }),
         columnHelper.accessor(row => `${row.veneue ? row.veneue : ''}`, {
             id: 'veneue',
-            header: 'VENEUE'
+            header: 'VENUE'
         }),
         columnHelper.display({
             header: 'Links',

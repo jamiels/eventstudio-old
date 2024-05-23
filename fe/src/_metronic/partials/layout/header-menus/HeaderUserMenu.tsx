@@ -5,9 +5,10 @@ import { toAbsoluteUrl } from '../../../helpers';
 import { Modal, ModalBody, ModalFooter } from '../../../../app/components/global/Modal';
 import TextField from '../../../../app/components/global/TextField';
 import Button from '../../../../app/components/global/Button';
+import userApi from '../../../../app/apis/user';
 
 const HeaderUserMenu: FC = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, auth, setCurrentUser } = useAuth();
   console.log("🚀 ~ currentUser:", currentUser)
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -23,9 +24,14 @@ const HeaderUserMenu: FC = () => {
       setPasswordError('New password and confirm password must match');
       return;
     }
-    // Implement your logic for updating profile here
-    // Example: userService.updateProfile({ name: newName, password: newPassword })
-    // Then close the modal
+    userApi.updateUser({ name, newpassword: newPassword, oldpassword: currentPassword }, auth?.token).then((res) => {
+      setCurrentUser(res?.user);
+      setConfirmNewPassword('');
+      setCurrentPassword('');
+      setNewPassword('');
+    }).catch((err) => {
+      console.log("Error:", err?.response?.data?.message);
+    });
     setShowProfileModal(false);
   };
 

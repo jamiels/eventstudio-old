@@ -59,6 +59,6 @@ module.exports = app => {
     router.post('/space/addUser', auth, spaceController.addUserToSpace); // Assuming addUserToSpace is for adding a user to a team/space
     router.get('/space/userspace', auth, spaceController.getUserSpaces); // Assuming getUserSpaces is for getting user's teams/spaces
     router.delete('/space/:id', auth, spaceController.deleteSpace); // Assuming getUserSpaces is for getting user's teams/spaces
-
+    router.put('/space/update/:id', auth, spaceController.updateSpace);
     app.use('/dashboard', router);
 };

@@ -149,16 +149,16 @@ const SpeakerPage = withSwal((props) => {
         openModal(speaker);
     };
     const columns = [
-        columnHelper.accessor('firstName'),
-        columnHelper.accessor('lastName'),
-        columnHelper.accessor('emailAddress', { header: 'email Address' }),
+        columnHelper.accessor('first Name'),
+        columnHelper.accessor('last Name'),
+        columnHelper.accessor('email Address', { header: 'email Address' }),
         columnHelper.accessor('primaryAffiliation', { header: 'primary Affiliation' }),
         columnHelper.accessor('title'),
         columnHelper.accessor('headshot'),
         columnHelper.accessor('linkedInURL', { header: 'linkedIn URL' }),
         columnHelper.accessor('twitterURL', { header: 'twitter URL' }),
         columnHelper.accessor('bio'),
-        columnHelper.accessor('adminFullName', { header: 'admin FullName' }),
+        columnHelper.accessor('adminFullName', { header: 'admin Full Name' }),
         columnHelper.accessor('adminEmailAddress', { header: 'admin Email Address' }),
         columnHelper.display({
             header: 'Action',

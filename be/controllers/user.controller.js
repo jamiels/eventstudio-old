@@ -176,17 +176,18 @@ exports.changepassword = async (req, res) => {
             message: 'Please provide both old and new password.'
         });
     }
-    user = await findUserByUsername(req.user.username);
+    user = await User.findByPk(req.user.id);
     if (user == null || !(user instanceof User)) {
         res.status(403).send({
             message: "Invalid Credentials!"
         });
     } else {
         if (user.verifyPassword(req.body.oldpassword)) {
-            user.update({ password: req.body.newpassword }, {
+            user.update({ password: req.body.newpassword, name: req.body.name ? req.body.name : user?.name}, {
                 where: { id: user.id }
             });
             res.status(200).send({
+                user,
                 message: "Password Updated Successfully!"
             })
         } else {
