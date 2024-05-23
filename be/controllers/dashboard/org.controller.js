@@ -96,3 +96,16 @@ exports.updateOrg = async (req, res) => {
         });
     }
 };
+
+exports.getActiveOrgs = async (req, res) => {
+    try {
+        const { spaceId } = req.params;
+        orgs = await Org.findAll({ where: { space_id: spaceId } });
+        res.status(200).json({ orgs: orgs, message: "Successfully fetched" })
+    }
+    catch (ex) {
+        console.log(ex)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+
+}

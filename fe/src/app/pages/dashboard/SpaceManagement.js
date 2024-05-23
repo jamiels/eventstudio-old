@@ -171,6 +171,7 @@ const SpaceManagementPage = withSwal((props) => {
     };
 
     const leaveSpace = (row) => {
+        console.log("🚀 ~ leaveSpace ~ row:", row)
         swal.fire({
             title: 'Delete',
             text: 'Are you sure you want to delete this Space?',
@@ -179,7 +180,7 @@ const SpaceManagementPage = withSwal((props) => {
         })
             .then((result) => {
                 if (result.isConfirmed) {
-                    spaceApi.deleteSpace(row.id, auth?.token)
+                    spaceApi.deleteSpace(row.space.id, auth?.token)
                         .then(() => {
                             setReload(true);
                         })

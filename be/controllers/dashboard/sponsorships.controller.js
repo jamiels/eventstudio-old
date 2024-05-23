@@ -2,19 +2,21 @@ const db = require("../../models");
 const Sponsorship = db.sponsorships;
 const Organization = db.organization;
 const Event = db.events;
-//getallsponserships
+
+// Get all sponsorships
 exports.getAllSponsorships = async (req, res) => {
     try {
         const { spaceId } = req.params;
         if (!spaceId) {
             return res.status(400).send({ message: "spaceId not found." });
         }
-        // Find all sponsorships and include the associated organization and event
         const sponsorships = await Sponsorship.findAll({
             where: { space_id: spaceId },
-            include: [{ model: Organization, attributes: ['id', 'name'] }, { model: Event, attributes: ['id', 'name'] }]
+            include: [
+                { model: Organization, attributes: ['id', 'name'] },
+                { model: Event, attributes: ['id', 'name'] }
+            ]
         });
-
         res.send({ sponsorships });
     } catch (err) {
         console.error("Error fetching sponsorships:", err);
@@ -28,36 +30,55 @@ exports.getAllSponsorships = async (req, res) => {
 
 // Add sponsorship
 exports.addSponsorship = (req, res) => {
-    const { organizationId, eventId, deckSent, commitmentAmount, space_id } = req.body;
-    if (!organizationId || !eventId || !deckSent || !commitmentAmount || !space_id) {
-        res.status(400).send({
-            message: 'Please provide all the fields.'
+    const {
+        organizationId,
+        eventId,
+        contactPerson,
+        contactEmailAddress,
+        invoicePerson,
+        invoiceEmailAddress,
+        deckSent,
+        contractSent,
+        invoiceSent,
+        paymentReceived,
+        commitmentAmount,
+        space_id
+    } = req.body;
+
+    if (!organizationId || !eventId || !contactPerson || !contactEmailAddress || !invoicePerson || !invoiceEmailAddress || !commitmentAmount || !space_id) {
+        return res.status(400).send({
+            message: 'Please provide all the required fields.'
         });
     }
 
-    // Create a new sponsorship object with the provided data
     const newSponsorship = {
         organization_id: organizationId,
         event_id: eventId,
-        deckSent: deckSent,
-        commitmentAmount: commitmentAmount,
+        contact_person: contactPerson,
+        contact_email_address: contactEmailAddress,
+        invoice_person: invoicePerson,
+        invoice_email_address: invoiceEmailAddress,
+        deck_sent: deckSent,
+        contract_sent: contractSent,
+        invoice_sent: invoiceSent,
+        payment_received: paymentReceived,
+        commitment_amount: commitmentAmount,
         space_id
-        // Add more fields as needed
-    }
+    };
 
-    // Use the Sponsorship model to create a new sponsorship in the database
     Sponsorship.create(newSponsorship)
         .then(data => {
             res.send({ success: true, sponsorship: data });
         })
         .catch(err => {
-            console.log("error", err);
+            console.log("Error", err);
             res.status(500).send({
                 message: "Some error occurred while saving new Sponsorship",
                 errObj: err
             });
         });
-}
+};
+
 
 // Get specific sponsorship by ID
 exports.getSponsorship = async (req, res) => {
@@ -79,6 +100,7 @@ exports.getSponsorship = async (req, res) => {
         });
     }
 };
+
 
 // Delete specific sponsorship by ID
 exports.deleteSponsorship = async (req, res) => {
@@ -102,11 +124,12 @@ exports.deleteSponsorship = async (req, res) => {
 };
 
 
+
+// Get all sponsorships for a specific event
 exports.getAllSponsorshipsEventDetail = async (req, res) => {
     try {
-        const eventId = req.params.eventId; // Get the eventId from the request parameters
+        const eventId = req.params.eventId;
 
-        // Find all sponsorships where event_id matches the provided eventId
         const sponsorships = await Sponsorship.findAll({
             where: { event_id: eventId }
         });
@@ -121,32 +144,52 @@ exports.getAllSponsorshipsEventDetail = async (req, res) => {
     }
 };
 
+
+// Update sponsorship
 exports.updateSponsorship = async (req, res) => {
     const id = req.params.id;
-    const { organizationId, eventId, deckSent, space_id, commitmentAmount } = req.body;
+    const {
+        organizationId,
+        eventId,
+        contactPerson,
+        contactEmailAddress,
+        invoicePerson,
+        invoiceEmailAddress,
+        deckSent,
+        contractSent,
+        invoiceSent,
+        paymentReceived,
+        commitmentAmount,
+        space_id
+    } = req.body;
 
     try {
-        // Find the sponsorship by its ID
         let sponsorship = await Sponsorship.findByPk(id);
 
-        // If sponsorship not found, return 404 error
         if (!sponsorship) {
             return res.status(404).send({ message: "Sponsorship not found." });
         }
+
         const updateSponsorship = {
             organization_id: organizationId,
             event_id: eventId,
-            deckSent: deckSent,
-            commitmentAmount: commitmentAmount,
+            contact_person: contactPerson,
+            contact_email_address: contactEmailAddress,
+            invoice_person: invoicePerson,
+            invoice_email_address: invoiceEmailAddress,
+            deck_sent: deckSent,
+            contract_sent: contractSent,
+            invoice_sent: invoiceSent,
+            payment_received: paymentReceived,
+            commitment_amount: commitmentAmount,
             space_id
-        }
-        sponsorship = await Sponsorship.update(updateSponsorship, { where: { id: id } });
+        };
 
-        // Return success response with updated sponsorship
-        res.send({ success: true, sponsorship });
+        await Sponsorship.update(updateSponsorship, { where: { id: id } });
+
+        res.send({ success: true });
     } catch (err) {
-        console.log("🚀 ~ exports.updateSponsorship= ~ err:", err)
-        // Return error response if any error occurs
+        console.log("Error updating sponsorship:", err);
         res.status(500).send({
             message: "Error updating sponsorship with id=" + id,
             errObj: err

@@ -97,7 +97,7 @@ exports.getUserSpaces = async (req, res) => {
         // Find spaces associated with the user
         const userSpaces = await SpaceUser.findAll({
             where: { user_id: req.user.id },
-            include: [{ model: Space, attributes: ['space_name', 'uuid'] }]
+            include: [{ model: Space, attributes: ['space_name', 'uuid', 'id'] }]
         });
 
         // Extract space names from the result
@@ -184,6 +184,59 @@ exports.updateSpace = async (req, res) => {
         console.error("Error updating space:", err);
         res.status(500).send({
             message: "An error occurred while updating the space.",
+            errObj: err
+        });
+    }
+};
+
+
+
+// Get all users in the current space, ensuring requester is an admin
+exports.getAllUsersCurrentSpace = async (req, res) => {
+    try {
+        const { space_id } = req.params;
+        if (!space_id) {
+          return res.status(400).send({ error: 'spaceId is required' });
+        }
+        const user_id = req.user.id;
+
+        // Verify the space exists
+        const space = await Space.findByPk(space_id);
+        if (!space) {
+            return res.status(404).send({ message: "Space not found." });
+        }
+
+        // Verify the requester is an admin of the space
+        const adminCheck = await SpaceUser.findOne({
+            where: { space_id, user_id, isAdmin: true }
+        });
+        if (!adminCheck) {
+            return res.status(403).send({ message: "Not authorized. Admin access required." });
+        }
+
+        // Fetch all users in the space, excluding the requester
+        const spaceUsers = await SpaceUser.findAll({
+            where: { space_id },
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'email']
+            }]
+        });
+
+        // Filter out the current user from the response
+        const users = spaceUsers
+            .filter(spaceUser => spaceUser.user_id !== user_id)
+            .map(spaceUser => ({
+                id: spaceUser.user.id,
+                name: spaceUser.user.name,
+                email: spaceUser.user.email
+            }));
+
+        res.send(users);
+    } catch (err) {
+        console.error("Error fetching users for space:", err);
+        res.status(500).send({
+            message: "An error occurred while fetching users for space.",
             errObj: err
         });
     }

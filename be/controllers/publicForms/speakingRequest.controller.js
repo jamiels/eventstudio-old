@@ -7,7 +7,7 @@ exports.addSpeakingRequest = async (req, res) => {
     try {
         const { id } = req.params;
         // Check if all required fields are present in the request body
-        const requiredFields = ["fullName", "email", "organization", "title", "panelists", "abstract", "linkedInURL", "sponsorshipInterest"];
+        const requiredFields = ["fullName", "email", "organization", "title", "abstract", "linkedInURL", "sponsorshipInterest"];
         for (const field of requiredFields) {
             if (!req.body[field]) {
                 return res.status(400).send({ message: `${field} is required` });
@@ -44,7 +44,7 @@ exports.addSpeakingRequest = async (req, res) => {
 
 exports.getAllSpeakingRequests = async (req, res) => {
     try {
-        const allSpeakingRequests = await SpeakingRequest.findAll({order: [['createdAt', 'DESC']]});
+        const allSpeakingRequests = await SpeakingRequest.findAll({ order: [['createdAt', 'DESC']] });
         res.status(200).send({ speakingRequests: allSpeakingRequests });
     } catch (error) {
         console.error("Error fetching speaking requests:", error);

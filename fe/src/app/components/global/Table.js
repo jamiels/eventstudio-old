@@ -1,19 +1,27 @@
+import React, { useState } from 'react';
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
-  createColumnHelper
+  getSortedRowModel,
 } from '@tanstack/react-table';
 
 import clsx from 'clsx';
 
 function TableCmp(props) {
+  const [sorting, setSorting] = useState([]);
+
   const table = useReactTable({
     data: props.data,
     columns: props.columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
   });
 
   // Ensure that props.data is defined and not null before accessing its length
@@ -30,10 +38,22 @@ function TableCmp(props) {
                 className="text-start text-black fw-bold fs-7 text-uppercase gs-0"
               >
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} style={{textTransform: 'capitalize'}} className={`min-w-125px sorting ${header.id === 'actions' ? 'text-end' : 'text-start'}`}>
+                  <th 
+                    key={header.id} 
+                    style={{ textTransform: 'capitalize' }} 
+                    className={`min-w-125px sorting ${header.id === 'actions' ? 'text-end' : 'text-start'}`}
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
+                    <span>
+                      {header.column.getIsSorted() === 'desc'
+                        ? ' 🔽'
+                        : header.column.getIsSorted() === 'asc'
+                        ? ' 🔼'
+                        : ''}
+                    </span>
                   </th>
                 ))}
               </tr>

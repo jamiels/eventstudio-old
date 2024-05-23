@@ -17,7 +17,9 @@ const PublicLayout = () => {
     }, [])
 
     return (
-        <div className='d-flex flex-column flex-column-fluid' style={{backgroundImage: `url('${toAbsoluteUrl("/media/auth/bg8.jpg")}')`}}>
+        <div className='d-flex flex-column flex-column-fluid' 
+        // style={{backgroundImage: `url('${toAbsoluteUrl("/media/auth/bg8.jpg")}')`}}
+        >
             <div className="d-flex flex-column flex-center text-center p-10 h-100">
                 <Outlet />
             </div>

@@ -101,6 +101,13 @@ const AsideDefault: FC = () => {
               <span className="menu-title">Volunteer</span>
             </NavLink>
           </div>
+
+          <div className="menu-item">
+            <NavLink to='/dashboard/users' className='menu-link'>
+              <span className="menu-title">Users</span>
+            </NavLink>
+          </div>
+
         </div>
       </div>
     </div>

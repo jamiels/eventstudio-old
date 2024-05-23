@@ -2,7 +2,7 @@ import ReactSelect from 'react-select';
 import clsx from 'clsx';
 
 const Select = ({
-  defaultValue = null,
+  defaultValue,
   onChange,
   label,
   layout = 'vertical',

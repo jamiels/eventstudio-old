@@ -45,7 +45,19 @@ const updateOrg = (id, data) => {
         });
 }
 
+
+
+const getActiveOrgs = (spaceId) => {
+    return axios.get(API_URL + `active/${spaceId}`, {})
+        .then((response) => {
+            return response.data;
+        });
+};
+
+
+
 export default {
+    getActiveOrgs,
     addOrg,
     getOrg,
     deleteOrg,

@@ -57,8 +57,8 @@ const deleteSpace = (id, token) => { // Updated function name to deleteSpace
 };
 
 
-const updateSpace = (id, data, token) => { // Updated function name to getSpaces
-    return axios.put(`${API_URL}update/${id}`, data, { // Updated endpoint name to userteams
+const updateSpace = (id, data, token) => { 
+    return axios.put(`${API_URL}update/${id}`, data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -68,8 +68,21 @@ const updateSpace = (id, data, token) => { // Updated function name to getSpaces
         });
 };
 
+const getAllUserSpace = (space_id, token) => {
+    return axios.get(`${API_URL}getAllUsers/${space_id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then((response) => {
+            return response.data;
+        });
+};
+
+
 export default {
     addSpace,
+    getAllUserSpace,
     updateSpace,
     getSpaces,
     deleteSpace,
