@@ -7,7 +7,7 @@ const where = db.Sequelize.where;
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/jwt.config');
 
-module.exports = function generatePasswordResetToken(email) {
+exports.generatePasswordResetToken = (email) => {
     const token = jwt.sign({ email }, secret, { expiresIn: process.env.expiresIn });
     return token;
 }
@@ -58,9 +58,15 @@ exports.createPassword = async (req, res) => {
             });
         }
 
-        user.update({ password: req.body.newpassword }, {
+        user.update({ password: newPassword }, {
             where: { id: user.id }
         });
+
+        // Create the default space
+        const space = await Space.create({ space_name: `Default Space` });
+
+        // Add the user as admin to the space
+        await SpaceUser.create({ user_id: user.id, space_id: space.id, isAdmin: true });
 
         res.status(200).send({
             message: 'Password Created successfully.'
@@ -183,7 +189,7 @@ exports.changepassword = async (req, res) => {
         });
     } else {
         if (user.verifyPassword(req.body.oldpassword)) {
-            user.update({ password: req.body.newpassword, name: req.body.name ? req.body.name : user?.name}, {
+            user.update({ password: req.body.newpassword, name: req.body.name ? req.body.name : user?.name }, {
                 where: { id: user.id }
             });
             res.status(200).send({

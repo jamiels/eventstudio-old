@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toAbsoluteUrl } from '../../../_metronic/helpers';
 import TextField from '../../components/global/TextField';
 import userApi from '../../apis/user';
 
 export function CreatePassword() {
     const { token } = useParams();
+    const navigate = useNavigate();
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(null);
@@ -21,8 +22,8 @@ export function CreatePassword() {
         try {
             await passwordSchema.validate({ newPassword, confirmPassword }, { abortEarly: false });
 
-            const res = await userApi.resetPassword({ newPassword, token });
-
+            const res = await userApi.createPassword({ newPassword, token });
+            navigate('/login')
             setSuccessMessage(res.message);
             setError(null);
             setNewPassword('');

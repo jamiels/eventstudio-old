@@ -3,7 +3,7 @@ const Space = db.space;
 const SpaceUser = db.space_users;
 const User = db.users;
 const sgMail = require('@sendgrid/mail');
-const generatePasswordResetToken = require('../user.controller');
+const { generatePasswordResetToken } = require('../user.controller');
 // Create Space
 exports.createSpace = async (req, res) => {
     try {
@@ -49,15 +49,91 @@ exports.addUserToSpace = async (req, res) => {
         if (!user) {
             const newUser = await User.create({ email, name });
             const token = generatePasswordResetToken(newUser.email);
-
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: email,
-                from: 'no-reply@yourdomain.com',
+                from: 'i@jamiel.net',
                 subject: 'Create Your Password',
-                html: `<p>Please create your password by clicking the link below:</p>
-                       <a href="${process.env.FRONTEND_URL}/public/create-password/${token}">Create Password</a>`
+                html: `<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Create Your Password</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            margin: 0;
+                            padding: 0;
+                            color: #333;
+                        }
+                        .container {
+                            width: 100%;
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #ffffff;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            border-radius: 8px;
+                            overflow: hidden;
+                        }
+                        .header {
+                            background-color: #4CAF50;
+                            color: white;
+                            text-align: center;
+                            padding: 20px 0;
+                        }
+                        .header h1 {
+                            margin: 0;
+                            font-size: 24px;
+                        }
+                        .content {
+                            padding: 20px;
+                        }
+                        .content p {
+                            font-size: 16px;
+                            line-height: 1.5;
+                        }
+                        .content a {
+                            display: inline-block;
+                            margin-top: 20px;
+                            padding: 10px 20px;
+                            background-color: #4CAF50;
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 4px;
+                        }
+                        .footer {
+                            text-align: center;
+                            padding: 10px 20px;
+                            background-color: #f4f4f4;
+                            color: #777;
+                            font-size: 12px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>Event Studio</h1>
+                        </div>
+                        <div class="content">
+                            <p>Hello,</p>
+                            <p>Please create your password by clicking the link below:</p>
+                            <a href="${process.env.FRONTEND_URL}/public/create-password/${token}">Create Password</a>
+                        </div>
+                        <div class="footer">
+                            <p>&copy; ${new Date().getFullYear()} Event Studio. All rights reserved.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                `
             };
+            console.log("URL for testing", `${process.env.FRONTEND_URL}/public/create-password/${token}`)
+            // Add the user to the space
+            await SpaceUser.create({ user_id: newUser.id, space_id });
+
             await sgMail.send(msg);
 
             return res.status(200).send({ message: 'Email sent to create password.' });
@@ -196,7 +272,7 @@ exports.getAllUsersCurrentSpace = async (req, res) => {
     try {
         const { space_id } = req.params;
         if (!space_id) {
-          return res.status(400).send({ error: 'spaceId is required' });
+            return res.status(400).send({ error: 'spaceId is required' });
         }
         const user_id = req.user.id;
 

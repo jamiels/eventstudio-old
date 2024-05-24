@@ -164,6 +164,8 @@ const SpaceManagementPage = withSwal((props) => {
             .then((res) => {
                 setShowSuccess(res?.response?.data?.message || res.message)
                 setEmail('');
+                setName('');
+                setShowModalAddToCreateSpace(false);
             }).catch((err) => {
                 setError(err?.response?.data?.message || "Error occurred");
                 console.log("Error:", err?.response?.data?.message);

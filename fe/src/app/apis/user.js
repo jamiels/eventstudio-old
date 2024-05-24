@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/user/`;
 
-const createPassword = (newPassword, token) => {
-    return axios.post(API_URL + "create-password", { newPassword, token })
+const createPassword = (data) => {
+    return axios.post(API_URL + "create-password", data)
         .then((response) => {
             console.log("createpassword", response?.data)
             return response.data;
