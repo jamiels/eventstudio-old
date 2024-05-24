@@ -25,7 +25,7 @@ const SpeakerOnboardingPage = withSwal((props) => {
   }, []);
 
   const columns = [
-    columnHelper.accessor('fullName'),
+    columnHelper.accessor('full Name'),
     columnHelper.accessor('email'),
     columnHelper.accessor('bio'),
     columnHelper.display({

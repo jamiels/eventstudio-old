@@ -2,9 +2,6 @@ const db = require("../../models");
 const User = db.users;
 const Event = db.events;
 
-const Op = db.Sequelize.Op;
-const where = db.Sequelize.where;
-
 exports.add = (req, res) => {
     const data = req.body.data;
     const newEvent = {
@@ -40,7 +37,6 @@ exports.get = async (req, res) => {
         if (!spaceId) {
             return res.status(400).send({ message: "spaceId not found." });
         }
-        console.log("🚀 ~ exports.get= ~ spaceId:", spaceId)
         events = await Event.findAll({ where: { space_id: spaceId } });
         res.send({ events: events })
     }

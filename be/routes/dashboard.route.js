@@ -28,7 +28,7 @@ module.exports = app => {
     //org
     router.post("/org/add", orgController.add);
     router.put("/org/update/:id", orgController.updateOrg);
-
+    router.get("/org/active/:spaceId", orgController.getActiveOrgs);
     router.get('/org/names/:spaceId', orgController.getAllOrgNames);
     router.delete('/org/delete/:id', orgController.deleteOrganization);
 
@@ -58,5 +58,10 @@ module.exports = app => {
     router.post('/space/add', auth, spaceController.createSpace); // Assuming createSpace is for creating a team/space
     router.post('/space/addUser', auth, spaceController.addUserToSpace); // Assuming addUserToSpace is for adding a user to a team/space
     router.get('/space/userspace', auth, spaceController.getUserSpaces); // Assuming getUserSpaces is for getting user's teams/spaces
+    router.delete('/space/:id', auth, spaceController.deleteSpace); // Assuming getUserSpaces is for getting user's teams/spaces
+    router.put('/space/update/:id', auth, spaceController.updateSpace);
+    router.get('/space/getAllUsers/:space_id', auth, spaceController.getAllUsersCurrentSpace);
+
+
     app.use('/dashboard', router);
 };

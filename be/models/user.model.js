@@ -3,16 +3,11 @@ require('dotenv').config()
 
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
-    // username: {
-    //   type: Sequelize.STRING,
-    //   set: function (val) {
-    //     this.setDataValue('username', val?.toLowerCase());
-    //   },
-    //   notEmpty: true,
-    //   notNull: true,
-    //   is: /^[a-zA-Z0-9\._]{4,32}$/,
-    //   unique: true
-    // },
+    name: {
+      type: Sequelize.STRING,
+      notEmpty: true,
+      notNull: true,
+    },
     email: {
       type: Sequelize.STRING,
       set: function (val) {

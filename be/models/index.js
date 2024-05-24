@@ -39,7 +39,11 @@ db.events.hasOne(db.sponsorships, { foreignKey: 'event_id' });
 db.sponsorships.belongsTo(db.events, { foreignKey: 'event_id' })
 db.organization.hasOne(db.sponsorships, { foreignKey: 'organization_id' });
 db.sponsorships.belongsTo(db.organization, { foreignKey: 'organization_id' });
-db.space_users.belongsTo(db.space,{ foreignKey: 'space_id' });
-db.space.hasMany(db.space_users,{ foreignKey: 'space_id' });
+// Space-Users Associations
+db.space_users.belongsTo(db.space, { foreignKey: 'space_id' });
+db.space.hasMany(db.space_users, { foreignKey: 'space_id' });
+
+db.space_users.belongsTo(db.users, { foreignKey: 'user_id' });
+db.users.hasMany(db.space_users, { foreignKey: 'user_id' });
 
 module.exports = db;

@@ -14,5 +14,7 @@ module.exports = app => {
 
     router.post("/verifypassword", auth, users.verifypassword);
 
+    router.post("/create-password", users.createPassword);
+
     app.use('/user', router);
 };

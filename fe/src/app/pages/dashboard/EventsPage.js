@@ -19,7 +19,6 @@ import { useSpace } from "../../context/space.provider";
 
 const EventsPage = withSwal((props) => {
     const { selectedSpace } = useSpace();
-    console.log("🚀 ~ EventsPage ~ selectedSpace:", selectedSpace)
 
     const columnHelper = createColumnHelper();
 
@@ -59,10 +58,7 @@ const EventsPage = withSwal((props) => {
     const fetchVenueNames = () => {
         EventAPI.getVeneue(selectedSpace?.space_id)
             .then(res => {
-                setVeneueOptions(res.venueNames?.map(item => ({
-                    value: item?.id,
-                    label: item?.name
-                })))
+                setVeneueOptions(res.venueNames)
 
                 setReload(false)
             })
@@ -102,7 +98,7 @@ const EventsPage = withSwal((props) => {
     const columns = [
         columnHelper.accessor('id'),
         columnHelper.accessor('name'),
-        columnHelper.accessor('shortname'),
+        columnHelper.accessor('shortname', { header: 'Short Name' }),
         columnHelper.display({
             header: 'landing Url',
             id: 'actions',
@@ -112,11 +108,11 @@ const EventsPage = withSwal((props) => {
         }),
         columnHelper.accessor('sponsorshipDeckUrl', { header: 'sponsorship Deck Url' }),
         columnHelper.accessor('theme'),
-        columnHelper.accessor('startdate'),
-        columnHelper.accessor('enddate'),
+        columnHelper.accessor('startdate', { header: 'Start Date' }),
+        columnHelper.accessor('enddate', { header: 'End Date' }),
         columnHelper.accessor(row => `${row.veneue ? row.veneue : ''}`, {
             id: 'veneue',
-            header: 'VENEUE'
+            header: 'VENUE'
         }),
         columnHelper.display({
             header: 'Links',
@@ -221,14 +217,14 @@ const EventsPage = withSwal((props) => {
                 name,
                 shortName,
                 landingURL: url,
-                startdate: startDate != null ? startDate.toLocaleDateString() : '',
-                enddate: endDate != null ? endDate.toLocaleDateString() : '',
+                startdate: startDate != null ? startDate?.toLocaleDateString() : '',
+                enddate: endDate != null ? endDate?.toLocaleDateString() : '',
                 veneue: veneue !== 0 ? veneue : 0,
-                themes,
+                theme: themes,
                 sponsorshipDeckUrl,
                 space_id: selectedSpace?.space_id
             };
-
+            console.log("🚀 ~ addEventFunc ~ startDate:", startDate?.toLocaleDateString())
             if (isEditMode) {
                 EventAPI.updateEvent(eventToUpdate.id, eventData)
                     .then(res => {
@@ -254,18 +250,20 @@ const EventsPage = withSwal((props) => {
     }
 
     const openEditModal = (event) => {
-        setName(event.name);
-        setShortName(event.shortname);
-        setUrl(event.landingURL);
-        setStartDate(event.startdate ? new Date(event.startdate) : null);
-        setEndDate(event.enddate ? new Date(event.enddate) : null);
+        console.log("🚀 ~ openEditModal ~ event:", event)
+        setName(event.name || '');
+        setShortName(event.shortname || '');
+        setUrl(event.landingUrl || '');
+        setStartDate(event.startdate);
+        setEndDate(event.enddate);
         setVeneue(event.veneue);
-        setThemes(event.theme);
-        setSponsorshipDeckUrl(event.sponsorshipDeckUrl);
+        setThemes(event.theme || '');
+        setSponsorshipDeckUrl(event.sponsorshipDeckUrl || '');
         setModalShow(true);
         setIsEditMode(true);
         setEventToUpdate(event);
     };
+
 
     return (
         <>
@@ -298,7 +296,14 @@ const EventsPage = withSwal((props) => {
                     <TextField label='Sponsorship Deck URL' name='sponsorshipDeckUrl' value={sponsorshipDeckUrl} onChange={(e) => setSponsorshipDeckUrl(e.target.value)} />
                     <DatePicker label='StartDate' onChange={(e) => { handleStartDateChange(e) }} value={startDate} />
                     <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />
-                    <Select label='Veneue' name='veneue' options={veneueOptions} onChange={(e) => { setVeneue(e.value) }} />
+                    {/* <Select label='Veneue' name='veneue' options={veneueOptions} defaultValue={veneue} onChange={(e) => { setVeneue(e.value) }} /> */}
+                    <label htmlFor="Venue">Venue</label>
+                    <select id="Venue" value={veneue} nChange={(e) => { setVeneue(e.target.value) }}  className="form-select">
+                        <option value="" disabled>Select Venue</option>
+                        {veneueOptions?.map(venue => (
+                            <option key={venue.id} value={venue.id}>{venue.name}</option>
+                        ))}
+                    </select>
                 </ModalBody>
                 <ModalFooter>
                     <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>

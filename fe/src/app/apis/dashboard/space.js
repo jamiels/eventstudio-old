@@ -44,16 +44,46 @@ const getSpaces = (token) => { // Updated function name to getSpaces
         });
 };
 
-const deleteSpace = (id) => { // Updated function name to deleteSpace
-    return axios.delete(`${API_URL}${id}`) // Updated API URL
+const deleteSpace = (id, token) => { // Updated function name to deleteSpace
+    return axios.delete(`${API_URL}${id}`, { // Updated endpoint name to userteams
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }) // Updated API URL
         .then((response) => {
             console.log("del", response?.data);
             return response.data;
         });
 };
 
+
+const updateSpace = (id, data, token) => { 
+    return axios.put(`${API_URL}update/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then((response) => {
+            return response.data;
+        });
+};
+
+const getAllUserSpace = (space_id, token) => {
+    return axios.get(`${API_URL}getAllUsers/${space_id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then((response) => {
+            return response.data;
+        });
+};
+
+
 export default {
     addSpace,
+    getAllUserSpace,
+    updateSpace,
     getSpaces,
     deleteSpace,
     addUserToSpace

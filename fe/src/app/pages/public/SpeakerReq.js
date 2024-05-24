@@ -15,7 +15,7 @@ export function SpeakerReq() {
     const [panelists, setPanelists] = useState(false);
     const [abstract, setAbstract] = useState('');
     const [linkedInURL, setLinkedInURL] = useState('');
-    const [sponsorshipInterest, setSponsorshipInterest] = useState('');
+    const [sponsorshipInterest, setSponsorshipInterest] = useState('Yes');
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
 
@@ -37,7 +37,7 @@ export function SpeakerReq() {
                 email,
                 organization,
                 title,
-                panelists,
+                panelists: panelists,
                 abstract,
                 linkedInURL,
                 sponsorshipInterest
@@ -96,22 +96,28 @@ export function SpeakerReq() {
                     <TextField label='Organization' required name='organization' value={organization} onChange={(e) => setOrganization(e.target.value)} error={error && error.organization} />
                     <TextField label='Title' required name='title' value={title} onChange={(e) => setTitle(e.target.value)} error={error && error.title} />
                     <div className="form-group">
-                        <label htmlFor="panelists" className="form-label">Panelists</label>
+                        <label htmlFor="panelists" className="form-label">If you're proposing a panel, do you have panelists in mind you'd recruit? </label>
                         <select id="panelists" className="form-select" value={panelists} onChange={(e) => setPanelists(e.target.value)}>
-                            <option value={true}>Yes</option>
-                            <option value={false}>No</option>
+                            <option value={true}> Yes, I can create a panel</option>
+                            <option value={false}> No, I would need help filling a panel</option>
                         </select>
                         {error && error.panelists && <div className="text-red-500">{error.panelists}</div>}
                     </div>
-                    <TextField label='Abstract' required name='abstract' value={abstract} onChange={(e) => setAbstract(e.target.value)} error={error && error.abstract} />
+
+                    <div data-mdb-input-init className="form-outline my-5">
+                        <label className="form-label" for="textAreaExample">Provide a short abstract of your talk (max 200 characters)</label>
+                        <textarea value={abstract} onChange={(e) => setAbstract(e.target.value)} required className="form-control" id="textAreaExample1" rows="4"></textarea>
+                    </div>
+
                     <TextField label='LinkedIn URL' required name='linkedInURL' value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} error={error && error.linkedInURL} />
                     <div className="form-group">
-                        <label htmlFor="sponsorshipInterest" className="form-label">Sponsorship Interest</label>
+                        <label htmlFor="sponsorshipInterest" className="form-label">My organization may consider sponsoring events</label>
                         <select id="sponsorshipInterest" className="form-select" value={sponsorshipInterest} onChange={(e) => setSponsorshipInterest(e.target.value)}>
                             <option value="Yes">Yes</option>
                             <option value="Possibly">Possibly</option>
                             <option value="No">No</option>
                         </select>
+
                         {error && error.sponsorshipInterest && <div className="text-red-500">{error.sponsorshipInterest}</div>}
                     </div>
                 </div>

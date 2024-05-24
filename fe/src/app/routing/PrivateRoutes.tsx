@@ -9,6 +9,8 @@ import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import EventDetailsPage from '../pages/dashboard/EventDetails'
+import SpaceManagementPage from '../pages/dashboard/SpaceManagement'
+import UserList from '../pages/dashboard/UserList'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -26,6 +28,7 @@ const PrivateRoutes = () => {
         <Route path='auth/*' element={<Navigate to='/dashboard/events' />} />
         {/* Pages */}
         <Route path='dashboard/events' element={<DashboardWrapper sidebar="events" />} />
+        <Route path='dashboard/space-management' element={<SpaceManagementPage />} />
         <Route path='dashboard/events/details/:eventId' element={<EventDetailsPage />} />
         <Route path='dashboard/organizations' element={<DashboardWrapper sidebar="organizations" />} />
         <Route path='dashboard/venues' element={<DashboardWrapper sidebar="venues" />} />
@@ -36,6 +39,7 @@ const PrivateRoutes = () => {
         <Route path='dashboard/speaking-requests' element={<DashboardWrapper sidebar="speaking-requests" />} />
         <Route path='dashboard/speaker-onboard' element={<DashboardWrapper sidebar="speaker-onboard" />} />
         <Route path='dashboard/volunteer' element={<DashboardWrapper sidebar="volunteer" />} />
+        <Route path='dashboard/users' element={<DashboardWrapper sidebar="Users" />} />
 
         <Route path='dashboard' element={<Navigate to='/dashboard/events' />} />
         <Route path='builder' element={<BuilderPageWrapper />} />
