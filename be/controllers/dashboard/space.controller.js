@@ -120,7 +120,7 @@ exports.addUserToSpace = async (req, res) => {
                         <div class="content">
                             <p>Hello,</p>
                             <p>Please create your password by clicking the link below:</p>
-                            <a href="${process.env.FRONTEND_URL}/public/create-password/${token}">Create Password</a>
+                            <a href="${process.env.Frontend_URL}/public/create-password/${token}">Create Password</a>
                         </div>
                         <div class="footer">
                             <p>&copy; ${new Date().getFullYear()} Event Studio. All rights reserved.</p>
@@ -130,7 +130,7 @@ exports.addUserToSpace = async (req, res) => {
                 </html>
                 `
             };
-            console.log("URL for testing", `${process.env.FRONTEND_URL}/public/create-password/${token}`)
+            console.log("URL for testing", `${process.env.Frontend_URL}/public/create-password/${token}`)
             // Add the user to the space
             await SpaceUser.create({ user_id: newUser.id, space_id });
 
