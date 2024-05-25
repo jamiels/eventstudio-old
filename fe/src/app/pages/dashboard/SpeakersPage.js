@@ -39,6 +39,7 @@ const SpeakerPage = withSwal((props) => {
         SpeakerAPI.getSpeaker(selectedSpace?.space_id)
             .then(res => {
                 setTableData(res.speakers);
+                console.log("res.speakers", res.speakers);
                 setReload(false);
             })
             .catch(err => {
@@ -149,9 +150,9 @@ const SpeakerPage = withSwal((props) => {
         openModal(speaker);
     };
     const columns = [
-        columnHelper.accessor('first Name'),
-        columnHelper.accessor('last Name'),
-        columnHelper.accessor('email Address', { header: 'email Address' }),
+        columnHelper.accessor('firstName', { header: 'First Name' }),
+        columnHelper.accessor('lastName', { header: 'Last Name' }),
+        columnHelper.accessor('emailAddress', { header: 'email Address' }),
         columnHelper.accessor('primaryAffiliation', { header: 'primary Affiliation' }),
         columnHelper.accessor('title'),
         columnHelper.accessor('headshot'),
