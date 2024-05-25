@@ -211,20 +211,21 @@ const EventsPage = withSwal((props) => {
         if (startDate != null && endDate != null && endDate < startDate) {
             setEndDateError("End Date must be later than Start Date.");
         }
+        const formatDateString = (date) => date instanceof Date ? date.toLocaleDateString() : date;
 
         if (name !== '' && endDateError === '') {
+
             const eventData = {
                 name,
                 shortName,
                 landingURL: url,
-                startdate: startDate != null ? startDate?.toLocaleDateString() : '',
-                enddate: endDate != null ? endDate?.toLocaleDateString() : '',
+                startdate: startDate != null ? formatDateString(startDate) : '',
+                enddate: endDate != null ? formatDateString(endDate) : '',
                 veneue: veneue !== 0 ? veneue : 0,
                 theme: themes,
                 sponsorshipDeckUrl,
                 space_id: selectedSpace?.space_id
             };
-            console.log("🚀 ~ addEventFunc ~ startDate:", startDate?.toLocaleDateString())
             if (isEditMode) {
                 EventAPI.updateEvent(eventToUpdate.id, eventData)
                     .then(res => {
@@ -297,7 +298,7 @@ const EventsPage = withSwal((props) => {
                     <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />
                     {/* <Select label='Veneue' name='veneue' options={veneueOptions} defaultValue={veneue} onChange={(e) => { setVeneue(e.value) }} /> */}
                     <label htmlFor="Venue">Venue</label>
-                    <select id="Venue" value={veneue} onChange={(e) => { setVeneue(e.target.value) }}  className="form-select">
+                    <select id="Venue" value={veneue} onChange={(e) => { setVeneue(e.target.value) }} className="form-select">
                         <option value="" disabled>Select Venue</option>
                         {veneueOptions?.map(venue => (
                             <option key={venue.id} value={venue.id}>{venue.name}</option>
