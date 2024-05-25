@@ -36,8 +36,8 @@ const SpaceManagementPage = withSwal((props) => {
     const fetchData = () => {
         spaceApi.getSpaces()
             .then(res => {
-                console.log("responso data", res);
                 setTableData(res?.userSpaces);
+                setSpaces(res?.userSpaces)
                 setReload(false);
             })
             .catch(err => {
@@ -77,10 +77,12 @@ const SpaceManagementPage = withSwal((props) => {
             try {
                 if (isEditMode) {
                     await spaceApi.updateSpace(spaceToUpdate.space_id, { space_name: spaceName }, auth?.token);
+                    setReload(true);
                 } else {
                     await spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
                         .then((res) => {
                             setShowSuccess(res?.response?.data?.message || res.message)
+                            setReload(true);
                             setSpaceName('');
                         }).catch((err) => {
                             console.log("🚀 ~ .then ~ err:", err)
