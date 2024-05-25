@@ -175,31 +175,35 @@ exports.verifyToken = async (req, res) => {
 }
 
 exports.changepassword = async (req, res) => {
-    console.log(req.body)
 
-    if (!req.body.oldpassword || !req.body.newpassword) {
-        res.status(400).send({
-            message: 'Please provide both old and new password.'
-        });
-    }
     user = await User.findByPk(req.user.id);
     if (user == null || !(user instanceof User)) {
         res.status(403).send({
             message: "Invalid Credentials!"
         });
     } else {
-        if (user.verifyPassword(req.body.oldpassword)) {
-            user.update({ password: req.body.newpassword, name: req.body.name ? req.body.name : user?.name }, {
+        if (req.body.oldpassword && req.body.newpassword) {
+            if (user.verifyPassword(req.body.oldpassword)) {
+                user.update({ password: req.body.newpassword, name: req.body.name ? req.body.name : user?.name }, {
+                    where: { id: user.id }
+                });
+                res.status(200).send({
+                    user,
+                    message: "Password Updated Successfully!"
+                })
+            } else {
+                res.status(403).send({
+                    message: "Invalid Old Password! Please recheck."
+                });
+            }
+        } else if (req.body.name && !req.body.oldpassword && !req.body.newpassword) {
+            user.update({ name: req.body.name }, {
                 where: { id: user.id }
             });
             res.status(200).send({
                 user,
-                message: "Password Updated Successfully!"
+                message: "Name Updated Successfully!"
             })
-        } else {
-            res.status(403).send({
-                message: "Invalid Old Password! Please recheck."
-            });
         }
     }
 }
