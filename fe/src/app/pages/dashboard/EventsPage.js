@@ -297,7 +297,7 @@ const EventsPage = withSwal((props) => {
                     <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />
                     {/* <Select label='Veneue' name='veneue' options={veneueOptions} defaultValue={veneue} onChange={(e) => { setVeneue(e.value) }} /> */}
                     <label htmlFor="Venue">Venue</label>
-                    <select id="Venue" value={veneue} nChange={(e) => { setVeneue(e.target.value) }}  className="form-select">
+                    <select id="Venue" value={veneue} onChange={(e) => { setVeneue(e.target.value) }}  className="form-select">
                         <option value="" disabled>Select Venue</option>
                         {veneueOptions?.map(venue => (
                             <option key={venue.id} value={venue.id}>{venue.name}</option>
