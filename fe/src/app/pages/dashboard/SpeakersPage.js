@@ -228,18 +228,43 @@ const SpeakerPage = withSwal((props) => {
                             ))}
                         </select>
                     </div>
-                    <TextField label='First Name' required={true} name='first name' value={firstName} onChange={(e) => handleNameChange(e.target.value)} />
-                    <TextField label='Last Name' name='last name' value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                    <TextField label='Email Address' required={true} name='emailAddress' value={emailAddress} onChange={(e) => handleEmailChange(e.target.value)} />
-                    <TextField label='Primary Affiliation' name='primaryAffiliation' value={primaryAffiliation} onChange={(e) => setPrimaryAffiliation(e.target.value)} />
-                    <TextField label='Title' name='title' value={title} onChange={(e) => setTitle(e.target.value)} />
-                    <TextField label='Headshot' name='headshot' value={headshot} onChange={(e) => setHeadshot(e.target.value)} />
-                    <TextField label='LinkedInURL' name='linkedInURL' value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} />
-                    <TextField label='TwitterURL' name='twitterURL' value={twitterURL} onChange={(e) => setTwitterURL(e.target.value)} />
-                    <TextField label='Bio' name='bio' value={bio} onChange={(e) => setBio(e.target.value)} />
-                    <TextField label='Admin Full Name' name='adminFullName' value={adminFullName} onChange={(e) => setAdminFullName(e.target.value)} />
-                    <TextField label='Admin Email Address' name='adminEmailAddress' value={adminEmailAddress} onChange={(e) => setAdminEmailAddress(e.target.value)} />
+                    <div className="row">
+                        <div className="col-md-6">
+                            <TextField label='First Name' required={true} name='first name' value={firstName} onChange={(e) => handleNameChange(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Last Name' name='last name' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Email Address' required={true} name='emailAddress' value={emailAddress} onChange={(e) => handleEmailChange(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Primary Affiliation' name='primaryAffiliation' value={primaryAffiliation} onChange={(e) => setPrimaryAffiliation(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Title' name='title' value={title} onChange={(e) => setTitle(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Headshot' name='headshot' value={headshot} onChange={(e) => setHeadshot(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='LinkedIn URL' name='linkedInURL' value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Twitter URL' name='twitterURL' value={twitterURL} onChange={(e) => setTwitterURL(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Bio' name='bio' value={bio} onChange={(e) => setBio(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Admin Full Name' name='adminFullName' value={adminFullName} onChange={(e) => setAdminFullName(e.target.value)} />
+                        </div>
+                        <div className="col-md-6">
+                            <TextField label='Admin Email Address' name='adminEmailAddress' value={adminEmailAddress} onChange={(e) => setAdminEmailAddress(e.target.value)} />
+                        </div>
+                    </div>
                 </ModalBody>
+
                 <ModalFooter>
                     <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
                         Cancel

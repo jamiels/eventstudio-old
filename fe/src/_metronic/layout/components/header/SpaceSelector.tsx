@@ -17,6 +17,8 @@ const SpaceSelector: FC = () => {
                     // If the default space is found, update the selected space
                     if (defaultSpace) {
                         updateSelectedSpace(defaultSpace);
+                    } else {
+                        updateSelectedSpace(res.userSpaces[0]);
                     }
                 }
             })

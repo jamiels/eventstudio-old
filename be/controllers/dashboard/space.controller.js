@@ -301,7 +301,7 @@ exports.getAllUsersCurrentSpace = async (req, res) => {
 
         // Filter out the current user from the response
         const users = spaceUsers
-            .filter(spaceUser => spaceUser.user_id !== user_id)
+            // .filter(spaceUser => spaceUser.user_id !== user_id)
             .map(spaceUser => ({
                 id: spaceUser.user.id,
                 name: spaceUser.user.name,

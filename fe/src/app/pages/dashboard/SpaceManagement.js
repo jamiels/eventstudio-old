@@ -76,7 +76,7 @@ const SpaceManagementPage = withSwal((props) => {
         if (spaceName !== '') {
             try {
                 if (isEditMode) {
-                    await spaceApi.updateSpace(spaceToUpdate.id, { space_name: spaceName }, auth?.token);
+                    await spaceApi.updateSpace(spaceToUpdate.space_id, { space_name: spaceName }, auth?.token);
                 } else {
                     await spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
                         .then((res) => {
@@ -160,7 +160,7 @@ const SpaceManagementPage = withSwal((props) => {
         if (email === '') setEmailError('Email is required');
         if (name === '') setNameError('Name is required');
 
-        spaceApi.addUserToSpace({ name, email, space_id: spaceToUpdate.id }, auth?.token)
+        spaceApi.addUserToSpace({ name, email, space_id: spaceToUpdate.space_id }, auth?.token)
             .then((res) => {
                 setShowSuccess(res?.response?.data?.message || res.message)
                 setEmail('');
@@ -173,7 +173,6 @@ const SpaceManagementPage = withSwal((props) => {
     };
 
     const leaveSpace = (row) => {
-        console.log("🚀 ~ leaveSpace ~ row:", row)
         swal.fire({
             title: 'Delete',
             text: 'Are you sure you want to delete this Space?',
