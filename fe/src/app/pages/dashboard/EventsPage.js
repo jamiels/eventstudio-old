@@ -112,7 +112,7 @@ const EventsPage = withSwal((props) => {
         columnHelper.accessor('enddate', { header: 'End Date' }),
         columnHelper.accessor(row => `${row.veneue ? row.veneue : ''}`, {
             id: 'veneue',
-            header: 'VENUE'
+            header: 'Venue'
         }),
         columnHelper.display({
             header: 'Links',
@@ -250,7 +250,6 @@ const EventsPage = withSwal((props) => {
     }
 
     const openEditModal = (event) => {
-        console.log("🚀 ~ openEditModal ~ event:", event)
         setName(event.name || '');
         setShortName(event.shortname || '');
         setUrl(event.landingUrl || '');
