@@ -2,10 +2,12 @@ import React, { FC } from 'react'
 import clsx from 'clsx'
 import { useLayout } from '../../core'
 import { Link, NavLink } from 'react-router-dom'
+import { useSpace } from '../../../../app/context/space.provider'
 
 const AsideDefault: FC = () => {
   const { config, classes } = useLayout()
   const { aside } = config
+  const { selectedSpace } = useSpace();
 
   return (
     <div
@@ -95,18 +97,18 @@ const AsideDefault: FC = () => {
             </NavLink>
           </div>
 
-          
+
           <div className="menu-item">
             <NavLink to='/dashboard/volunteer' className='menu-link'>
               <span className="menu-title">Volunteer</span>
             </NavLink>
           </div>
 
-          <div className="menu-item">
+          {(selectedSpace?.isAdmin) && <div className="menu-item">
             <NavLink to='/dashboard/users' className='menu-link'>
               <span className="menu-title">Users</span>
             </NavLink>
-          </div>
+          </div>}
 
         </div>
       </div>
