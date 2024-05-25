@@ -23,7 +23,7 @@ export function CreatePassword() {
             await passwordSchema.validate({ newPassword, confirmPassword }, { abortEarly: false });
 
             const res = await userApi.createPassword({ newPassword, token });
-            navigate('/login')
+            navigate('/auth')
             setSuccessMessage(res.message);
             setError(null);
             setNewPassword('');
