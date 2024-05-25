@@ -211,6 +211,17 @@ const EventsPage = withSwal((props) => {
         if (startDate != null && endDate != null && endDate < startDate) {
             setEndDateError("End Date must be later than Start Date.");
         }
+        if (veneue === 0 || veneue === '') {
+            // Assuming you want to use some kind of state or UI to display this error
+            swal.fire({
+                title: 'Error',
+                text: 'Please select a venue.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+            return;
+        }
+
         const formatDateString = (date) => date instanceof Date ? date.toLocaleDateString() : date;
 
         if (name !== '' && endDateError === '') {
@@ -298,12 +309,13 @@ const EventsPage = withSwal((props) => {
                     <DatePicker label='EndDate' onChange={(e) => { handleEndDateChange(e) }} value={endDate} error={endDateError} />
                     {/* <Select label='Veneue' name='veneue' options={veneueOptions} defaultValue={veneue} onChange={(e) => { setVeneue(e.value) }} /> */}
                     <label htmlFor="Venue">Venue</label>
-                    <select id="Venue" value={veneue} onChange={(e) => { setVeneue(e.target.value) }} className="form-select">
-                        <option value="" disabled>Select Venue</option>
+                    <select required id="Venue" value={veneue} onChange={(e) => { setVeneue(e.target.value) }} className="form-select">
+                        <option value="">Select Venue</option>
                         {veneueOptions?.map(venue => (
                             <option key={venue.id} value={venue.id}>{venue.name}</option>
                         ))}
                     </select>
+
                 </ModalBody>
                 <ModalFooter>
                     <Button className="btn btn-sm btn-flex btn-secondary" onClick={() => { setModalShow(false) }}>
