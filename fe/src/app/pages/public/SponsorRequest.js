@@ -79,7 +79,7 @@ export function SponsorPage() {
                 {error && typeof error === 'string' && <div className="text-red-500">{error}</div>}
                 {successMessage && <div className="text-green-500">{successMessage}</div>}
                 <div className="mb-5 mt-10">
-                    <button className="btn btn-sm btn-primary" onClick={handleSponsorRequest}>Request Sponsor</button>
+                    <button className="btn btn-sm btn-primary" onClick={handleSponsorRequest}>Send</button>
                 </div>
             </div>
         </div>

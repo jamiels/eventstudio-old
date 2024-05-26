@@ -12,7 +12,7 @@ export function Volunteer() {
     const [mobilePhone, setMobilePhone] = useState('');
     const [communicationTools, setCommunicationTools] = useState([]);
     const [telegramId, setTelegramId] = useState('');
-    const [linkedInURL, setLinkedInURL] = useState('');
+    const [linkedInURL, setLinkedInURL] = useState('https://linkedin.com/in/');
     const [areasOfSupport, setAreasOfSupport] = useState([]);
     const [businessAttire, setBusinessAttire] = useState(true);
     const [error, setError] = useState(null);
@@ -47,7 +47,7 @@ export function Volunteer() {
                 email,
                 mobilePhone,
                 communicationTools,
-                telegramId,
+                telegramID: telegramId,
                 linkedInURL,
                 areasOfSupport,
                 businessAttire,
@@ -90,9 +90,9 @@ export function Volunteer() {
                 <div className="d-flex text-start flex-column">
                     <TextField label="Full Name" required name="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} error={error && error.fullName} />
                     <TextField label="Email" required name="email" value={email} onChange={(e) => setEmail(e.target.value)} error={error && error.email} />
-                    <TextField label="Mobile Phone" name="mobilePhone" value={mobilePhone} onChange={(e) => setMobilePhone(e.target.value)} />
+                    <TextField label="Mobile Phone #" name="mobilePhone" value={mobilePhone} onChange={(e) => setMobilePhone(e.target.value)} />
                     <div className="form-group">
-                        <label className="form-label">Communication Tools</label>
+                        <label className="form-label">For team communications, we use several tools. Which of the followings tools are you comfortable with?</label>
                         <div className="mb-2">
                             <input type="checkbox" id="whatsapp" value="WhatsApp" checked={communicationTools.includes('WhatsApp')} onChange={(e) => setCommunicationTools(e.target.checked ? [...communicationTools, e.target.value] : communicationTools.filter(tool => tool !== e.target.value))} />
                             <label htmlFor="whatsapp" className="ms-2">WhatsApp</label>
@@ -109,7 +109,7 @@ export function Volunteer() {
                     <TextField label="Telegram ID" name="telegramId" value={telegramId} onChange={(e) => setTelegramId(e.target.value)} />
                     <TextField label="LinkedIn URL" required name="linkedInURL" value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} error={error && error.linkedInURL} />
                     <div className="form-group">
-                        <label className="form-label">Areas of Support</label>
+                        <label className="form-label">What areas of support do you feel you can best assist in?</label>
                         <div className="mb-2">
                             <input type="checkbox" id="checkin" value="Check-in / Registration Desk" checked={areasOfSupport.includes('Check-in / Registration Desk')} onChange={(e) => setAreasOfSupport(e.target.checked ? [...areasOfSupport, e.target.value] : areasOfSupport.filter(area => area !== e.target.value))} />
                             <label htmlFor="checkin" className="ms-2">Check-in / Registration Desk</label>
@@ -144,7 +144,7 @@ export function Volunteer() {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Business Attire</label>
+                        <label className="form-label">Are you ok with wearing business casual attire at our events?</label>
                         <div>
                             <input type="radio" id="yesAttire" value="true" checked={businessAttire} onChange={(e) => setBusinessAttire(true)} />
                             <label htmlFor="yesAttire" className="ms-2">Yes</label>
@@ -159,7 +159,7 @@ export function Volunteer() {
                 {error && typeof error === 'string' && <div className="text-red-500">{error}</div>}
                 {successMessage && <div className="text-green-500">{successMessage}</div>}
                 <div className="mb-5 mt-10">
-                    <button className="btn btn-sm btn-primary" onClick={handleVolunteerRequest}>Submit</button>
+                    <button className="btn btn-sm btn-primary" onClick={handleVolunteerRequest}>Send</button>
                 </div>
             </div>
         </div>
