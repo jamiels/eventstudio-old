@@ -76,8 +76,13 @@ const SpaceManagementPage = withSwal((props) => {
         if (spaceName !== '') {
             try {
                 if (isEditMode) {
-                    await spaceApi.updateSpace(spaceToUpdate.space_id, { space_name: spaceName }, auth?.token);
-                    setReload(true);
+                    spaceApi.updateSpace(spaceToUpdate.space_id, { space_name: spaceName }, auth?.token).then(res => {
+                        if (res?.space.id === selectedSpace.id) updateSelectedSpace(res?.space);
+                        setReload(true);
+                    })
+                        .catch(err => {
+                            console.log(err);
+                        });
                 } else {
                     await spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
                         .then((res) => {
@@ -146,7 +151,6 @@ const SpaceManagementPage = withSwal((props) => {
     ];
 
     const renameSpace = (space) => {
-        console.log("🚀 ~ renameSpace ~ space:", space)
         setSpaceToUpdate(space);
         setSpaceName(space.space.space_name);
         setIsEditMode(true);
@@ -158,7 +162,7 @@ const SpaceManagementPage = withSwal((props) => {
         setSpaceToUpdate(curr_space); // Assuming you have state to hold the current space
     };
 
-    const addUser = (curr_space) => {
+    const addUser = () => {
         if (email === '') setEmailError('Email is required');
         if (name === '') setNameError('Name is required');
 
@@ -176,16 +180,28 @@ const SpaceManagementPage = withSwal((props) => {
 
     const leaveSpace = (row) => {
         swal.fire({
-            title: 'Delete',
-            text: 'Are you sure you want to delete this Space?',
+            title: 'Leave',
+            text: 'Are you sure you want to leave this Space?',
             icon: 'error',
-            confirmButtonText: 'Delete'
+            confirmButtonText: 'Leave'
         })
             .then((result) => {
                 if (result.isConfirmed) {
                     spaceApi.deleteSpace(row.space.id, auth?.token)
                         .then(() => {
                             setReload(true);
+                            console.log("row.space.id", row.space, selectedSpace);
+
+                            if (row?.space.id === selectedSpace.space_id) {
+                                // Filter out the deleted space from the spaces array
+                                const updatedSpaces = spaces.filter(space => space.space_id !== row.space.id);
+                                // Update the selectedSpace to another space if available
+                                if (updatedSpaces.length > 0) {
+                                    updateSelectedSpace(updatedSpaces[0]);
+                                } else {
+                                    updateSelectedSpace(null); // Handle case where no spaces are left
+                                }
+                            }
                         })
                         .catch(err => {
                             console.log(err);
@@ -193,6 +209,7 @@ const SpaceManagementPage = withSwal((props) => {
                 }
             });
     };
+
 
     return (
         <>
