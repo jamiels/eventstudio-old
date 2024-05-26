@@ -254,8 +254,12 @@ exports.updateSpace = async (req, res) => {
         // Update the space name
         space.space_name = space_name;
         await space.save();
-
-        res.status(200).send({ success: true, message: 'Space name updated successfully.', space });
+        // Find spaces associated with the user
+        const updatedSpace = await SpaceUser.findOne({
+            where: { user_id: req.user.id, space_id: space.id },
+            include: [{ model: Space, attributes: ['space_name', 'uuid', 'id'] }]
+        });
+        res.status(200).send({ success: true, message: 'Space name updated successfully.', space: updatedSpace });
     } catch (err) {
         console.error("Error updating space:", err);
         res.status(500).send({
