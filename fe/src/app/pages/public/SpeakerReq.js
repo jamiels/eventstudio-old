@@ -54,7 +54,7 @@ export function SpeakerReq() {
                 linkedInURL,
                 sponsorshipInterest
             }, id);
-
+            console.log("🚀 ~ handleSpeakerRequest ~ res:", res)
             setSuccessMessage(res.message);
             setError(null);
             setFullName('');
@@ -106,7 +106,7 @@ export function SpeakerReq() {
 
                     <div data-mdb-input-init className="form-outline my-5">
                         <label className="form-label" for="textAreaExample">Provide a short abstract of your talk (max 200 characters)</label>
-                        <textarea value={abstract} onChange={(e) => setAbstract(e.target.value)} required className="form-control" id="textAreaExample1" rows="4"></textarea>
+                        <textarea maxLength={200} value={abstract} onChange={(e) => setAbstract(e.target.value)} required className="form-control" id="textAreaExample1" rows="4"></textarea>
                     </div>
 
                     <TextField label='LinkedIn URL' required name='linkedInURL' value={linkedInURL} onChange={(e) => setLinkedInURL(e.target.value)} error={error && error.linkedInURL} />
