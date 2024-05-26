@@ -106,7 +106,13 @@ const EventsPage = withSwal((props) => {
                 <a href={original.landingUrl} target="_blank" rel="noopener noreferrer">{original?.landingUrl}</a>
             ),
         }),
-        columnHelper.accessor('sponsorshipDeckUrl', { header: 'sponsorship Deck Url' }),
+        columnHelper.display({
+            header: 'sponsorship Deck Url',
+            id: 'actions',
+            cell: ({ row: { original } }) => (
+                <a href={original.sponsorshipDeckUrl} target="_blank" rel="noopener noreferrer">{original?.sponsorshipDeckUrl}</a>
+            ),
+        }),
         columnHelper.accessor('theme'),
         columnHelper.accessor('startdate', { header: 'Start Date' }),
         columnHelper.accessor('enddate', { header: 'End Date' }),
