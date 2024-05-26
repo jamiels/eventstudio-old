@@ -76,13 +76,16 @@ const SpaceManagementPage = withSwal((props) => {
         if (spaceName !== '') {
             try {
                 if (isEditMode) {
-                    spaceApi.updateSpace(spaceToUpdate.space_id, { space_name: spaceName }, auth?.token).then(res => {
-                        if (res?.space.id === selectedSpace.id) updateSelectedSpace(res?.space);
+                    await spaceApi.updateSpace(spaceToUpdate.space_id, { space_name: spaceName }, auth?.token).then(res => {
                         setReload(true);
+                        if (res?.space.space_id === selectedSpace.space_id) { updateSelectedSpace(res?.space) };
                     })
                         .catch(err => {
+                            setReload(true);
                             console.log(err);
                         });
+                    setReload(true);
+
                 } else {
                     await spaceApi.addSpace({ space_name: spaceName }, auth?.token) // Change addTeam to addSpace
                         .then((res) => {
