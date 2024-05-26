@@ -61,7 +61,7 @@ export function SpeakerOnBoarding() {
             // If validation passes, make the request
             const res = await speakerBoardingApi.addSpeakerOnboarding(formData, id);
 
-            setSuccessMessage(res.message);
+            setSuccessMessage(res?.message);
             setError(null);
             setFullName('');
             setEmail('');
@@ -92,10 +92,7 @@ export function SpeakerOnBoarding() {
                         <img alt="Logo" src={toAbsoluteUrl("/event_logo.png")} className="h-40px" />
                     </Link>
                 </div>
-                <h1 className="fw-bolder text-gray-900 mb-5">Sponsor Boarding</h1>
-                <div className="fw-semibold fs-6 text-gray-500 mb-7">
-                    Complete the form to apply for sponsorship.
-                </div>
+                <h1 className="fw-bolder text-gray-900 mb-5">Speaker Onboarding</h1>
                 <div className="d-flex text-start flex-column">
                     <TextField label='Full Name' required name='fullName' value={fullName} onChange={(e) => setFullName(e.target.value)} error={error && error.fullName} />
                     <TextField label='Email' required name='email' value={email} onChange={(e) => setEmail(e.target.value)} error={error && error.email} />
@@ -114,7 +111,7 @@ export function SpeakerOnBoarding() {
                 {error && typeof error === 'string' && <div className="text-red-500">{error}</div>}
                 {successMessage && <div className="text-green-500">{successMessage}</div>}
                 <div className="mb-5 mt-10">
-                    <button className="btn btn-sm btn-primary" onClick={handleSponsorBoarding}>Submit</button>
+                    <button className="btn btn-sm btn-primary" onClick={handleSponsorBoarding}>Send</button>
                 </div>
             </div>
         </div>
