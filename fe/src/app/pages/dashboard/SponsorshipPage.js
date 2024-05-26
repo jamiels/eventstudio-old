@@ -150,8 +150,21 @@ const SponsorshipPage = withSwal((props) => {
     };
 
     const handleCommitmentAmountChange = (value) => {
-        setCommitmentAmount(value);
+        // Regular expression to allow only numbers (including decimal numbers)
+        const numberRegex = /^\d*\.?\d*$/;
+
+        if (numberRegex.test(value)) {
+            setCommitmentAmount(value);
+        } else {
+            swal.fire({
+                title: 'Error',
+                text: 'Invalid input: Please enter a valid number',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+        }
     };
+
 
     const addOrUpdateSponsorship = async () => {
         if (organizationId !== '' && eventId !== '' && commitmentAmount !== '') {
