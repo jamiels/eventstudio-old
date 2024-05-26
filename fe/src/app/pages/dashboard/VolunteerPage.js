@@ -25,7 +25,7 @@ const VolunteerPage = withSwal((props) => {
   }, []);
 
   const columns = [
-    columnHelper.accessor('full Name'),
+    columnHelper.accessor('fullName', {header: 'Full Name'}),
     columnHelper.accessor('email'),
     columnHelper.accessor('linkedInURL', { header: 'LinkedIn URL' }), // Display LinkedIn URL
     columnHelper.accessor('mobilePhone', { header: 'Mobile Phone' }), // Display Mobile Phone
